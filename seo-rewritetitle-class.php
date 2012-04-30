@@ -103,6 +103,8 @@ class zeo_rewrite_title {
 
 }
 
+
+function zeo_final_title(){
   	// Use object to avoid namespace collisions
 	$zeo_rewrite_title = new zeo_rewrite_title();
 
@@ -112,6 +114,19 @@ class zeo_rewrite_title {
 	// There is no action hook for "start of processing",
 	// so we use this implicitly.
 	$zeo_rewrite_title->starting();
+}
 
+/* General Function */
+
+function zeo_ischk($chkname,$value)
+    {
+                  
+                if(get_option($chkname) == $value)
+                {
+                    return true;
+                } 
+        	return false;
+	}
+if(zeo_ischk('zeo_activate_title', 'yes' )){zeo_final_title();}
 
 ?>
