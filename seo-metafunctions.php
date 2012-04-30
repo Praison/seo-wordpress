@@ -15,7 +15,11 @@ function zeo_activate() {
 	add_option('zeo_common_error_title', $default_title);
 	add_option('zeo_analytics_id', ''); 
 	add_option('zeo_home_description', ''); 
-	add_option('zeo_home_keywords', ''); 
+	add_option('zeo_home_keywords', '');
+	add_option('zeo_canonical_url', 'yes');
+	add_option('zeo_nofollow', 'no');
+	add_option('zeo_activate_title', 'yes');	
+	
 }
 
 
@@ -39,25 +43,28 @@ function zeo_google_analytics(){
 }
 if(get_option('zeo_analytics_id')!=NULL)
 add_action('wp_footer', 'zeo_google_analytics');
+/* Rel No Follow */
 
-add_action( 'admin_menu', 'zeo_options_menu' );
-function zeo_options_menu(){
-	
-	add_options_page('Wordpress SEO Plugin' , 'Wordpress SEO', 9,  SEO_ADMIN_DIRECTORY.'/seo-optionspage.php');
-	
+if(zeo_ischeckeds('zeo_nofollow', 'yes' )){zeo_process_post();}
+function zeo_process_post(){
+add_filter( 'the_content', 'zeo_relnofollow' );
 }
-add_action( 'admin_head', 'zeo_admin_header' );
 
-function zeo_admin_header(){
-  echo '<script type="text/javascript">
-window.___gcfg = {lang: "en"};
-(function() 
-{var po = document.createElement("script");
-po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";
-var s = document.getElementsByTagName("script")[0];
-s.parentNode.insertBefore(po, s);
-})();</script>';
+function zeo_relnofollow($content){
+	return str_replace('<a href=', '<a rel="nofollow" href=',  $content);
 }
+
+/* General Function */
+
+function zeo_ischeckeds($chkname,$value)
+    {
+                  
+                if(get_option($chkname) == $value)
+                {
+                    return true;
+                } 
+        	return false;
+	}
 
 
 

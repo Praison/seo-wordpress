@@ -13,7 +13,7 @@ add_action( 'load-post.php', 'call_seo_metabox_class' );
 class seo_metabox_class {
 	
 
-public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords'	);
+public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo_index'	);
 
 	public function __construct(){	
 		
@@ -56,12 +56,14 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords'	);
 			if($i==0)$mytitle=$uid;
 			if($i==1)$mydescription=$uid;
 			if($i==2)$mykeywords=$uid;
+			if($i==3)$myindex=$uid;
 			$i+=1;
 		}
 		
 		$titlevalue = $seo_data_class->zeo_get_post_meta($mytitle);
 		$descriptionvalue = $seo_data_class->zeo_get_post_meta($mydescription);
 		$keywordsvalue = $seo_data_class->zeo_get_post_meta($mykeywords);
+		$indexvalue = $seo_data_class->zeo_get_post_meta($myindex);
 		
 		
         echo '<table>
@@ -90,12 +92,21 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords'	);
 		<td><input type="text" size="80" name="zeo_keywords" value="';
 		echo $keywordsvalue;
 		
-		echo '" ></input></form></td>
+		echo '" ></input></form></td>';
+		?>
+		</tr>
+		<tr>
+		<td><b>Index, Follow Settings</b></td>
+		<td><input type="radio" name="zeo_index" value="index, follow" <?php if($indexvalue=='index, follow')echo 'checked'; ?> />Index, Follow &nbsp;&nbsp;
+		<input type="radio" name="zeo_index" value="index, nofollow" <?php if($indexvalue=='index, nofollow')echo 'checked'; ?> /> Index, NoFollow &nbsp;&nbsp;
+        <input type="radio" name="zeo_index" value="noindex, follow" <?php if($indexvalue=='noindex, follow')echo 'checked'; ?> /> NoIndex, Follow &nbsp;&nbsp;
+		<input type="radio" name="zeo_index" value="noindex, nofollow" <?php if($indexvalue=='noindex, nofollow')echo 'checked'; ?> /> NoIndex, NoFollow &nbsp;
+		</form></td>
 		
 		</tr>
 		
-		
-		</table>';
+		<?php
+		echo '</table>';
     }
 	
 	
@@ -165,9 +176,12 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords'	);
 		elseif($checkvalue!=NULL){
 			if($uid=='zeo_description')echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/> ";
 			if($uid=='zeo_keywords')echo "<meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
+			if($uid=='zeo_index')echo "<meta name='robots' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
+			
 		}
 				
 	}
+	if(get_option('zeo_canonical_url')!=NULL && get_option('zeo_canonical_url')=='yes')echo "<link rel='canonical' href='".get_permalink()."' />";
 	echo "\n<!-- End of Wordpress SEO Plugin by Mervin Praison --> \n";	
 	}	
 

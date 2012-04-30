@@ -1,7 +1,18 @@
 <div class="wrap">
 <h1>Wordpress SEO Plugin Settings</h1>
-<br />
-<?php if ( $_POST['update_zeooptions'] == 'true' ) { zeooptions_update(); }  
+<?php 
+
+function zeo_ischecked($chkname,$value)
+    {
+                  
+                if(get_option($chkname) == $value)
+                {
+                    return true;
+                } 
+        	return false;
+	}
+
+if ( $_POST['update_zeooptions'] == 'true' ) { zeooptions_update(); }  
 
 function zeooptions_update(){
 	
@@ -15,8 +26,10 @@ function zeooptions_update(){
 	update_option('zeo_common_archive_title', $_POST['zeo_common_archive_title']); 
 	update_option('zeo_common_tag_title', $_POST['zeo_common_tag_title']); 
 	update_option('zeo_common_search_title', $_POST['zeo_common_search_title']); 
-	update_option('zeo_common_error_title', $_POST['zeo_common_error_title']); 
-	
+	update_option('zeo_common_error_title', $_POST['zeo_common_error_title']);
+	update_option('zeo_canonical_url', $_POST['zeo_canonical_url']);
+	update_option('zeo_nofollow', $_POST['zeo_nofollow']);
+	update_option('zeo_activate_title', $_POST['zeo_activate_title']);	
 	
 	echo '<div class="updated">
 		<p>
@@ -25,64 +38,44 @@ function zeooptions_update(){
 	</div>'; 
 	
 }
+
 ?>
-<?php if ( $_POST['update_authorshipoptions'] == 'true' ) { authorshipoptions_update(); }  
-
-function authorshipoptions_update(){
-	global $current_user;
-	if ( !current_user_can( 'edit_user', $current_user->ID ) )
-		return false;
-
-	update_usermeta( $current_user->ID, 'zeoauthor', $_POST['zeoauthor'] );
-	update_usermeta( $current_user->ID, 'zeopreferredname', $_POST['zeopreferredname'] );
-	
-	echo '<div class="updated">
-		<p>
-			<strong>Options saved</strong>
-		</p>
-	</div>'; 
-	
-}
-?>
-  <?php if ( $_POST['update_analyticsoptions'] == 'true' ) { analyticsoptions_update(); }  
-
-function analyticsoptions_update(){
-	
-	
-	update_option('zeo_analytics_id', $_POST['zeo_analytics_id']); 
-	
-	echo '<div class="updated">
-		<p>
-			<strong>Options saved</strong>
-		</p>
-	</div>'; 
-	
-}
-?> 
-<h3>If you thought of Encouraging me to develop more Plugins for FREE,<br />
-Please LIKE ME and ADD ME to your circles</h3>
+<div class="postbox-container" style="width:70%;">
+				<div class="metabox-holder">	
+					<div class="meta-box-sortables ui-sortable">
+                    <div class="postbox" id="support">
+<strong><h3>Want more FREE Plugins? Encourage me by,
+LIKING ME and ADDING ME to your circles</h3></strong>
 <table>
 <tr>
 <td>
 <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fmervinpraisons&amp;width=250&amp;height=62&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=true&amp;appId=252850214734670" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:250px; height:62px;" allowTransparency="true"></iframe>
 </td>
-<td>
-<div class="g-plus" data-href="https://plus.google.com/101518602031253199279?rel=publisher" data-width="170" data-height="69" data-theme="light"></div>
+<td style="padding-top:10px;" >
+<div class="g-plus" data-href="https://plus.google.com/101518602031253199279?rel=publisher" data-width="170" data-height="70" data-theme="light"></div>
+</td>
+<td style="padding-top:10px;" >
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a name="fb_share" type="icon_link" 
+   share_url="http://mervin.info/seo-wordpress" style="font-weight:bold; font-size:15px;">Share me Please</a> 
+<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" 
+        type="text/javascript">
+</script>
 </td>
 </tr>
 </table>
+</div>
+
+                    
 <form method="POST" action="">  
             <input type="hidden" name="update_zeooptions" value="true" />  
-            <table cellpadding="2">
+            <div class="postbox" id="support">
+            <table cellpadding="6">
 	            <h3>Home Page Settings</h3>
-                <tr style="background-color:#CCC;">
-        		<td width="210"><b>Home Page</b></td>
-        		<td><b>Settings</b></td>
-        		</tr>
-                <tr><td>
+                
+                <tr><td width="210">
 				Home Page Title: 
 				</td><td>
-            	<input size="50" type="text" value="<?php echo get_option('zeo_common_home_title'); ?>" name="zeo_common_home_title"  />  
+            	<input size="55" type="text" value="<?php echo get_option('zeo_common_home_title'); ?>" name="zeo_common_home_title"  />  
             	</td></tr>
                 <tr><td>
 				Home Page  Meta Description:
@@ -92,13 +85,20 @@ Please LIKE ME and ADD ME to your circles</h3>
                 <tr><td>
 				Home Page  Meta Keywords:
 				</td><td>
-            	<input size="50" type="text" value="<?php echo get_option('zeo_home_keywords'); ?>" name="zeo_home_keywords"  />  
-            	</td></tr></table><table>
+            	<input size="55" type="text" value="<?php echo get_option('zeo_home_keywords'); ?>" name="zeo_home_keywords"  />  
+            	</td></tr></table>
+                
+                </div>
+                
+                <div class="postbox" id="support">
+                
+                
+                <table cellpadding="6">
                 <h3>Other Page Title Settings</h3>
-                <tr style="background-color:#CCC;"><td>
-				<b>Titles</b> </td><td><b>Title Prefix</b>
+                <tr><td>
+				<h3>Titles</h3> </td><td><h3>Title Prefix</h3>
 				</td><td>
-            	<b>Title Suffix</b>
+            	<h3>Title Suffix</h3>
             	</td></tr>
                 <tr><td>
 				Blog Page Title: </td><td> Blog Page Title
@@ -141,76 +141,38 @@ Please LIKE ME and ADD ME to your circles</h3>
 				</td><td>
             	<input size="50" type="text" value="<?php echo get_option('zeo_common_error_title'); ?>" name="zeo_common_error_title"  />  
             	</td></tr>
+                </table>
                 
-
-                
-                
-                
-			</table>
-            <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
-        </form> 
-        
-     
-        <br />
-        <h1>Google Analytics Settings</h1>
-        <form method="POST" action="">  
-        <input type="hidden" name="update_analyticsoptions" value="true" />
-        <table cellpadding="2">
-        <tr style="background-color:#CCC;">
-        <td width="230"><b>Analytics</b></td>
-        <td><b>ID</b></td>
-        </tr>
-        <tr>
-        <td>Please Enter your Tracking ID</td>
-        <td><input size="48" type="text" value="<?php echo get_option('zeo_analytics_id'); ?>" name="zeo_analytics_id"  /></td>
-        </tr>
-        
-        
-        </table>
-            <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
-        </form> 
-
-
-<br />
-
-<h1>Google Authorship Settings</h1>
-<form method="POST" action="">  
-        <input type="hidden" name="update_authorshipoptions" value="true" />
-<table cellpadding="2">
-        <tr style="background-color:#CCC;"><td width="230"><b>Function</b></td><td width="300"><b>Setup</b></td></tr>
-		
-
-<?php
-global $current_user;
-	get_currentuserinfo();
-    ?>
-    
-
-
-		<tr>
-			<th align="left" style="font-weight:normal"><label for="mpgpauthor">Google Plus Profile URL (Required)</label></th>
-
-			<td>
-				<input type="text" name="zeoauthor" id="mpgpauthor" value="<?php echo esc_attr( get_the_author_meta( 'zeoauthor', $current_user->ID ) ); ?>" class="regular-text" />
-                <!--<br />
-				<span class="description">Please enter your Google Plus Profile URL. (with "https://plus.google.com/1234567890987654321")</span>
-                -->
-			</td>
-		</tr>
-		<tr>
-
-			<th align="left" style="font-weight:normal"><label for="preferredname">Preferred Name</label></th>
-			<td>
-				<input type="text" name="zeopreferredname" id="preferredname" value="<?php echo esc_attr( get_the_author_meta( 'zeopreferredname', $current_user->ID ) ); ?>" class="regular-text" />
+                </div>
+                 <div class="postbox" id="support">
+                <table cellpadding="6">
+                <h3>General Settings</h3>
+                <tr>
+        		<td width="212"><h3>Functions</h3></td>
+        		<td width="312"><h3>Setup</h3></td>
+        		</tr>
+                <tr><td>
+				Activate Other Page Title settings: 
+				</td><td>
+            	<input type="checkbox" name="zeo_activate_title" value="yes" <?php if(zeo_ischecked('zeo_activate_title', 'yes' )){echo "checked";}?>>  </input>
+            	</td></tr>
+                <tr><td>
+				Canonical Link: 
+				</td><td>
+            	<input type="checkbox" name="zeo_canonical_url" value="yes" <?php if(zeo_ischecked('zeo_canonical_url', 'yes' )){echo "checked";}?>>  </input>
+            	</td></tr>
                 <!--
-                <br />
-				<span class="description">Enter Your Preferred Name</span>
+                <tr><td>
+				rel = NoFollow for Outbound Links: 
+				</td><td>
+            	<input type="checkbox" name="zeo_nofollow" value="yes" <?php if(zeo_ischecked('zeo_nofollow', 'yes' )){echo "checked";}?>>  </input>
+            	</td></tr>              
                 -->
-			</td>
-		</tr>
+                </table>
+            	</div>
+                
+            <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
+        </form>        
+     
+       </div></div></div>
 
-	</table>
-     <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
-</form>
-
-</div>
