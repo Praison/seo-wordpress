@@ -32,7 +32,7 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="http://mervin.info/">Mervin</a> Praison
+<a href="http://mervin.info/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
 
 == Installation ==
 
@@ -46,7 +46,7 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="http://mervin.info/">Mervin</a> Praison
+<a href="http://mervin.info/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
 
 
 == ChangeLog ==
@@ -54,10 +54,16 @@ Customize according to your Need.
 
 * First release.
 
+= Version 2.0 =
+
+* Proper Admin Panel
+* No Follow No Index Settings added
+* Canonical Meta Tag added
+
 == Frequently Asked Questions ==
 
 = How to Setup? =
-Check this <a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/">Mervin</a> Praison
+Check this <a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -102,4 +108,4 @@ Created the Perfect Wordpress SEO Bundle
 
 = Wordpress SEO Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/">Mervin</a> Praison
+<a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
