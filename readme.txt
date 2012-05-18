@@ -5,6 +5,7 @@ Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordp
 Requires at least: 3.0
 Tested up to: 3.3
 Stable tag: trunk
+License: GPLv2 or later
 
 SEO Wordpress Plugin by Mervin Praison is a Powerfull Plugin which has many SEO Features. Google Authorship and Google Analytics Integration. 
 
@@ -23,6 +24,14 @@ Customize according to your Need.
 * Google Authorship Integration
 * Canonical URL
 * No Follow, No Index Settings
+* XML Sitemap
+* Breadcrumbs
+* Google Webmaster Tools Verification 
+* Bing Webmaster Tool Verification
+* Alexa Verification
+* Category No Follow Option
+* Tag No Follow Option
+* Dated Page No Follow Options
 * Beginners - Just install, it works fine
 * Advanced Users can tweak according to their needs.
 * Very Easy to implement.
@@ -60,6 +69,17 @@ Customize according to your Need.
 * No Follow No Index Settings added
 * Canonical Meta Tag added
 
+= Version 3.0 =
+
+* XML Sitemap
+* Breadcrumbs
+* Google Webmaster Tools Verification 
+* Bing Webmaster Tool Verification
+* Alexa Verification
+* Category No Follow Option
+* Tag No Follow Option
+* Dated Page No Follow Options
+
 == Frequently Asked Questions ==
 
 = How to Setup? =
@@ -80,6 +100,17 @@ Created the Perfect Wordpress SEO Bundle
 * No Follow No Index Settings added
 * Canonical Meta Tag added
 
+= 3.0 =
+
+* XML Sitemap
+* Breadcrumbs
+* Google Webmaster Tools Verification 
+* Bing Webmaster Tool Verification
+* Alexa Verification
+* Category No Follow Option
+* Tag No Follow Option
+* Dated Page No Follow Options
+
 == Version history ==
 
 = Version 1.0 =
@@ -87,9 +118,21 @@ Created the Perfect Wordpress SEO Bundle
 * Initial release version.
 
 = Version 2.0 =
+
 * Proper Admin Panel
 * No Follow No Index Settings added
 * Canonical Meta Tag added
+
+= Version 3.0 =
+
+* XML Sitemap
+* Breadcrumbs
+* Google Webmaster Tools Verification 
+* Bing Webmaster Tool Verification
+* Alexa Verification
+* Category No Follow Option
+* Tag No Follow Option
+* Dated Page No Follow Options
 
 == Changelog ==
 = 1.0 =
@@ -105,6 +148,17 @@ Created the Perfect Wordpress SEO Bundle
 * Proper Admin Panel
 * No Follow No Index Settings added
 * Canonical Meta Tag added
+
+= 3.0 =
+
+* XML Sitemap
+* Breadcrumbs
+* Google Webmaster Tools Verification 
+* Bing Webmaster Tool Verification
+* Alexa Verification
+* Category No Follow Option
+* Tag No Follow Option
+* Dated Page No Follow Options
 
 = Wordpress SEO Plugin Documentation =
 

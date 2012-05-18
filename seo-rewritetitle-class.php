@@ -42,6 +42,10 @@ class zeo_rewrite_title {
         $title = get_the_time('Y'); $title .= " ";
 		$title .= get_option('zeo_common_archive_title');
       }
+	  else if (is_tag()) {
+      $title = trim(wp_title(false, false)); $title .= " ";
+	  $title .= get_option('zeo_common_tag_title');
+    }
     } else if (is_search()) {
       $title = trim($_REQUEST[s]); $title .= " ";
 	  $title .= get_option('zeo_common_search_title');
@@ -67,9 +71,6 @@ class zeo_rewrite_title {
 	  $title = $individual_title;
 	  $title .= " ";
 	  $title .= get_option('zeo_common_page_title');
-    }else if (is_tag()) {
-      $title = trim(wp_title(false, false)); $title .= " ";
-	  $title .= get_option('zeo_common_tag_title');
     }
     
     if ($title) {
