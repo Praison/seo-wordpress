@@ -78,10 +78,12 @@ class ZEO_Sitemaps {
 	 * Initialize sitemaps. Add sitemap rewrite rules and query var
 	 */
 	function init() {
+		global $wp_rewrite;
 		$GLOBALS['wp']->add_query_var( 'sitemap' );
 		$GLOBALS['wp']->add_query_var( 'sitemap_n' );
 		add_rewrite_rule( 'sitemap_index\.xml$', 'index.php?sitemap=1', 'top' );
 		add_rewrite_rule( '([^/]+?)-sitemap([0-9]+)?\.xml$', 'index.php?sitemap=$matches[1]&sitemap_n=$matches[2]', 'top' );
+		$wp_rewrite->flush_rules();
 	}
 
 	/**
