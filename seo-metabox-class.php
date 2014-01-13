@@ -362,9 +362,9 @@ public function zeo_head(){
 			if(get_option('zeo_blog_keywords')!=NULL)echo " <meta name='keywords' content='".get_option('zeo_blog_keywords')."'/>";
 			$i=2;
 		}
-		elseif($checkvalue!=NULL){
-			if($uid=='zeo_description' && get_option('zeo_home_description')==NULL )echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/> ";
-			if($uid=='zeo_keywords' && get_option('zeo_home_keywords')==NULL)echo " <meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
+		elseif($checkvalue!=NULL && $i==1){
+			if($uid=='zeo_description')echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
+			if($uid=='zeo_keywords')echo " <meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
 			if($uid=='zeo_index' && !is_front_page())echo " <meta name='robots' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
 			
 		}
