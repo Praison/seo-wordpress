@@ -3,7 +3,7 @@ Contributors: mervinpraison
 Donate Link: http://mervin.info
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.8
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -42,6 +42,7 @@ Customize according to your Need.
 = SEO Wordpress Plugin Documentation =
 
 <a href="http://mervin.info/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
+<a href="http://seomanager.org.uk/">SEO Manager</a>
 
 == Installation ==
 
@@ -56,6 +57,7 @@ Customize according to your Need.
 = SEO Wordpress Plugin Documentation =
 
 <a href="http://mervin.info/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
+<a href="http://seomanager.org.uk/">SEO Manager</a>
 
 
 == ChangeLog ==
@@ -80,10 +82,20 @@ Customize according to your Need.
 * Tag No Follow Option
 * Dated Page No Follow Options
 
+= Version 3.0.1 =
+
+* Front Page and Blog page Bug fix
+
+= Version 3.0.2 =
+
+* Bug Fix
+
+
 == Frequently Asked Questions ==
 
 = How to Setup? =
 Check this <a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
+<a href="http://seomanager.org.uk/">SEO Manager</a>
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -111,6 +123,14 @@ Created the Perfect Wordpress SEO Bundle
 * Tag No Follow Option
 * Dated Page No Follow Options
 
+= 3.0.1 =
+
+* Front Page and Blog page Bug fix
+
+= 3.0.2 =
+
+* Bug Fix
+
 == Version history ==
 
 = Version 1.0 =
@@ -133,6 +153,14 @@ Created the Perfect Wordpress SEO Bundle
 * Category No Follow Option
 * Tag No Follow Option
 * Dated Page No Follow Options
+
+= Version 3.0.1 =
+
+* Front Page and Blog page Bug fix
+
+= Version 3.0.2 =
+
+* Bug Fix
 
 == Changelog ==
 = 1.0 =
@@ -160,6 +188,15 @@ Created the Perfect Wordpress SEO Bundle
 * Tag No Follow Option
 * Dated Page No Follow Options
 
+= 3.0.1 =
+
+* Front Page and Blog page Bug fix
+
+= 3.0.2 =
+
+* Bug Fix
+
 = Wordpress SEO Plugin Documentation =
 
 <a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
+<a href="http://seomanager.org.uk/">SEO Manager</a>
