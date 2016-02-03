@@ -1,6 +1,6 @@
 === SEO Wordpress ===
 Contributors: mervinpraison
-Donate Link: http://mervin.info
+Donate Link: https://mer.vin
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
 Tested up to: 3.8
@@ -41,8 +41,8 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
-<a href="http://seomanager.org.uk/">SEO Manager</a>
+<a href="https://mer.vin/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://seomanageruk.com/">SEO Manager</a>
 
 == Installation ==
 
@@ -56,8 +56,8 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="http://mervin.info/" >Mervin</a> Praison
-<a href="http://seomanager.org.uk/">SEO Manager</a>
+<a href="https://mer.vin/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://seomanageruk.com/">SEO Manager</a>
 
 
 == ChangeLog ==
@@ -94,8 +94,8 @@ Customize according to your Need.
 == Frequently Asked Questions ==
 
 = How to Setup? =
-Check this <a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
-<a href="http://seomanager.org.uk/">SEO Manager</a>
+Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://seomanageruk.com/">SEO Manager</a>
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -198,5 +198,5 @@ Created the Perfect Wordpress SEO Bundle
 
 = Wordpress SEO Plugin Documentation =
 
-<a href="http://mervin.info/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="http://mervin.info/" >Mervin</a> Praison
-<a href="http://seomanager.org.uk/">SEO Manager</a>
+<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://seomanageruk.com/">SEO Manager</a>
