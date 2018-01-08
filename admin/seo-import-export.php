@@ -6,7 +6,11 @@
 
 		// update options
 		if ($_POST['action'] && $_POST['action'] == 'aioseop-migrate') {
+
+			/*NONCE Verification*/
+
 		$nonce = $_POST['aioseop-migrate-nonce'];
+
 			if (!wp_verify_nonce($nonce, 'aioseop-migrate-nonce')) die ( 'Security Check - If you receive this in error, log out and back in to WordPress');
 
 $aioseop_options = get_option('aioseop_options');
@@ -53,6 +57,7 @@ echo "<div class='updated fade' style='background-color:green;border-color:green
 <input type="hidden" name="aioseop-migrate-nonce" value="<?php echo wp_create_nonce('aioseop-migrate-nonce'); ?>" />
 <input type="submit" name="Submit" value="<?php _e('Migrate from All in One SEO', 'platinum_seo_pack')?> &raquo;" />
 </p>
+
 </form>
 
 

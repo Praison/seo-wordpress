@@ -9,14 +9,31 @@ function move_me_around_scripts() {
 <div class="wrap">
 <h1>XML Sitemap Settings</h1>
 
-<?php if ( $_POST['update_sitemapoptions'] == 'true' ) { sitemapoptions_update(); }  
+<?php if ( $_POST['update_sitemapoptions'] == 'true' ) {  
+
+	/*NONCE Verification*/ 
+	
+	if ( ! isset( $_POST['seo_xml_sitemap_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_xml_sitemap_nonce_field'], 'seo_xml_sitemap' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		sitemapoptions_update(); 
+	}
+}  
 
 function sitemapoptions_update(){
+
+	// Only allowed user can edit
+
 	global $current_user;
-	$mervin_sitemap = array();
+	
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
 	
+	$mervin_sitemap = array();
+
 	$post_types=get_post_types('','names');
 	if ( !in_array( $post_type, array('revision','nav_menu_item','attachment') ) ) {
 	foreach ($post_types as $post_type ) {					
@@ -31,7 +48,7 @@ function sitemapoptions_update(){
 									$tax = get_taxonomy($taxonomy);
 										if ( isset( $tax->labels->name ) && trim($tax->labels->name) != '' ){
 											
-											if(isset($_POST['taxonomies-'.$taxonomy.'-not_in_sitemap'])){
+											if(isset($_POST['taxonomies-'.$taxonomy.'-not_in_sitemap'])) {
 											
 												$mervin_sitemap['taxonomies-'.$taxonomy.'-not_in_sitemap'] = 'yes';
 												
@@ -181,7 +198,7 @@ $options = get_mervin_options();
    			 </div>
     </div>
      <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     
+     <?php wp_nonce_field( 'seo_xml_sitemap', 'seo_xml_sitemap_nonce_field' ); ?>
 </form>
 
 

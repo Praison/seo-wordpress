@@ -9,21 +9,38 @@ function move_me_around_scripts() {
 <div class="wrap">
 <h1>RSS Settings</h1>
 
-<?php if ( $_POST['update_rss'] == 'true' ) { rss_update(); }  
+<?php if ( $_POST['update_rss'] == 'true' ) { 
+
+	/*NONCE Verification*/ 
+	
+	if ( ! isset( $_POST['seo_rss_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_rss_nonce_field'], 'seo_rss' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		rss_update(); 
+	}
+}  
 
 function rss_update(){
+
+	// Only allowed user can edit
+
 	global $current_user;
-	$mervin_rss = array();
+	
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
 	
-	
+	$mervin_rss = array();
+
+	// Validate and Sanitise POST Values
 	
 	if(isset($_POST['rss-header-content'])){
-		$mervin_rss['rss-header-content']=stripslashes($_POST['rss-header-content']);
+		$mervin_rss['rss-header-content']=stripslashes(sanitize_textarea_field($_POST['rss-header-content']));
 	}
 	if(isset($_POST['rss-footer-content'])){
-		$mervin_rss['rss-footer-content']=stripslashes($_POST['rss-footer-content']);
+		$mervin_rss['rss-footer-content']=stripslashes(sanitize_textarea_field($_POST['rss-footer-content']));
 	}
 	
 	
@@ -59,14 +76,14 @@ $options = get_mervin_options();
 			<th align="right" style="font-weight:normal"><label for="rsshead">Content Before Each Post</label></th>
 
 			<td>
-				<textarea cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php echo $options['rss-header-content']?></textarea>  
+				<textarea cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php echo esc_html($options['rss-header-content'])?></textarea>  
 			</td>
 		</tr>
        <tr>
 			<th align="right" style="font-weight:normal"><label for="rssfoot">Content After each Post</label></th>
 
 			<td>
-				<textarea cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php echo $options['rss-footer-content']?></textarea>             
+				<textarea cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php echo esc_html($options['rss-footer-content'])?></textarea>             
 			</td>
 		</tr>
 <tr>
@@ -80,7 +97,7 @@ Note: HTML Allowed
     
    
      <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     
+     <?php wp_nonce_field( 'seo_rss', 'seo_rss_nonce_field' ); ?>
 </form>
 
 

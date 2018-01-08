@@ -9,20 +9,39 @@ function move_me_around_scripts() {
 <div class="wrap">
 <h1>Breadcrumbs Settings</h1>
 
-<?php if ( $_POST['update_sitemapoptions'] == 'true' ) { sitemapoptions_update(); }  
+<?php if ( $_POST['update_sitemapoptions'] == 'true' ) {   
+	
+	/*NONCE Verification*/
+	
+	if ( ! isset( $_POST['seo_breadcrumbs_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_breadcrumbs_nonce_field'], 'seo_breadcrumbs' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		sitemapoptions_update(); 
+	}
+}  
 
 function sitemapoptions_update(){
+
+	// Only allowed user can edit
+
 	global $current_user;
-	$mervin_breadcrumbs = array();
+
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
-	
+
+	$mervin_breadcrumbs = array();
 				
 	
 	$listtoupdate = array('breadcrumbs-enable', 'breadcrumbs-boldlast', 'trytheme', 'breadcrumbs-sep', 'breadcrumbs-home', 'breadcrumbs-selectedmenu', 'breadcrumbs-blog-remove', 'breadcrumbs-menus', 'breadcrumbs-archiveprefix', 'breadcrumbs-searchprefix', 'breadcrumbs-404crumb', 'breadcrumbs-prefix' );
+	
+	//  Validate and Sanitise POST Values
+
 	foreach ($listtoupdate as $list){
 	if(isset($_POST[$list])){
-		$mervin_breadcrumbs[$list]=stripslashes($_POST[$list]);
+		$mervin_breadcrumbs[$list]=stripslashes(sanitize_text_field($_POST[$list]));
 	}
 	}
 	
@@ -70,7 +89,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-sep" id="breadcrumbsep" class="regular-text" <?php if(isset($options['breadcrumbs-sep'])){ ?>
-                value="<?php echo $options['breadcrumbs-sep']?>"
+                value="<?php echo esc_html($options['breadcrumbs-sep'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -80,7 +99,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-home" id="breadcrumbhome" class="regular-text" <?php if(isset($options['breadcrumbs-home'])){ ?>
-                value="<?php echo $options['breadcrumbs-home']?>"
+                value="<?php echo esc_html($options['breadcrumbs-home'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -90,7 +109,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-prefix" id="breadcrumbprefix" class="regular-text" <?php if(isset($options['breadcrumbs-prefix'])){ ?>
-                value="<?php echo $options['breadcrumbs-prefix']?>"
+                value="<?php echo esc_html($options['breadcrumbs-prefix'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -100,7 +119,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-archiveprefix" id="breadcrumbarchiveprefix" class="regular-text" <?php if(isset($options['breadcrumbs-archiveprefix'])){ ?>
-                value="<?php echo $options['breadcrumbs-archiveprefix']?>"
+                value="<?php echo esc_html($options['breadcrumbs-archiveprefix'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -110,7 +129,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-searchprefix" id="breadcrumbsearchprefix" class="regular-text" <?php if(isset($options['breadcrumbs-searchprefix'])){ ?>
-                value="<?php echo $options['breadcrumbs-searchprefix']?>"
+                value="<?php echo esc_html($options['breadcrumbs-searchprefix'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -120,7 +139,7 @@ $options = get_mervin_options();
 
 			<td>
 				<input size="54" type="text" name="breadcrumbs-404crumb" id="breadcrumb404prefix" class="regular-text" <?php if(isset($options['breadcrumbs-404crumb'])){ ?>
-                value="<?php echo $options['breadcrumbs-404crumb']?>"
+                value="<?php echo esc_html($options['breadcrumbs-404crumb'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -268,7 +287,7 @@ $options = get_mervin_options();
 } ?&gt;</pre>		
     </div>
      <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     
+     <?php wp_nonce_field( 'seo_breadcrumbs', 'seo_breadcrumbs_nonce_field' ); ?>
 </form>
 
 
