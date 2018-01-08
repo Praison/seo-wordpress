@@ -9,15 +9,31 @@ function move_me_around_scripts() {
 <div class="wrap">
 <h1>Advanced Settings</h1>
 
-<?php if ( $_POST['update_rss'] == 'true' ) { rss_update(); }  
+<?php if ( $_POST['update_rss'] == 'true' ) { 
+
+	/*NONCE Verification*/
+
+	if ( ! isset( $_POST['seo_advanced_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_advanced_nonce_field'], 'seo_advanced' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		rss_update(); 
+	}
+
+}  
 
 function rss_update(){
 	global $current_user;
 	$mervin_rss = array();
+
+	// Only allowed user can edit
+
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
 	
-	
+	// Validating and Santising POST Values
 	
 	if(isset($_POST['advanced-categorybase'])){
 		$mervin_advanced['advanced-categorybase']='yes';
@@ -82,16 +98,11 @@ $options = get_mervin_options();
 
 	</table>
     </div>    
-    </div>
-    
-   
+    </div>    
+   		
      <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     
+     <?php wp_nonce_field( 'seo_advanced', 'seo_advanced_nonce_field' ); ?>
 </form>
-
-
-
-
 
 
 </div> 

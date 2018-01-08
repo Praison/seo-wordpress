@@ -3,7 +3,7 @@ Contributors: mervinpraison
 Donate Link: https://mer.vin
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
-Tested up to: 3.8
+Tested up to: 4.9.1
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -90,6 +90,12 @@ Customize according to your Need.
 
 * Bug Fix
 
+= Version 4.0.0 =
+
+* Nonce Added to forms
+* Sanitisation
+* Validation
+* Restrict Users
 
 == Frequently Asked Questions ==
 
@@ -131,6 +137,13 @@ Created the Perfect Wordpress SEO Bundle
 
 * Bug Fix
 
+= Version 4.0.0 =
+
+* Nonce Added to forms
+* Sanitisation
+* Validation
+* Restrict Users
+
 == Version history ==
 
 = Version 1.0 =
@@ -161,6 +174,13 @@ Created the Perfect Wordpress SEO Bundle
 = Version 3.0.2 =
 
 * Bug Fix
+
+= Version 4.0.0 =
+
+* Nonce Added to forms
+* Sanitisation
+* Validation
+* Restrict Users
 
 == Changelog ==
 = 1.0 =
@@ -195,6 +215,13 @@ Created the Perfect Wordpress SEO Bundle
 = 3.0.2 =
 
 * Bug Fix
+
+= 4.0.0 =
+
+* Nonce Added to forms
+* Sanitisation
+* Validation
+* Restrict Users
 
 = Wordpress SEO Plugin Documentation =
 

@@ -23,15 +23,39 @@ function zeo_ischecked($chkname,$value)
 
 
 ?>
-<?php if ( $_POST['update_authorshipoptions'] == 'true' ) { authorshipoptions_update(); }  
+<?php if ( $_POST['update_authorshipoptions'] == 'true' ) {  
+	
+	/*NONCE Verification*/
+	
+	if ( ! isset( $_POST['seo_authorship_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_authorship_nonce_field'], 'seo_authorship' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		authorshipoptions_update(); 
+	}
+
+}  
 
 function authorshipoptions_update(){
+	
+	// Only allowed user can edit
+
 	global $current_user;
+
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
 
-	update_usermeta( $current_user->ID, 'zeoauthor', $_POST['zeoauthor'] );
-	update_usermeta( $current_user->ID, 'zeopreferredname', $_POST['zeopreferredname'] );
+	// Validate POST Values
+
+	if(!$_POST['zeoauthor'] ) {$_POST['zeoauthor'] = '';}
+	if(!$_POST['zeopreferredname'] ) {$_POST['zeopreferredname'] = '';}
+
+	// Sanitise POST values
+
+	update_usermeta( $current_user->ID, 'zeoauthor', sanitize_text_field($_POST['zeoauthor'] ));
+	update_usermeta( $current_user->ID, 'zeopreferredname', sanitize_text_field($_POST['zeopreferredname'] ));
 	
 	echo '<div class="updated">
 		<p>
@@ -41,29 +65,48 @@ function authorshipoptions_update(){
 	
 }
 ?>
-  <?php if ( $_POST['update_analyticsoptions'] == 'true' ) { analyticsoptions_update(); }  
+  <?php if ( $_POST['update_analyticsoptions'] == 'true' ) {   
+	
+	/*NONCE Verification*/
+	
+	if ( ! isset( $_POST['seo_analytics_nonce_field'] ) 
+	    || ! wp_verify_nonce( $_POST['seo_analytics_nonce_field'], 'seo_analytics' ) 
+	) {
+	   print 'Sorry, your nonce did not verify.';
+	   exit;
+	} else {
+		analyticsoptions_update(); 
+	}
+}  
 
 function analyticsoptions_update(){
 	
+	// Only allowed user can edit
+
 	global $current_user;
-	$mervin_breadcrumbs = array();
+
 	if ( !current_user_can( 'edit_user', $current_user->ID ) )
 		return false;
-		
+
+	$mervin_breadcrumbs = array();
+	
+	// Validating and Santising POST Values
+
 	if(isset($_POST['verification-google'])){
-		$mervin_verification['verification-google']=stripslashes($_POST['verification-google']);
+		$mervin_verification['verification-google']=stripslashes(sanitize_text_field($_POST['verification-google']));
 	}
 	if(isset($_POST['verification-bing'])){
-		$mervin_verification['verification-bing']=stripslashes($_POST['verification-bing']);
+		$mervin_verification['verification-bing']=stripslashes(sanitize_text_field($_POST['verification-bing']));
 	}
 	if(isset($_POST['verification-alexa'])){
-		$mervin_verification['verification-alexa']=stripslashes($_POST['verification-alexa']);
+		$mervin_verification['verification-alexa']=stripslashes(sanitize_text_field($_POST['verification-alexa']));
 	}
 	
+	if(!$_POST['zeo_analytics_id'] ) {$_POST['zeo_analytics_id'] = '';}
 	
 	update_option('mervin_verification', $mervin_verification);
 	
-	update_option('zeo_analytics_id', $_POST['zeo_analytics_id']); 
+	update_option('zeo_analytics_id', sanitize_text_field($_POST['zeo_analytics_id'])); 
 	
 	echo '<div class="updated">
 		<p>
@@ -122,6 +165,7 @@ global $current_user;
 	</table>
     </div>
      <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
+<?php wp_nonce_field( 'seo_authorship', 'seo_authorship_nonce_field' ); ?>
 </form>
 <br />
 
@@ -133,7 +177,7 @@ global $current_user;
         
         <tr>
         <td>Please Enter your Analytics Tracking ID</td>
-        <td><input size="51" type="text" value="<?php echo get_option('zeo_analytics_id'); ?>" name="zeo_analytics_id"  /></td>
+        <td><input size="51" type="text" value="<?php echo esc_attr(get_option('zeo_analytics_id')); ?>" name="zeo_analytics_id"  /></td>
         </tr>
         
         
@@ -150,7 +194,7 @@ global $current_user;
 
 			<td>
 				<input size="54" type="text" name="verification-google" id="mervingoogle" class="regular-text" <?php if(isset($options['verification-google'])){ ?>
-                value="<?php echo $options['verification-google']?>"
+                value="<?php echo esc_html($options['verification-google'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -159,7 +203,7 @@ global $current_user;
 
 			<td>
 				<input size="54" type="text" name="verification-bing" id="mervinbing" class="regular-text" <?php if(isset($options['verification-bing'])){ ?>
-                value="<?php echo $options['verification-bing']?>"
+                value="<?php echo esc_html($options['verification-bing'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -168,7 +212,7 @@ global $current_user;
 
 			<td>
 				<input size="54" type="text" name="verification-alexa" id="mervinalexa" class="regular-text" <?php if(isset($options['verification-alexa'])){ ?>
-                value="<?php echo $options['verification-alexa']?>"
+                value="<?php echo esc_html($options['verification-alexa'])?>"
 				<?php 	}?> />                
 			</td>
 		</tr>
@@ -178,6 +222,7 @@ global $current_user;
     
     
     <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
+        <?php wp_nonce_field( 'seo_analytics', 'seo_analytics_nonce_field' ); ?>
         </form> 
 
 
