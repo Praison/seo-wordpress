@@ -147,14 +147,7 @@
 							</tbody>
 						</table>
 					</xsl:if>
-				</div>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-				<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.29.2/js/jquery.tablesorter.min.js"></script>
-				<script	type="text/javascript"><![CDATA[
-					$(document).ready(function() { 
-				        $("#sitemap").tablesorter( { widgets: ['zebra'] } ); 
-					});
-				]]></script>						
+				</div>					
 			</body>
 		</html>
 	</xsl:template>

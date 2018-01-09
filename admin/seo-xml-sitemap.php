@@ -82,7 +82,7 @@ function sitemapoptions_update(){
 function analyticsoptions_update(){
 	
 	
-	update_option('zeo_analytics_id', $_POST['zeo_analytics_id']); 
+	update_option('zeo_analytics_id', sanitize_text_field($_POST['zeo_analytics_id'])); 
 	
 	echo '<div class="updated">
 		<p>
