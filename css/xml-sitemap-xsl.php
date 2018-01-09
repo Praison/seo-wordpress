@@ -152,7 +152,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 						</table>
 					</xsl:if>
 				</div>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+				<script type="text/javascript" src="<?php echo get_bloginfo( 'wpurl' ).'/wp-includes/js/jquery/jquery.js?ver=1.7.1'; ?>"></script>
 				<script type="text/javascript" src="<?php echo '//'.$_SERVER['HTTP_HOST'].str_replace('xml-sitemap-xsl.php','',$_SERVER['REQUEST_URI']); ?>jquery.tablesorter.min.js"></script>
 				<script	type="text/javascript"><![CDATA[
 					$(document).ready(function() { 

@@ -82,7 +82,7 @@ class ZEO_Taxonomy {
 
 		foreach (array('title', 'desc', 'metakey', 'bctitle', 'canonical', 'sitemap_include') as $key) {
 			if ( isset($_POST['zeo_'.$key]) )
-				$tax_meta[$taxonomy][$term_id]['zeo_'.$key] 	= $_POST['zeo_'.$key];
+				$tax_meta[$taxonomy][$term_id]['zeo_'.$key] 	= sanitize_text_field($_POST['zeo_'.$key]);
 		}
 
 		foreach (array('noindex', 'nofollow') as $key) {
