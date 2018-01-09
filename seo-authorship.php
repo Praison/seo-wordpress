@@ -19,22 +19,6 @@
 */
 
 
-if ( function_exists('add_action') ) {
-    //WordPress definitions
-    if ( !defined('WP_CONTENT_URL') )
-        define('WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
-    if ( !defined('WP_CONTENT_DIR') )
-        define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
-    if ( !defined('WP_PLUGIN_URL') )
-        define('WP_PLUGIN_URL', WP_CONTENT_URL.'/plugins');
-    if ( !defined('WP_PLUGIN_DIR') )
-        define('WP_PLUGIN_DIR', WP_CONTENT_DIR.'/plugins');
-    if ( !defined('PLUGINDIR') )
-        define( 'PLUGINDIR', 'wp-content/plugins' ); // Relative to ABSPATH.  For back compat.
-		
-}
-
-
 /* Initializing */
 
 include( WP_PLUGIN_DIR . '/seo-wordpress/seo-authorship-badge.php');
