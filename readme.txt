@@ -101,6 +101,10 @@ Customize according to your Need.
 
 * Dashboard Design Update Phase 1
 
+= Version 4.0.1 =
+
+* Dashboard Design Update Phase 1 fix
+
 == Frequently Asked Questions ==
 
 = How to Setup? =
@@ -141,16 +145,20 @@ Created the Perfect Wordpress SEO Bundle
 
 * Bug Fix
 
-= Version 4.0.0 =
+= 4.0.0 =
 
 * Nonce Added to forms
 * Sanitisation
 * Validation
 * Restrict Users
 
-= Version 4.0.1 =
+= 4.0.1 =
 
 * Dashboard Design Update Phase 1
+
+= 4.0.2 =
+
+* Dashboard Design Update Phase 1 fix
 
 == Version history ==
 
@@ -193,6 +201,10 @@ Created the Perfect Wordpress SEO Bundle
 = Version 4.0.1 =
 
 * Dashboard Design Update Phase 1
+
+= Version 4.0.2 =
+
+* Dashboard Design Update Phase 1 fix
 
 == Changelog ==
 = 1.0 =
@@ -238,6 +250,10 @@ Created the Perfect Wordpress SEO Bundle
 = 4.0.1 =
 
 * Dashboard Design Update Phase 1
+
+= 4.0.2 =
+
+* Dashboard Design Update Phase 1 fix
 
 = Wordpress SEO Plugin Documentation =
 
