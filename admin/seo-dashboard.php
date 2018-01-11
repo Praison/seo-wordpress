@@ -1,5 +1,5 @@
 <div class="wrap">
-<h1>Wordpress SEO Plugin Settings</h1>
+<h3>Wordpress SEO Plugin Settings</h3>
 <?php 
 
 function zeo_ischecked($chkname,$value)
@@ -95,9 +95,9 @@ function zeooptions_update(){
 				<div class="metabox-holder">	
 					<div class="meta-box-sortables ui-sortable">
                     <div class="postbox" id="support">
-<strong><h3>Want more FREE Plugins? Encourage me by,
-LIKING ME and ADDING ME to your circles</h3></strong>
-<table>
+<div class="container p-3"><strong>Want more FREE Plugins? Encourage me by,
+LIKING ME and ADDING ME to your circles</strong></div>
+<table class="table">
 <tr>
 <td>
 <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FMervinPraison&amp;width=200&amp;height=62&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=true&amp;appId=252850214734670" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:62px;" allowTransparency="true"></iframe>
