@@ -97,6 +97,10 @@ Customize according to your Need.
 * Validation
 * Restrict Users
 
+= Version 4.0.1 =
+
+* Dashboard Design Update Phase 1
+
 == Frequently Asked Questions ==
 
 = How to Setup? =
@@ -144,6 +148,10 @@ Created the Perfect Wordpress SEO Bundle
 * Validation
 * Restrict Users
 
+= Version 4.0.1 =
+
+* Dashboard Design Update Phase 1
+
 == Version history ==
 
 = Version 1.0 =
@@ -181,6 +189,10 @@ Created the Perfect Wordpress SEO Bundle
 * Sanitisation
 * Validation
 * Restrict Users
+
+= Version 4.0.1 =
+
+* Dashboard Design Update Phase 1
 
 == Changelog ==
 = 1.0 =
@@ -222,6 +234,10 @@ Created the Perfect Wordpress SEO Bundle
 * Sanitisation
 * Validation
 * Restrict Users
+
+= 4.0.1 =
+
+* Dashboard Design Update Phase 1
 
 = Wordpress SEO Plugin Documentation =
 
