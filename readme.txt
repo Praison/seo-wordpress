@@ -101,9 +101,13 @@ Customize according to your Need.
 
 * Dashboard Design Update Phase 1
 
-= Version 4.0.1 =
+= Version 4.0.2 =
 
 * Dashboard Design Update Phase 1 fix
+
+= Version 4.0.3 =
+
+* Responsive Mobile Optimised Dashboard
 
 == Frequently Asked Questions ==
 
@@ -160,6 +164,10 @@ Created the Perfect Wordpress SEO Bundle
 
 * Dashboard Design Update Phase 1 fix
 
+= 4.0.3 =
+
+* Responsive Mobile Optimised Dashboard
+
 == Version history ==
 
 = Version 1.0 =
@@ -205,6 +213,10 @@ Created the Perfect Wordpress SEO Bundle
 = Version 4.0.2 =
 
 * Dashboard Design Update Phase 1 fix
+
+= Version 4.0.3 =
+
+* Responsive Mobile Optimised Dashboard
 
 == Changelog ==
 = 1.0 =
@@ -254,6 +266,10 @@ Created the Perfect Wordpress SEO Bundle
 = 4.0.2 =
 
 * Dashboard Design Update Phase 1 fix
+
+= 4.0.3 =
+
+* Responsive Mobile Optimised Dashboard
 
 = Wordpress SEO Plugin Documentation =
 

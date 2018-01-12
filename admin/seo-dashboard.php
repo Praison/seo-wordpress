@@ -1,5 +1,7 @@
-<div class="wrap">
-<h3>Wordpress SEO Plugin Settings</h3>
+<div >
+<div class="container mt-3">
+    <h1 >Wordpress SEO Plugin Settings</h1>
+</div>
 <?php 
 
 function zeo_ischecked($chkname,$value)
@@ -91,165 +93,145 @@ function zeooptions_update(){
 }
 
 ?>
-<div class="postbox-container" style="width:70%;">
+<div class="container" >
+
+
 				<div class="metabox-holder">	
 					<div class="meta-box-sortables ui-sortable">
-                    <div class="postbox" id="support">
-<div class="container p-3"><strong>Want more FREE Plugins? Encourage me by,
-LIKING ME and ADDING ME to your circles</strong></div>
-<table class="table">
-<tr>
-<td>
-<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FMervinPraison&amp;width=200&amp;height=62&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=true&amp;appId=252850214734670" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:62px;" allowTransparency="true"></iframe>
-</td>
-<td style="padding-top:10px;" >
-<div class="g-plus" data-href="https://plus.google.com/101518602031253199279?rel=publisher" data-width="170" data-height="70" data-theme="light"></div>
-</td>
-<td style="padding-top:10px;" >
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a name="fb_share" type="icon_link" 
-   share_url="http://mervin.info/seo-wordpress" style="font-weight:bold; font-size:15px;">Share me Please</a> 
-<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" 
-        type="text/javascript">
-</script>
-</td>
-<td>
-&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://mervin.info/seo-wordpress" data-size="large">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-   </td>
-</tr>
-</table>
-</div>
+<div class="row">
 
 <!-- ESCAPING Values while displaying Data -->
+	<div class="col-md-8">
                     
-<form method="POST" action="">  
+		<form method="POST" action="">  
             <input type="hidden" name="update_zeooptions" value="true" />  
-            <div class="postbox" id="support">
-            <table cellpadding="6">
-	            <h3>Home Page Settings</h3>
-                
-                <tr><td width="210">
-				Home Page Title: 
-				</td><td>
-            	<input size="55" type="text" value="<?php echo esc_html(get_option('zeo_common_home_title')); ?>" name="zeo_common_home_title"  />  
-            	</td></tr>
-                <tr><td>
-				Home Page  Meta Description:
-				</td><td>
-            	<textarea size="50" rows="3" cols="52" name="zeo_home_description" ><?php echo esc_html(get_option('zeo_home_description')); ?></textarea>  
-            	</td></tr>
-                <tr><td>
-				Home Page  Meta Keywords:
-				</td><td>
-            	<input size="55" type="text" value="<?php echo esc_html(get_option('zeo_home_keywords')); ?>" name="zeo_home_keywords"  />  
-            	</td></tr>
-                <tr><td>
-				Blog Page  Meta Description (if exists):
-				</td><td>
-            	<textarea size="50" rows="3" cols="52" name="zeo_blog_description" ><?php echo esc_html(get_option('zeo_blog_description')); ?></textarea>  
-            	</td></tr>
-                <tr><td>
-				Blog Page  Meta Keywords (if exists):
-				</td><td>
-            	<input size="55" type="text" value="<?php echo esc_html(get_option('zeo_blog_keywords')); ?>" name="zeo_blog_keywords"  />  
-            	</td></tr></table>
-                
-                </div>
-                
-                <div class="postbox" id="support">
-                
-                
-                <table cellpadding="6">
-                <h3>Other Page Title Settings</h3>
-                <tr><td>
-				<h3>Titles</h3> </td><td><h3>Title Prefix</h3>
-				</td><td>
-            	<h3>Title Suffix</h3>
-            	</td></tr>
-                <tr><td>
-				Blog Page Title: </td><td> Blog Page Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_frontpage_title')); ?>" name="zeo_common_frontpage_title"  />  
-            	</td></tr>
-				<tr><td>
-				Page Title: </td><td> Individual Page Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_page_title')); ?>" name="zeo_common_page_title"  />  
-            	</td></tr>
-                <tr><td>
-				Post Title: </td><td> Individual Post Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_post_title')); ?>" name="zeo_common_post_title"  />  
-            	</td></tr>
-                <tr><td>
-				Category Title: </td><td> Individual Category Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_category_title')); ?>" name="zeo_common_category_title"  />  
-            	</td></tr>                
-                <tr><td>
-				Archive Title: </td><td> Individual Archive Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_archive_title')); ?>" name="zeo_common_archive_title"  />  
-            	</td></tr>
-                
-                <tr><td>
-				Tag Title: </td><td> Individual Tag Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_tag_title')); ?>" name="zeo_common_tag_title"  />  
-            	</td></tr>
-                <tr><td>
-				Search Title: </td><td> Individual Search Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_search_title')); ?>" name="zeo_common_search_title"  />  
-            	</td></tr>
-                <tr><td>
-				404 Page Title: </td><td> Individual 404 Page Title
-				</td><td>
-            	<input size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_error_title')); ?>" name="zeo_common_error_title"  />  
-            	</td></tr>
-                </table>
+                <div class="border border-secondary p-3 mb-4" id="support">
+            
+    	            <h2>Home Page Settings</h2>
+                    
+                    <div class="form-group">
+        				<label for="homePageTitle">Home Page Title:</label>
+        				
+                    	<input id="homePageTitle" class="form-control" size="55" type="text" value="<?php echo esc_html(get_option('zeo_common_home_title')); ?>" name="zeo_common_home_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="homePageMetaDescription">Home Page  Meta Description:</label>
+        				
+                    	<textarea id="homePageMetaDescription" class="form-control" size="50" rows="3" cols="52" name="zeo_home_description" ><?php echo esc_html(get_option('zeo_home_description')); ?></textarea>  
+                	</div>
+                    <div class="form-group">
+        				<label for="homePageMetaKeywords">Home Page  Meta Keywords:</label>
+        				
+                    	<input id="homePageMetaKeywords" class="form-control" size="55" type="text" value="<?php echo esc_html(get_option('zeo_home_keywords')); ?>" name="zeo_home_keywords"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="blogPageMetaDescription">Blog Page  Meta Description (if exists):</label>
+        				
+                    	<textarea id="blogPageMetaDescription" class="form-control" size="50" rows="3" cols="52" name="zeo_blog_description" ><?php echo esc_html(get_option('zeo_blog_description')); ?></textarea>  
+                	</div>
+                    <div class="form-group">
+        				<label for="blogPageMetaKeywords">Blog Page  Meta Keywords (if exists):</label>
+        				
+                    	<input id="blogPageMetaKeywords" class="form-control" size="55" type="text" value="<?php echo esc_html(get_option('zeo_blog_keywords')); ?>" name="zeo_blog_keywords"  />  
+            	    </div>
                 
                 </div>
-                 <div class="postbox" id="support">
-                <table cellpadding="6">
-                <h3>General Settings</h3>
-                <tr>
-        		<td width="212"><h3>Functions</h3></td>
-        		<td width="312"><h3>Setup</h3></td>
-        		</tr>
-                <tr><td>
-				Activate Other Page Title settings: 
-				</td><td>
-            	<input type="checkbox" name="zeo_activate_title" value="yes" <?php if(zeo_ischecked('zeo_activate_title', 'yes' )){echo "checked";}?>>  </input>
-            	</td></tr>
-                <tr><td>
-				Canonical Link: 
-				</td><td>
-            	<input type="checkbox" name="zeo_canonical_url" value="yes" <?php if(zeo_ischecked('zeo_canonical_url', 'yes' )){echo "checked";}?>>  </input>
-            	</td></tr>
-                <tr><td>
-				Category No Follow: 
-				</td><td>
-            	<input type="checkbox" name="zeo_category_nofollow" value="yes" <?php if(zeo_ischecked('zeo_category_nofollow', 'yes' )){echo "checked";}?>> </input>
-            	</td></tr>
-                <tr><td>
-				Tag No Follow: 
-				</td><td>
-            	<input type="checkbox" name="zeo_tag_nofollow" value="yes" <?php if(zeo_ischecked('zeo_tag_nofollow', 'yes' )){echo "checked";}?>> </input>
-            	</td></tr>
-                <tr><td>
-				Date Based Page No Follow: 
-				</td><td>
-            	<input type="checkbox" name="zeo_date_nofollow" value="yes" <?php if(zeo_ischecked('zeo_date_nofollow', 'yes' )){echo "checked";}?>> </input>
-            	</td></tr>
-                <!--
-                <tr><td>
-				rel = NoFollow for Outbound Links: 
-				</td><td>
-            	<input type="checkbox" name="zeo_nofollow" value="yes" <?php if(zeo_ischecked('zeo_nofollow', 'yes' )){echo "checked";}?>>  </input>
-            	</td></tr>              
-                -->
-                </table>
+                
+                <div class="border border-secondary p-3 mb-4" id="support">  
+                
+                    <h2>Other Page Title Settings</h2>
+                    
+    				<h3>Title Suffix</h3> 
+                    
+                	<div class="form-group">
+        				<label for="blogPageTitle">Blog Page Title:</label>
+        				
+                    	<input id="blogPageTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_frontpage_title')); ?>" name="zeo_common_frontpage_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="pageTitle">Page Title:</label>
+        				
+                    	<input id="pageTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_page_title')); ?>" name="zeo_common_page_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="postTitle">Post Title:</label>
+        				
+                    	<input id="postTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_post_title')); ?>" name="zeo_common_post_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="categoryTitle">Category Title:</label>
+        				
+                    	<input id="categoryTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_category_title')); ?>" name="zeo_common_category_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="archiveTitle">Archive Title:</label>
+        				
+                    	<input id="archiveTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_archive_title')); ?>" name="zeo_common_archive_title"  />  
+                	</div>
+                    <div class="form-group">                   
+                    
+        				<label for="tagTitle">Tag Title:</label>
+        				
+                    	<input id="tagTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_tag_title')); ?>" name="zeo_common_tag_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="searchTitle">Search Title:</label>
+        				
+                    	<input id="searchTitle" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_search_title')); ?>" name="zeo_common_search_title"  />  
+                	</div>
+                    <div class="form-group">
+        				<label for="404Title">404 Page Title:</label>
+        				
+                    	<input id="404Title" class="form-control" size="50" type="text" value="<?php echo esc_html(get_option('zeo_common_error_title')); ?>" name="zeo_common_error_title"  />  
+            	    </div>
+
+                    <h3>Title Prefix</h3>
+                    Note : Title Prefix is your actual Page title
+                
+                </div>
+
+                <div class="border border-secondary p-3 mb-4" id="support">
+                    
+                    <h2>General Settings</h2>
+                    
+            		<h3>Functions Setup</h3>
+            		<div class="form-group">
+        				<label class="form-check-label pr-3" for="activateOtherPageTitleSettings">Activate Other Page Title settings: </label>
+        				
+                    	<input id="activateOtherPageTitleSettings" class="form-check-input" type="checkbox" name="zeo_activate_title" value="yes" <?php if(zeo_ischecked('zeo_activate_title', 'yes' )){echo "checked";}?>>  </input>
+                	</div>
+                    <div class="form-group">
+        				<label class="form-check-label pr-3" for="canonicalLink">Canonical Link: </label>
+        				
+                    	<input id="canonicalLink" class="form-check-input" type="checkbox" name="zeo_canonical_url" value="yes" <?php if(zeo_ischecked('zeo_canonical_url', 'yes' )){echo "checked";}?>>  </input>
+                	</div>
+                    <div class="form-group">
+        				<label class="form-check-label pr-3" for="categoryNoFollow">Category No Follow: </label>
+        				
+                    	<input id="categoryNoFollow" class="form-check-input" type="checkbox" name="zeo_category_nofollow" value="yes" <?php if(zeo_ischecked('zeo_category_nofollow', 'yes' )){echo "checked";}?>> </input>
+                	</div>
+                    <div class="form-group">
+        				<label class="form-check-label pr-3" for="tagNoFollow">Tag No Follow: </label>
+        				
+                    	<input id="tagNoFollow" class="form-check-input" type="checkbox" name="zeo_tag_nofollow" value="yes" <?php if(zeo_ischecked('zeo_tag_nofollow', 'yes' )){echo "checked";}?>> </input>
+                	</div>
+                    <div class="form-group">
+                              
+                    				<label class="form-check-label pr-3" for="dateBasedPageNoFollow">Date Based Page No Follow: </label>
+                			
+                            
+                            	<input id="dateBasedPageNoFollow" class="form-check-input" type="checkbox" name="zeo_date_nofollow" value="yes" <?php if(zeo_ischecked('zeo_date_nofollow', 'yes' )){echo "checked";}?>> </input>
+                            
+                        
+                	</div>
+                    <!--
+                    <tr><td>
+    				rel = NoFollow for Outbound Links: 
+    				</td><td>
+                	<input type="checkbox" name="zeo_nofollow" value="yes" <?php if(zeo_ischecked('zeo_nofollow', 'yes' )){echo "checked";}?>>  </input>
+                	</td></tr>              
+                    -->
+                    </table>
             	</div>
                 
                <!-- 
@@ -281,8 +263,45 @@ LIKING ME and ADDING ME to your circles</strong></div>
                 
                 -->
                 
-            <p><input type="submit" name="search" value="Update Options" class="button" /></p>  
+            <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p>  
             <?php wp_nonce_field( 'seo_dashboard', 'seo_dashboard_nonce_field' ); ?>
-        </form>        
+        </form>
+    </div>        
+    
+<!-- Support  Sidebar-->
+
+	<div class="col-md-4" id="support">
+	<div class="border border-secondary p-3 mb-4">
+	<div class="row p-3">
+        <h6>Want more FREE Plugins? Encourage me by,
+	LIKING ME and ADDING ME to your circles</h6>
+    </div>
+	<div class="row p-3">
+	   <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FMervinPraison&amp;width=200&amp;height=62&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=true&amp;appId=252850214734670" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:62px;" allowTransparency="true"></iframe>
+	</div>
+	<div class="row p-3">
+	   <div class="g-plus" data-href="https://plus.google.com/101518602031253199279?rel=publisher" data-width="170" data-height="70" data-theme="light"></div>
+	</div>
+	<div class="row p-3">
+	
+	<a name="fb_share" type="icon_link" 
+	   share_url="https://mer.vin/seo-wordpress" style="font-weight:bold; font-size:15px;">Tweet me Please</a> 
+	<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" 
+			type="text/javascript">
+	</script>
+	</div>
+	<div class="row p-3">
+	
+	&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://mer.vin/seo-wordpress" data-size="large">Tweet</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</div>   
+	</div>
+	</div>
+
+<!-- End of Support -->
      
-       </div></div></div>
+	</div> <!-- End of Row -->
+
+       </div>
+       </div>
+       </div> <!-- End of Container -->
