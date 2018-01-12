@@ -6,8 +6,10 @@ function move_me_around_scripts() {
 }
 
 ?>
-<div class="wrap">
-<h1>XML Sitemap Settings</h1>
+<div>
+<div class="container mt-3">
+    <h1>XML Sitemap Settings</h1>
+</div>	
 
 <?php if ( $_POST['update_sitemapoptions'] == 'true' ) {  
 
@@ -95,84 +97,68 @@ function analyticsoptions_update(){
 <?php
 $options = get_mervin_options();
 ?>
-<div class="postbox-container" style="width:70%;">
-				<div class="metabox-holder">	                
-					<div class="meta-box-sortables ui-sortable">
-                    
-<form method="POST" action="">  
-		
-        <input type="hidden" name="update_sitemapoptions" value="true" />        
-        <div class="postbox" id="support">
-        <div class="handlediv" title="Click to toggle">
-<br />
-</div>
-        <h3 class="hndle"><span>Overall Settings</span></h3>
-        <div class="container">
-<table cellpadding="6">
-		<tr>
-			<th align="left" style="font-weight:normal"><label for="enablesitemap">Enable XML Sitemap</label></th>
+<div class="container">
+	<div class="metabox-holder">	                
+		<div class="meta-box-sortables ui-sortable">
+        	<div class="row">
+        		<div class="col-md-8">
+					<form method="POST" action="">  
+							
+					<input type="hidden" name="update_sitemapoptions" value="true" />        
+					<div class="border border-secondary p-3 mb-4" id="support">
+						<div class="handlediv" title="Click to toggle"></div>
+					
+						<h3 >Overall Settings</h3>
+						<div class="form-group">
+							<label for="enablesitemap">Enable XML Sitemap</label>
 
-			<td>
-				<input size="54" type="checkbox" name="enablexmlsitemap" id="enablesitemap" value="yes" class="regular-text" <?php if(isset($options['enablexmlsitemap'])){echo "checked";}?> />                
-			</td>
-		</tr>
-        <tr>
-			<th align="left" style="font-weight:normal"><label for="pingyahooid">Ping Yahoo!</label></th>
+							<input size="54" type="checkbox" name="enablexmlsitemap" id="enablesitemap" value="yes" class="regular-text" <?php if(isset($options['enablexmlsitemap'])){echo "checked";}?> />  
+						</div>
+						<div class="form-group">
+							<label for="pingyahooid">Ping Yahoo!</label>
 
-			<td>
-				<input size="54" type="checkbox" name="xml_ping_yahoo" id="pingyahooid" value="yes" class="regular-text" <?php if(isset($options['xml_ping_yahoo'])){echo "checked";}?> />                
-			</td>
-		</tr>
-		<tr>
+							<input size="54" type="checkbox" name="xml_ping_yahoo" id="pingyahooid" value="yes" class="regular-text" <?php if(isset($options['xml_ping_yahoo'])){echo "checked";}?> />   
+						</div>
+						<div class="form-group">             
+							<label for="pingaskid">Ping Ask.com</label>
 
-			<th align="left" style="font-weight:normal"><label for="pingaskid">Ping Ask.com</label></th>
-			<td>
-				<input size="54" type="checkbox" name="xml_ping_ask" id="pingaskid" value="yes" class="regular-text" <?php if(isset($options['xml_ping_ask'])){echo "checked";}?> />
-			</td>
-		</tr>
-
-	</table>
-	<?php
-	if ( $options['enablexmlsitemap'] )
-	   echo '<p style="padding-left:10px;">'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'seo-wordpress' ), '<a target="_blank" class="button-secondary" href="'.home_url($base.'sitemap_index.xml').'">', '</a>').'<br/><br/></p>';
-			
-	?>
-    </div>    
-    </div>
-    
-    <div class="postbox" id="support2">
-    <div class="handlediv" title="Click to toggle"><br /></div>
-        <h3 class="hndle">Post Types Disable</h3>
-       		<div class="container">
-				<table cellpadding="6">
+							<input size="54" type="checkbox" name="xml_ping_ask" id="pingaskid" value="yes" class="regular-text" <?php if(isset($options['xml_ping_ask'])){echo "checked";}?> />
+						</div>
+									
+						<?php
+						if ( $options['enablexmlsitemap'] )
+						   echo '<div >'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'seo-wordpress' ), '<a target="_blank" class="btn btn-primary" href="'.home_url($base.'sitemap_index.xml').'">', '</a>').'</div>';
+								
+						?>
+				    </div> 
+					    
+				    <div class="border border-secondary p-3 mb-4" id="support">
+				    	<div class="handlediv" title="Click to toggle"></div>
+				        <h3>Post Types Disable</h3>
  						<?php 							
 							foreach (get_post_types() as $post_type) {
 							if ( !in_array( $post_type, array('revision','nav_menu_item','attachment') ) ) {
 							$pt = get_post_type_object($post_type);
 					
 						?>
-					<tr>
-						<th align="left" style="font-weight:normal"><label for="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>"><?php echo $pt->labels->name; ?></label></th>
+						<div class="form-group">
 
-					<td>
-						<input size="54" type="checkbox" name="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>" id="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>" value="yes" class="regular-text" <?php if(isset($options['post_types-'.$post_type.'-not_in_sitemap'])){echo "checked";}?>/>                
-					</td>
-					</tr>
+							<label for="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>"><?php echo $pt->labels->name; ?></label>
+
+							<input size="54" type="checkbox" name="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>" id="<?php echo 'post_types-'.$post_type.'-not_in_sitemap' ?>" value="yes" class="regular-text" <?php if(isset($options['post_types-'.$post_type.'-not_in_sitemap'])){echo "checked";}?>/>                
+						</div>
 		
  						<?php					
 							}
 							}
 						?>
-				</table>
-   			 </div>
-    </div>
-    
-    
-    <div class="postbox" id="support3">
-    <div class="handlediv" title="Click to toggle"><br /></div>
-        <h3 class="hndle">Taxonomy Disable</h3>
-       		<div class="container">
-				<table cellpadding="6">
+
+				    </div>
+					    
+					<div class="border border-secondary p-3 mb-4" id="support">
+					    <div class="handlediv" title="Click to toggle"></div>
+				        <h3>Taxonomy Disable</h3>
+						
  						<?php 
 							
 							foreach (get_taxonomies() as $taxonomy) {
@@ -181,31 +167,31 @@ $options = get_mervin_options();
 										if ( isset( $tax->labels->name ) && trim($tax->labels->name) != '' ){
 					
 						?>
-					<tr>
-						<th align="left" style="font-weight:normal"><label for="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>"><?php echo $tax->labels->name; ?></label></th>
+						<div class="form-group">
+							<label for="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>"><?php echo $tax->labels->name; ?></label>
 
-					<td>
-						<input size="54" type="checkbox" name="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" id="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" value="yes" class="regular-text" <?php if(isset($options['taxonomies-'.$taxonomy.'-not_in_sitemap'])){echo "checked";}?>/>                
-					</td>
-					</tr>
-		
+							<input size="54" type="checkbox" name="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" id="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" value="yes" class="regular-text" <?php if(isset($options['taxonomies-'.$taxonomy.'-not_in_sitemap'])){echo "checked";}?>/>                
+						</div>
+						<div class="form-group">		
  						<?php					
 							}
 							}
 							}
 						?>
-				</table>
-   			 </div>
-    </div>
-     <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     <?php wp_nonce_field( 'seo_xml_sitemap', 'seo_xml_sitemap_nonce_field' ); ?>
-</form>
+						
+					   			 
+					</div>
+					     <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p> 
+					     <?php wp_nonce_field( 'seo_xml_sitemap', 'seo_xml_sitemap_nonce_field' ); ?>
+					</form>
 
 
+				</div> <!-- End of Column One -->
 
+				<div class="col-md-4" id="support">
 
-
-
-</div> 
-</div>
+				</div> <!-- End of Column Two -->
+			</div>
+		</div> 
+	</div>
 </div>

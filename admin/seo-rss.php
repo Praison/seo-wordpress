@@ -6,8 +6,10 @@ function move_me_around_scripts() {
 }
 
 ?>
-<div class="wrap">
-<h1>RSS Settings</h1>
+<div>
+<div class="container mt-3">
+    <h1>RSS Settings</h1>
+</div>
 
 <?php if ( $_POST['update_rss'] == 'true' ) { 
 
@@ -58,53 +60,48 @@ function rss_update(){
 <?php
 $options = get_mervin_options();
 ?>
-<div class="postbox-container" style="width:70%;">
-				<div class="metabox-holder">	                
-					<div class="meta-box-sortables ui-sortable">
-                    
-<form method="POST" action="">  
-		
-        <input type="hidden" name="update_rss" value="true" />        
-        <div class="postbox" id="support">
-        <div class="handlediv" title="Click to toggle">
-<br />
-</div>
-        <h3 class="hndle"><span>Overall Settings</span></h3>
-        <div class="container">
-<table cellpadding="6">
-		<tr>
-			<th align="right" style="font-weight:normal"><label for="rsshead">Content Before Each Post</label></th>
+<div class="container" >
+	<div class="metabox-holder">	                
+		<div class="meta-box-sortables ui-sortable">
+        	<div class="row"> 
+        		<div class="col-md-8">
+					<form method="POST" action="">  
+							
+					<input type="hidden" name="update_rss" value="true" />        
+					<div class="border border-secondary p-3 mb-4" id="support">
+					        
+						<h3>Overall Settings</h3>
+						
+						<div class="form-group">
+							<label for="rsshead">Content Before Each Post</label>
 
-			<td>
-				<textarea cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php echo esc_html($options['rss-header-content'])?></textarea>  
-			</td>
-		</tr>
-       <tr>
-			<th align="right" style="font-weight:normal"><label for="rssfoot">Content After each Post</label></th>
+							<textarea class="form-control" cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php echo esc_html($options['rss-header-content'])?></textarea> 
+						</div> 
+						<div class="form-group">
 
-			<td>
-				<textarea cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php echo esc_html($options['rss-footer-content'])?></textarea>             
-			</td>
-		</tr>
-<tr>
-<td>
-Note: HTML Allowed
-</td>
-</tr>
-	</table>
-    </div>    
-    </div>
-    
-   
-     <p><input type="submit" name="search" value="Update Options" class="button" /></p> 
-     <?php wp_nonce_field( 'seo_rss', 'seo_rss_nonce_field' ); ?>
-</form>
+							<label for="rssfoot">Content After each Post</label>
+							<textarea class="form-control" cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php echo esc_html($options['rss-footer-content'])?></textarea>             
+										
+							Note: HTML Allowed
+						</div>
+				       
+				    </div>
+					    
+					   
+					     <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p> 
+					     <?php wp_nonce_field( 'seo_rss', 'seo_rss_nonce_field' ); ?>
+					</form>
 
+				</div> <!-- End of Column One -->
 
+				<div class="col-md-4" id="support">
 
+				</div> <!-- End of Column Two -->
 
+			</div> <!-- End of Row -->
+		</div> 
 
 
 </div> 
-</div>
+</div> <!-- End of Container -->
 </div>
