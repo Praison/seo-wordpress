@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 <div >
 <div class="container mt-3">
+=======
+<div class="pr-3">
+<div class="container mt-4">
+>>>>>>> master
     <h1 >Wordpress SEO Plugin Settings</h1>
 </div>
 <?php 
@@ -271,6 +276,7 @@ function zeooptions_update(){
 <!-- Support  Sidebar-->
 
 	<div class="col-md-4" id="support">
+<<<<<<< HEAD
 	<div class="border border-secondary p-3 mb-4">
 	<div class="row p-3">
         <h6>Want more FREE Plugins? Encourage me by,
@@ -296,6 +302,47 @@ function zeooptions_update(){
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 	</div>   
 	</div>
+=======
+    	<div class="border border-secondary p-3">
+            <div class="row px-3">
+                <h2>SEO Review</h2>
+                <div class="clearfix"></div>
+                <h3 class="pb-3">Praison SEO Support &nbsp;</h3>
+
+                <div>
+                    
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Meta Data Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Redirect Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> OnPage SEO Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Structured Data Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Speed Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Mobile Optimisation Check<br /> 
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Conversion Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Content Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Keyword Analysis <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Broken Pages Check <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Monthly SEO Report<br />
+                    <br />
+
+                    Cost: £349 / Month <br /><br />
+
+                    Note : Only Limited Space <br /><br />
+                    Google Algorithm Changes regularly so we need a regular Analysis to be on top. 
+
+                    <br /><br />
+
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="FJGG89UCUYDQW">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+
+
+                </div>
+            </div>
+    	</div>
+>>>>>>> master
 	</div>
 
 <!-- End of Support -->
@@ -304,4 +351,46 @@ function zeooptions_update(){
 
        </div>
        </div>
+<<<<<<< HEAD
        </div> <!-- End of Container -->
+=======
+       </div> <!-- End of Container -->
+
+<div class="container pt-4">
+
+    <!-- Button trigger modal -->
+    <a class="float-right" data-toggle="modal" data-target="#exampleModalLong" href="#">
+      Terms and Conditions
+    </a>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">SEO Review Terms and Conditions</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3>Praison SEO Support </h3>
+
+        <p>
+        <i class="fa fa-check fa-fw fa-lg" > </i> £349 / month is for a reasonable size website, probably around 100 page website; Website will be analysed and a report will be provided each month. <br /><br /> 
+
+        <i class="fa fa-check fa-fw fa-lg" > </i> For Large websites and for the subscription of £349/month, 100 pages will be analysed based on your suggested pages. Remaining pages will be analysed based on additional budget. <br /><br />
+
+        <i class="fa fa-check fa-fw fa-lg" > </i> From the report you will get a clear understanding of the status of your website, each month. From that you could take necessary action and be on top of the regular Google Algorithm updates. <br /><br />
+
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+>>>>>>> master
