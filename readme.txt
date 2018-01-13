@@ -61,6 +61,12 @@ Customize according to your Need.
 
 
 == ChangeLog ==
+
+= Version 4.0.4 =
+
+* RSS Dashboard Sanitisation Fix
+* SEO Review option
+
 = Version 1.0 =
 
 * First release.
@@ -168,6 +174,11 @@ Created the Perfect Wordpress SEO Bundle
 
 * Responsive Mobile Optimised Dashboard
 
+= 4.0.4 =
+
+* RSS Dashboard Sanitisation Fix
+* SEO Review option
+
 == Version history ==
 
 = Version 1.0 =
@@ -218,7 +229,18 @@ Created the Perfect Wordpress SEO Bundle
 
 * Responsive Mobile Optimised Dashboard
 
+= Version 4.0.4 =
+
+* RSS Dashboard Sanitisation Fix
+* SEO Review option
+
 == Changelog ==
+
+= 4.0.4 =
+
+* RSS Dashboard Sanitisation Fix
+* SEO Review option
+
 = 1.0 =
 
 * Meta Description Optimisation
