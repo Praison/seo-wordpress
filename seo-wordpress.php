@@ -55,7 +55,8 @@ function cstm_css_and_js($hook) {
      }
 
     wp_enqueue_style('boot_css', plugins_url('css/bootstrap.min.css',__FILE__ ));
-     wp_enqueue_script('boot_js', plugins_url('js/bootstrap.min.js',__FILE__ ), array( 'jquery' ), false, true );
+    wp_enqueue_style('fa_css', plugins_url('css/font-awesome.min.css',__FILE__ ));
+    wp_enqueue_script('boot_js', plugins_url('js/bootstrap.min.js',__FILE__ ), array( 'jquery' ), false, true );
  }
 
 
