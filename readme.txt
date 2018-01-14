@@ -1,6 +1,6 @@
 === SEO Wordpress ===
 Contributors: mervinpraison
-Donate Link: https://mer.vin
+Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
 Tested up to: 4.9.1
@@ -42,7 +42,7 @@ Customize according to your Need.
 = SEO Wordpress Plugin Documentation =
 
 <a href="https://mer.vin/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
-<a href="https://seomanageruk.com/">SEO Manager</a>
+<a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 == Installation ==
 
@@ -57,7 +57,7 @@ Customize according to your Need.
 = SEO Wordpress Plugin Documentation =
 
 <a href="https://mer.vin/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
-<a href="https://seomanageruk.com/">SEO Manager</a>
+<a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 
 == ChangeLog ==
@@ -123,7 +123,7 @@ Customize according to your Need.
 
 = How to Setup? =
 Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
-<a href="https://seomanageruk.com/">SEO Manager</a>
+<a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -312,4 +312,4 @@ Created the Perfect Wordpress SEO Bundle
 = Wordpress SEO Plugin Documentation =
 
 <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
-<a href="https://seomanageruk.com/">SEO Manager</a>
+<a href="https://seomanageruk.com/">SEO Manager UK</a>
