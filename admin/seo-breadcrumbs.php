@@ -237,19 +237,6 @@ $options = get_mervin_options();
 					    
 					    </div>
 
-<<<<<<< HEAD
-
-					     <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p> 
-					     <?php wp_nonce_field( 'seo_breadcrumbs', 'seo_breadcrumbs_nonce_field' ); ?>
-					</form>
-
-					</div> <!-- End of Column One -->
-
-					<div class="col-md-4" id="support">
-
-					</div> <!-- End of Column Two -->
-=======
-
 					     <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p> 
 					     <?php wp_nonce_field( 'seo_breadcrumbs', 'seo_breadcrumbs_nonce_field' ); ?>
 					</form>
@@ -293,16 +280,11 @@ $options = get_mervin_options();
                     <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
                     <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
                     </form>
->>>>>>> master
+
 
 				</div> <!-- End of Row -->
 			</div> 
 
-<<<<<<< HEAD
-		</div> 
-	</div> <!-- End of Container -->
-</div>
-=======
                 </div>
             </div>
     	</div>
@@ -353,4 +335,3 @@ $options = get_mervin_options();
     </div>
   </div>
 </div>
->>>>>>> master

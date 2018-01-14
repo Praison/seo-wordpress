@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-<div >
-<div class="container mt-3">
-=======
 <div class="pr-3">
 <div class="container mt-4">
->>>>>>> master
     <h1 >Wordpress SEO Plugin Settings</h1>
 </div>
 <?php 
@@ -276,33 +271,6 @@ function zeooptions_update(){
 <!-- Support  Sidebar-->
 
 	<div class="col-md-4" id="support">
-<<<<<<< HEAD
-	<div class="border border-secondary p-3 mb-4">
-	<div class="row p-3">
-        <h6>Want more FREE Plugins? Encourage me by,
-	LIKING ME and ADDING ME to your circles</h6>
-    </div>
-	<div class="row p-3">
-	   <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FMervinPraison&amp;width=200&amp;height=62&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=true&amp;appId=252850214734670" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:62px;" allowTransparency="true"></iframe>
-	</div>
-	<div class="row p-3">
-	   <div class="g-plus" data-href="https://plus.google.com/101518602031253199279?rel=publisher" data-width="170" data-height="70" data-theme="light"></div>
-	</div>
-	<div class="row p-3">
-	
-	<a name="fb_share" type="icon_link" 
-	   share_url="https://mer.vin/seo-wordpress" style="font-weight:bold; font-size:15px;">Tweet me Please</a> 
-	<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" 
-			type="text/javascript">
-	</script>
-	</div>
-	<div class="row p-3">
-	
-	&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://mer.vin/seo-wordpress" data-size="large">Tweet</a>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	</div>   
-	</div>
-=======
     	<div class="border border-secondary p-3">
             <div class="row px-3">
                 <h2>SEO Review</h2>
@@ -342,7 +310,6 @@ function zeooptions_update(){
                 </div>
             </div>
     	</div>
->>>>>>> master
 	</div>
 
 <!-- End of Support -->
@@ -351,9 +318,6 @@ function zeooptions_update(){
 
        </div>
        </div>
-<<<<<<< HEAD
-       </div> <!-- End of Container -->
-=======
        </div> <!-- End of Container -->
 
 <div class="container pt-4">
@@ -392,5 +356,3 @@ function zeooptions_update(){
     </div>
   </div>
 </div>
-
->>>>>>> master
