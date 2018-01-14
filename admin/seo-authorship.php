@@ -194,11 +194,7 @@ $options = get_mervin_options();
 						</form> 
 					</div> <!-- End of Column One -->
 
-<<<<<<< HEAD
-					<div class="col-md-4" id="support">
 
-					</div> <!-- End of Column Two -->
-=======
 <!-- Support  Sidebar-->
 
 	<div class="col-md-4" id="support">
@@ -244,16 +240,14 @@ $options = get_mervin_options();
 	</div>
 
 <!-- End of Support -->
->>>>>>> master
+
 
 				</div> <!-- End of Row -->
 			</div> 
 
 		</div>
 </div>	<!-- End of Container -->
-<<<<<<< HEAD
-</div> 
-=======
+
 </div> 
 
 <div class="container pt-4">
@@ -292,4 +286,3 @@ $options = get_mervin_options();
     </div>
   </div>
 </div>
->>>>>>> master

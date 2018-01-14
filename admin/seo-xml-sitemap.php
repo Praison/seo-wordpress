@@ -171,12 +171,8 @@ $options = get_mervin_options();
 							<label for="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>"><?php echo $tax->labels->name; ?></label>
 
 							<input size="54" type="checkbox" name="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" id="<?php echo 'taxonomies-'.$taxonomy.'-not_in_sitemap' ?>" value="yes" class="regular-text" <?php if(isset($options['taxonomies-'.$taxonomy.'-not_in_sitemap'])){echo "checked";}?>/>                
-<<<<<<< HEAD
+
 						</div>
-						<div class="form-group">		
-=======
-						</div>		
->>>>>>> master
  						<?php					
 							}
 							}
@@ -188,8 +184,6 @@ $options = get_mervin_options();
 					     <p><input type="submit" name="search" value="Update Options" class="btn btn-primary" /></p> 
 					     <?php wp_nonce_field( 'seo_xml_sitemap', 'seo_xml_sitemap_nonce_field' ); ?>
 					</form>
-<<<<<<< HEAD
-=======
 
 
 				</div> <!-- End of Column One -->
@@ -202,7 +196,6 @@ $options = get_mervin_options();
                 <h2>SEO Review</h2>
                 <div class="clearfix"></div>
                 <h3 class="pb-3">Praison SEO Support &nbsp;</h3>
->>>>>>> master
 
                 <div>
                     
@@ -234,16 +227,6 @@ $options = get_mervin_options();
                     </form>
 
 				</div> <!-- End of Column One -->
-
-<<<<<<< HEAD
-				<div class="col-md-4" id="support">
-
-				</div> <!-- End of Column Two -->
-			</div>
-		</div> 
-	</div>
-</div>
-=======
                 </div>
             </div>
     	</div>
@@ -293,4 +276,3 @@ $options = get_mervin_options();
     </div>
   </div>
 </div>
->>>>>>> master

@@ -174,14 +174,11 @@ Created the Perfect Wordpress SEO Bundle
 
 * Responsive Mobile Optimised Dashboard
 
-<<<<<<< HEAD
-=======
 = 4.0.4 =
 
 * RSS Dashboard Sanitisation Fix
 * SEO Review option
 
->>>>>>> master
 == Version history ==
 
 = Version 1.0 =
@@ -232,14 +229,11 @@ Created the Perfect Wordpress SEO Bundle
 
 * Responsive Mobile Optimised Dashboard
 
-<<<<<<< HEAD
-=======
 = Version 4.0.4 =
 
 * RSS Dashboard Sanitisation Fix
 * SEO Review option
 
->>>>>>> master
 == Changelog ==
 
 = 4.0.4 =
