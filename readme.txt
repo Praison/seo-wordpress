@@ -1,4 +1,4 @@
-=== SEO Wordpress ===
+=== Praison SEO Wordpress ===
 Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
