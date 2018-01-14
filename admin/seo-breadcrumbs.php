@@ -293,9 +293,7 @@ $options = get_mervin_options();
 <!-- End of Support -->
 
 				</div> <!-- End of Row -->
-			</div> 
-
-		</div> 
+			
 	</div> <!-- End of Container -->
 </div>
 
