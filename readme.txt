@@ -62,6 +62,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= Version 4.0.5 =
+
+* Create SEO Optimised Website
+
 = Version 4.0.4 =
 
 * RSS Dashboard Sanitisation Fix
@@ -128,6 +132,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 
 == Upgrade Notice ==
 
+= 4.0.5 =
+
+* Create SEO Optimised Website
+
 = 1.0 =
 Created the Perfect Wordpress SEO Bundle
 
@@ -180,6 +188,10 @@ Created the Perfect Wordpress SEO Bundle
 * SEO Review option
 
 == Version history ==
+
+= Version 4.0.5 =
+
+* Create SEO Optimised Website
 
 = Version 1.0 =
 
@@ -235,6 +247,10 @@ Created the Perfect Wordpress SEO Bundle
 * SEO Review option
 
 == Changelog ==
+
+= 4.0.5 =
+
+* Create SEO Optimised Website
 
 = 4.0.4 =
 
