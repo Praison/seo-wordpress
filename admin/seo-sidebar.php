@@ -74,6 +74,38 @@
             	</div>
             </div>
         </div>
+        <br />
+        <div class="border border-secondary p-3">
+            <div class="row px-3 pt-3">
+                <h2>One time SEO Configuration</h2>
+                <div>
+                    <i class="fa fa-check fa-fw fa-lg" > </i> On-Page SEO Settings <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Optimised Loading Speed <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Google Analytics Integration <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Google Webmaster Tool Integration <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> XML Sitemap Creation <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Submitting to Google, Bing <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Canonicalisation <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> AMP page creation <br />
+                    <i class="fa fa-check fa-fw fa-lg" > </i> Structured Data Implementation<br />
+
+                    <br />
+                    Cost: £1000 <br /><br />
+
+                    Note : If we are not satisfied on what we agree, you will get 100% refund<br /><br />
+
+                    <br />
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="257ZHWEM4P7X6">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
 
 	</div>
 
