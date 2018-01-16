@@ -84,7 +84,7 @@ function zeooptions_update(){
 	update_option('zeo_date_nofollow', sanitize_text_field($_POST['zeo_date_nofollow']));
 	update_option('zeo_post_types', sanitize_text_field($_POST['zeo_post_types']));
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>
@@ -93,6 +93,7 @@ function zeooptions_update(){
 }
 
 ?>
+<div class="container float-left" >
 
 <div class="container float-left" >
 				<div class="metabox-holder">	

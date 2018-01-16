@@ -71,7 +71,7 @@ function sitemapoptions_update(){
 	
 	update_option('mervin_sitemap', $mervin_sitemap);
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>

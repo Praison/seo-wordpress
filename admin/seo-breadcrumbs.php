@@ -53,7 +53,7 @@ function sitemapoptions_update(){
 	
 	update_option('mervin_breadcrumbs', $mervin_breadcrumbs);
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>
@@ -65,7 +65,6 @@ function sitemapoptions_update(){
 <?php
 $options = get_mervin_options();
 ?>
-
 <div class="container float-left">
 	<div class="metabox-holder">	                
 		<div class="meta-box-sortables ui-sortable">
