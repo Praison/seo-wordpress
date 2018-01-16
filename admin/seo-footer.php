@@ -1,5 +1,4 @@
-<div class="container pt-4">
-
+<div class="container pt-4 float-left">
     <!-- Button trigger modal -->
     <a class="float-right" data-toggle="modal" data-target="#exampleModalLong" href="#">
       Terms and Conditions

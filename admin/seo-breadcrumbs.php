@@ -7,8 +7,7 @@ function move_me_around_scripts() {
 
 ?>
 <div>
-
-<div class="container mt-3">
+<div class="container mt-3 float-left">
     <h1>Breadcrumbs Settings</h1>
 </div>
 
@@ -66,7 +65,8 @@ function sitemapoptions_update(){
 <?php
 $options = get_mervin_options();
 ?>
-<div class="container">
+
+<div class="container float-left">
 	<div class="metabox-holder">	                
 		<div class="meta-box-sortables ui-sortable">
         	<div class="row">

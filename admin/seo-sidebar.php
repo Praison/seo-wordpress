@@ -3,9 +3,8 @@
 	<div class="col-md-4" id="support">
     	<div class="border border-secondary p-3">
             <div class="row px-3">
-                <h2>SEO Review</h2>
+                <h2 class="pb-3">SEO Care</h2>
                 <div class="clearfix"></div>
-                <h3 class="pb-3">Praison SEO Support &nbsp;</h3>
 
                 <div>
                     
