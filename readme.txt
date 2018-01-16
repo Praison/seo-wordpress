@@ -62,6 +62,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= Version 4.0.7 =
+
+* SEO Care and Gulp Added
+
 = Version 4.0.6 =
 
 * One Time SEO Configuration Option
@@ -136,6 +140,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 
 == Upgrade Notice ==
 
+= 4.0.7 =
+
+* SEO Care and Gulp Added
+
 = 4.0.6 =
 
 * One Time SEO Configuration Option
@@ -195,135 +203,6 @@ Created the Perfect Wordpress SEO Bundle
 * RSS Dashboard Sanitisation Fix
 * SEO Review option
 
-== Version history ==
-
-= Version 4.0.6 =
-
-* One Time SEO Configuration Option
-
-= Version 4.0.5 =
-
-* Create SEO Optimised Website
-
-= Version 1.0 =
-
-* Initial release version.
-
-= Version 2.0 =
-
-* Proper Admin Panel
-* No Follow No Index Settings added
-* Canonical Meta Tag added
-
-= Version 3.0 =
-
-* XML Sitemap
-* Breadcrumbs
-* Google Webmaster Tools Verification 
-* Bing Webmaster Tool Verification
-* Alexa Verification
-* Category No Follow Option
-* Tag No Follow Option
-* Dated Page No Follow Options
-
-= Version 3.0.1 =
-
-* Front Page and Blog page Bug fix
-
-= Version 3.0.2 =
-
-* Bug Fix
-
-= Version 4.0.0 =
-
-* Nonce Added to forms
-* Sanitisation
-* Validation
-* Restrict Users
-
-= Version 4.0.1 =
-
-* Dashboard Design Update Phase 1
-
-= Version 4.0.2 =
-
-* Dashboard Design Update Phase 1 fix
-
-= Version 4.0.3 =
-
-* Responsive Mobile Optimised Dashboard
-
-= Version 4.0.4 =
-
-* RSS Dashboard Sanitisation Fix
-* SEO Review option
-
-== Changelog ==
-
-= 4.0.6 =
-
-* One Time SEO Configuration Option
-
-= 4.0.5 =
-
-* Create SEO Optimised Website
-
-= 4.0.4 =
-
-* RSS Dashboard Sanitisation Fix
-* SEO Review option
-
-= 1.0 =
-
-* Meta Description Optimisation
-* Meta Keywords Optimisation
-* Title Optimisation
-* Google Analytics Integration
-* Google Authorship Integration
-
-= 2.0 =
-
-* Proper Admin Panel
-* No Follow No Index Settings added
-* Canonical Meta Tag added
-
-= 3.0 =
-
-* XML Sitemap
-* Breadcrumbs
-* Google Webmaster Tools Verification 
-* Bing Webmaster Tool Verification
-* Alexa Verification
-* Category No Follow Option
-* Tag No Follow Option
-* Dated Page No Follow Options
-
-= 3.0.1 =
-
-* Front Page and Blog page Bug fix
-
-= 3.0.2 =
-
-* Bug Fix
-
-= 4.0.0 =
-
-* Nonce Added to forms
-* Sanitisation
-* Validation
-* Restrict Users
-
-= 4.0.1 =
-
-* Dashboard Design Update Phase 1
-
-= 4.0.2 =
-
-* Dashboard Design Update Phase 1 fix
-
-= 4.0.3 =
-
-* Responsive Mobile Optimised Dashboard
 
 = Wordpress SEO Plugin Documentation =
 
