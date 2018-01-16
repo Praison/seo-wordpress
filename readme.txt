@@ -62,6 +62,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= Version 4.0.6 =
+
+* One Time SEO Configuration Option
+
 = Version 4.0.5 =
 
 * Create SEO Optimised Website
@@ -132,6 +136,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 
 == Upgrade Notice ==
 
+= 4.0.6 =
+
+* One Time SEO Configuration Option
+
 = 4.0.5 =
 
 * Create SEO Optimised Website
@@ -188,6 +196,10 @@ Created the Perfect Wordpress SEO Bundle
 * SEO Review option
 
 == Version history ==
+
+= Version 4.0.6 =
+
+* One Time SEO Configuration Option
 
 = Version 4.0.5 =
 
@@ -247,6 +259,10 @@ Created the Perfect Wordpress SEO Bundle
 * SEO Review option
 
 == Changelog ==
+
+= 4.0.6 =
+
+* One Time SEO Configuration Option
 
 = 4.0.5 =
 
