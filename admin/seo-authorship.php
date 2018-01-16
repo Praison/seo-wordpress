@@ -59,7 +59,7 @@ function authorshipoptions_update(){
 	update_usermeta( $current_user->ID, 'zeoauthor', sanitize_text_field($_POST['zeoauthor'] ));
 	update_usermeta( $current_user->ID, 'zeopreferredname', sanitize_text_field($_POST['zeopreferredname'] ));
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>
@@ -110,7 +110,7 @@ function analyticsoptions_update(){
 	
 	update_option('zeo_analytics_id', sanitize_text_field($_POST['zeo_analytics_id'])); 
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>

@@ -48,7 +48,7 @@ function rss_update(){
 	
 	update_option('mervin_rss', $mervin_rss);
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>

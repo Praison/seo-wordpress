@@ -54,7 +54,7 @@ function sitemapoptions_update(){
 	
 	update_option('mervin_breadcrumbs', $mervin_breadcrumbs);
 	
-	echo '<div class="updated">
+	echo '<div class="container float-left updated">
 		<p>
 			<strong>Options saved</strong>
 		</p>
