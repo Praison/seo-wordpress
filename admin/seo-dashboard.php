@@ -1,5 +1,5 @@
 <div class="pr-3">
-<div class="container mt-4">
+<div class="container mt-4 float-left">
     <h1 >Wordpress SEO Plugin Settings</h1>
 </div>
 <?php 
@@ -93,7 +93,7 @@ function zeooptions_update(){
 }
 
 ?>
-<div class="container" >
+<div class="container float-left" >
 
 
 				<div class="metabox-holder">	
