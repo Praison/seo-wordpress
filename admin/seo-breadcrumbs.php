@@ -7,7 +7,6 @@ function move_me_around_scripts() {
 
 ?>
 <div>
-
 <div class="container mt-3 float-left">
     <h1>Breadcrumbs Settings</h1>
 </div>

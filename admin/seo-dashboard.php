@@ -95,7 +95,6 @@ function zeooptions_update(){
 ?>
 <div class="container float-left" >
 
-
 				<div class="metabox-holder">	
 					<div class="meta-box-sortables ui-sortable">
 <div class="row">

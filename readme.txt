@@ -3,7 +3,7 @@ Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
-Tested up to: 4.9.1
+Tested up to: 4.9.2
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -203,8 +203,7 @@ Created the Perfect Wordpress SEO Bundle
 * RSS Dashboard Sanitisation Fix
 * SEO Review option
 
-
 = Wordpress SEO Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin Praison</a>
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
