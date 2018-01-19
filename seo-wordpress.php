@@ -45,6 +45,13 @@ function cstm_css_and_js($hook) {
 	
      // your-slug => The slug name to refer to this menu used in "add_submenu_page"
      // tools_page => refers to Tools top menu, so it's a Tools' sub-menu page
+    if ( 'post.php' == $hook ) {
+        
+        wp_enqueue_style('yseostyle_css', plugins_url('css/yseo/yseo-style.css',__FILE__ ));
+        wp_enqueue_style('yseo_css', plugins_url('css/yseo/yseo-min.css',__FILE__ ));
+        wp_enqueue_script('yseo_js', plugins_url('js/yseo.js',__FILE__ ), array( 'jquery' ), false, true );
+    }
+
      if ( 'seo-wordpress/admin/seo-dashboard.php' != $hook && 
      	'seo-wordpress/admin/seo-authorship.php' != $hook &&
      	'seo-wordpress/admin/seo-xml-sitemap.php' != $hook &&
@@ -58,6 +65,7 @@ function cstm_css_and_js($hook) {
     wp_enqueue_style('fa_css', plugins_url('css/font-awesome.min.css',__FILE__ ));
     wp_enqueue_style('praison_seo_css', plugins_url('css/main.css',__FILE__ ));
     wp_enqueue_script('boot_js', plugins_url('js/bootstrap.min.js',__FILE__ ), array( 'jquery' ), false, true );
+    
  }
 
 

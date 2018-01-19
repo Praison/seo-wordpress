@@ -1,7 +1,8 @@
 'use strict';
 
 var gulp = require('gulp'),
-    sass = require('gulp-sass');
+    sass = require('gulp-sass'),
+    browserify = require('gulp-browserify');
 
 var sassConfig = {
 	inputDirectory: './css/sass/*.scss',
@@ -10,6 +11,14 @@ var sassConfig = {
 		outputStyle: 'expanded'
 	}
 }
+
+gulp.task('seo-scripts', function() {
+    gulp.src('js/src/yseo.js')
+        .pipe(browserify({
+          insertGlobals : true     
+        }))
+        .pipe(gulp.dest('./js'))
+});
 
 gulp.task('build-css', function() {
 	return gulp
@@ -23,4 +32,4 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('default', ['build-css']);
+gulp.task('default', ['seo-scripts', 'build-css']);
