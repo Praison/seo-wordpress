@@ -47,7 +47,11 @@ window.onload = function() {
 		callbacks: {
 			getData: function() {
 				return {
+					baseUrl: "example.org/",
+					snippetCite: document.getElementById("editable-post-name").innerHTML,
+					title: document.getElementById("title").value,
 					keyword: document.getElementById( "focusKeyword" ).value,
+					meta: document.getElementById("zeo_description_id").value,
 					text: tinymce.activeEditor.getContent(),
 				};
 			},
@@ -62,8 +66,10 @@ window.onload = function() {
 			document.getElementsByClassName( "marked-text" )[ 0 ].innerHTML = text;
 
 			document.getElementsByClassName( "marked-text-raw" )[ 0 ].innerHTML = escape( text );
+
 		},
 	} );
+	
 
 	bindEvents( app );
 
@@ -79,10 +85,10 @@ window.onload = function() {
 
 	//testPlugin.addPlugin();
 
-	var previouslyUsedKeywordsPlugin = new PreviouslyUsedKeywords(
+	/*var previouslyUsedKeywordsPlugin = new PreviouslyUsedKeywords(
 		app, args, app.i18n
-	);
-	previouslyUsedKeywordsPlugin.registerPlugin();
+	);*/
+	//previouslyUsedKeywordsPlugin.registerPlugin();
 
 	var refreshAnalysis = document.getElementById( "refresh-analysis" );
 

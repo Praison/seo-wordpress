@@ -49,10 +49,12 @@ window.onload = function() {
 		callbacks: {
 			getData: function() {
 				return {
+					baseUrl: "example.org/",
+					snippetCite: document.getElementById("editable-post-name").innerHTML,
+					title: document.getElementById("title").value,
 					keyword: document.getElementById( "focusKeyword" ).value,
+					meta: document.getElementById("zeo_description_id").value,
 					text: tinymce.activeEditor.getContent(),
-					meta : document.getElementById( "snippet-editor-meta-description" ),
-					title : document.getElementById( "snippet-editor-title" ),
 				};
 			},
 		},
@@ -66,8 +68,10 @@ window.onload = function() {
 			document.getElementsByClassName( "marked-text" )[ 0 ].innerHTML = text;
 
 			document.getElementsByClassName( "marked-text-raw" )[ 0 ].innerHTML = escape( text );
+
 		},
 	} );
+	
 
 	bindEvents( app );
 
@@ -83,10 +87,10 @@ window.onload = function() {
 
 	//testPlugin.addPlugin();
 
-	var previouslyUsedKeywordsPlugin = new PreviouslyUsedKeywords(
+	/*var previouslyUsedKeywordsPlugin = new PreviouslyUsedKeywords(
 		app, args, app.i18n
-	);
-	previouslyUsedKeywordsPlugin.registerPlugin();
+	);*/
+	//previouslyUsedKeywordsPlugin.registerPlugin();
 
 	var refreshAnalysis = document.getElementById( "refresh-analysis" );
 
@@ -96,7 +100,7 @@ window.onload = function() {
 	} );
 };
 
-}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_258e684b.js","/")
+}).call(this,require("XJF/FV"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ee98adac.js","/")
 },{"XJF/FV":28,"buffer":26,"lodash/escape":80,"lodash/forEach":81,"yoastseo":100}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*

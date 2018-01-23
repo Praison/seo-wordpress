@@ -2,17 +2,17 @@
 /**
  * @package Praison SEO
  * @author Mervin Praison
- * @version 4.0.7
+ * @version 4.0.8
  */
 /*
     Plugin Name: Praison SEO
     Plugin URI: http://mer.vin/seo-wordpress/
     Description: SEO Wordpress Plugin by Mervin Praison is a Powerfull Best Optimisation Plugin which has many SEO Features. Google Webmasters and Google Analytics Integration. Very Easy to Setup. Check all benefits here https://mer.vin/seo-wordpress/
     Author: Mervin Praison
-    Version: 4.0.7
+    Version: 4.0.8
     License: GPL
-    Author URI: http://mer.vin/
-    Last change: 16.01.2018
+    Author URI: https://seomanageruk.com/
+    Last change: 23.01.2018
 */
 
 
@@ -47,9 +47,11 @@ function cstm_css_and_js($hook) {
      // tools_page => refers to Tools top menu, so it's a Tools' sub-menu page
     if ( 'post.php' == $hook ) {
         
-        wp_enqueue_style('yseostyle_css', plugins_url('css/yseo/yseo-style.css',__FILE__ ));
-        wp_enqueue_style('yseo_css', plugins_url('css/yseo/yseo-min.css',__FILE__ ));
-        wp_enqueue_script('yseo_js', plugins_url('js/yseo.js',__FILE__ ), array( 'jquery' ), false, true );
+        //wp_enqueue_style('yseostyle_css', plugins_url('css/yseo/yseo-style.css',__FILE__ ));
+        //wp_enqueue_style('yseo_css', plugins_url('css/yseo/yseo-min.css',__FILE__ ));
+        //wp_enqueue_script('yseo_js', plugins_url('js/yseo.js',__FILE__ ), array( 'jquery' ), false, true );
+        wp_enqueue_style('praisonseo_css', plugins_url('css/praisonseo.css',__FILE__ ));
+        wp_enqueue_script('praisonseo_js', plugins_url('js/praisonseo.js',__FILE__ ), array( 'jquery' ), false, true );
     }
 
      if ( 'seo-wordpress/admin/seo-dashboard.php' != $hook && 
