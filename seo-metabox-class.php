@@ -91,10 +91,12 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
         echo '<table>
 		<tr>
 		<td width="30%"><b>Title</b></td>
-		<td><form method="POST" action=""> <input type="text" size="82" name="zeo_title" value="';
+		<td><form method="POST" action=""> 
+		<input id="meta_title" type="text" size="82" name="zeo_title" value="';
 		echo $titlevalue;
 
 		echo '" ></input>
+		<span id="meta_title_count"></span>
 		</td>
 		
 		</tr>
@@ -102,10 +104,10 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
 		<td><b>Description</b></td>
 		<td>
 		
-		<textarea name="zeo_description" rows="2" cols="84" >';
+		<textarea id="meta_desc" name="zeo_description" rows="4" cols="84" >';
 		echo $descriptionvalue;
 		echo '</textarea>
-		
+		<span id="meta_desc_count"></span>
 		</td>
 		
 		</tr>

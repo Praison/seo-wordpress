@@ -18,7 +18,6 @@ Wordpress SEO Plugin by Mervin Praison is a Powerfull Plugin which has many SEO 
 Customize according to your Need. 
 
 * Meta Description Optimisation
-* Meta Keywords Optimisation
 * Title Optimisation
 * Google Analytics Integration
 * Google Authorship Integration
@@ -41,7 +40,7 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress" >SEO Wordpress</a> Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://mer.vin/seo-wordpress/" >SEO Wordpress Plugin</a> By Mervin Praison
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 == Installation ==
@@ -56,11 +55,15 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress" >Wordpress SEO </a>Plugin By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://mer.vin/seo-wordpress/" >Wordpress SEO Plugin</a> By Mervin Praison
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 
 == ChangeLog ==
+
+= Version 4.0.8 =
+
+* Meta Title and Meta Descrition Counter in Meta Box
 
 = Version 4.0.7 =
 
@@ -130,7 +133,7 @@ Customize according to your Need.
 == Frequently Asked Questions ==
 
 = How to Setup? =
-Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
+Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 == Screenshots ==
@@ -139,6 +142,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 3. Meta Data Optimisation
 
 == Upgrade Notice ==
+
+= 4.0.8 =
+
+* Meta Title and Meta Descrition Counter in Meta Box
 
 = 4.0.7 =
 
@@ -205,5 +212,5 @@ Created the Perfect Wordpress SEO Bundle
 
 = Wordpress SEO Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By <a href="https://mer.vin/" >Mervin</a> Praison
+<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
