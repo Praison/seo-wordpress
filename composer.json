@@ -7,7 +7,7 @@
 		  "wordpress"
 	  ],
 	  "homepage": "https://praison.com/wordpress/plugins/seo/",
-	  "license": "GPL",
+	  "license": "GPL-2.0-or-later",
 	  "authors": [
 		 {
 			"name": "Praison",
