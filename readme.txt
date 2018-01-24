@@ -61,6 +61,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= Version 4.0.9 =
+
+* PHP Warnings Fixed
+
 = Version 4.0.8 =
 
 * Meta Title and Meta Descrition Counter in Meta Box
@@ -142,6 +146,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 3. Meta Data Optimisation
 
 == Upgrade Notice ==
+
+= 4.0.9 =
+
+* PHP Warnings Fixed
 
 = 4.0.8 =
 
