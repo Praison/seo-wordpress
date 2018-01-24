@@ -139,8 +139,10 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
 		
  		 if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
    	   return;
-	
- 		 if ( !wp_verify_nonce( $_POST['myplugin_noncename'], plugin_basename( __FILE__ ) ) )
+		
+   		$myplugin_noncename = (isset($_POST['myplugin_noncename']) ? $_POST['myplugin_noncename'] : null);
+
+ 		 if ( !wp_verify_nonce( $myplugin_noncename, plugin_basename( __FILE__ ) ) )
     	  return;
 	  
  		 if ( 'page' == $_POST['post_type'] ) 
