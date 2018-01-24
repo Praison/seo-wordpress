@@ -84,7 +84,7 @@ add_action( 'edit_user_profile', 'seo_author_profile_fields' );
 function seo_author_profile_fields( $user ) { 
 	
 	global $current_user;
-	get_currentuserinfo();
+	wp_get_current_user();
 	$mpgp_author_name = esc_attr( get_the_author_meta( 'zeopreferredname', $current_user->ID ) );
 	$mpgp_author_url = esc_attr( get_the_author_meta( 'zeoauthor', $current_user->ID ) );
 

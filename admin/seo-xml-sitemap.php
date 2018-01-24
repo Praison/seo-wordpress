@@ -11,7 +11,11 @@ function move_me_around_scripts() {
     <h1>XML Sitemap Settings</h1>
 </div>	
 
-<?php if ( $_POST['update_sitemapoptions'] == 'true' ) {  
+<?php
+$update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['update_sitemapoptions'] : null);
+?>
+
+<?php if ( $update_sitemapoptions == 'true' ) {  
 
 	/*NONCE Verification*/ 
 	
@@ -37,7 +41,7 @@ function sitemapoptions_update(){
 	$mervin_sitemap = array();
 
 	$post_types=get_post_types('','names');
-	if ( !in_array( $post_type, array('revision','nav_menu_item','attachment') ) ) {
+	if ( !in_array( $post_types, array('revision','nav_menu_item','attachment') ) ) {
 	foreach ($post_types as $post_type ) {					
 		if(isset($_POST['post_types-'.$post_type.'-not_in_sitemap']))	
 		$mervin_sitemap['post_types-'.$post_type.'-not_in_sitemap'] = 'yes';
@@ -79,7 +83,12 @@ function sitemapoptions_update(){
 	
 }
 ?>
-  <?php if ( $_POST['update_analyticsoptions'] == 'true' ) { analyticsoptions_update(); }  
+
+<?php
+$update_analyticsoptions = (isset($_POST['update_analyticsoptions']) ? $_POST['update_analyticsoptions'] : null);
+?>
+
+  <?php if ( $update_analyticsoptions == 'true' ) { analyticsoptions_update(); }  
 
 function analyticsoptions_update(){
 	
@@ -124,10 +133,12 @@ $options = get_mervin_options();
 
 							<input size="54" type="checkbox" name="xml_ping_ask" id="pingaskid" value="yes" class="regular-text" <?php if(isset($options['xml_ping_ask'])){echo "checked";}?> />
 						</div>
-									
+						
+
+
 						<?php
 						if ( $options['enablexmlsitemap'] )
-						   echo '<div >'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'seo-wordpress' ), '<a target="_blank" class="btn btn-primary" href="'.home_url($base.'sitemap_index.xml').'">', '</a>').'</div>';
+						   echo '<div >'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'seo-wordpress' ), '<a target="_blank" class="btn btn-primary" href="'.home_url('/sitemap_index.xml').'">', '</a>').'</div>';
 								
 						?>
 				    </div> 

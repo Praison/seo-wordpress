@@ -14,7 +14,9 @@ function zeo_ischecked($chkname,$value)
         	return false;
 	}
 
-if ( $_POST['update_zeooptions'] == 'true' ) {     
+$update_zeooptions = (isset($_POST['update_zeooptions']) ? $_POST['update_zeooptions'] : null);
+
+if ( $update_zeooptions == 'true' ) {     
     
     /*NONCE Verification*/
 
@@ -40,26 +42,26 @@ function zeooptions_update(){
 	//Validating POST Values
 
 	
-    if(!$_POST['zeo_common_home_title'] ) {$_POST['zeo_common_home_title'] = '';}
-    if(!$_POST['zeo_home_description'] ) {$_POST['zeo_home_description'] = '';}
-    if(!$_POST['zeo_home_keywords'] ) {$_POST['zeo_home_keywords'] = '';}
-    if(!$_POST['zeo_blog_description'] ) {$_POST['zeo_blog_description'] = '';}
-    if(!$_POST['zeo_blog_keywords'] ) {$_POST['zeo_blog_keywords'] = '';}
-    if(!$_POST['zeo_common_frontpage_title'] ) {$_POST['zeo_common_frontpage_title'] = '';}
-    if(!$_POST['zeo_common_page_title'] ) {$_POST['zeo_common_page_title'] = '';}
-    if(!$_POST['zeo_common_post_title'] ) {$_POST['zeo_common_post_title'] = '';}
-    if(!$_POST['zeo_common_category_title'] ) {$_POST['zeo_common_category_title'] = '';}
-    if(!$_POST['zeo_common_archive_title'] ) {$_POST['zeo_common_archive_title'] = '';}
-    if(!$_POST['zeo_common_tag_title'] ) {$_POST['zeo_common_tag_title'] = '';}
-    if(!$_POST['zeo_common_search_title'] ) {$_POST['zeo_common_search_title'] = '';}
-    if(!$_POST['zeo_common_error_title'] ) {$_POST['zeo_common_error_title'] = '';}
-    if(!$_POST['zeo_canonical_url'] ) {$_POST['zeo_canonical_url'] = '';}
-    if(!$_POST['zeo_nofollow'] ) {$_POST['zeo_nofollow'] = '';}
-    if(!$_POST['zeo_activate_title'] ) {$_POST['zeo_activate_title'] = '';}
-    if(!$_POST['zeo_category_nofollow'] ) {$_POST['zeo_category_nofollow'] = '';}
-    if(!$_POST['zeo_tag_nofollow'] ) {$_POST['zeo_tag_nofollow'] = '';}
-    if(!$_POST['zeo_date_nofollow'] ) {$_POST['zeo_date_nofollow'] = '';}
-    if(!$_POST['zeo_post_types'] ) {$_POST['zeo_post_types'] = '';}
+    if(!isset($_POST['zeo_common_home_title']) ) {$_POST['zeo_common_home_title'] = '';}
+    if(!isset($_POST['zeo_home_description']) ) {$_POST['zeo_home_description'] = '';}
+    if(!isset($_POST['zeo_home_keywords']) ) {$_POST['zeo_home_keywords'] = '';}
+    if(!isset($_POST['zeo_blog_description']) ) {$_POST['zeo_blog_description'] = '';}
+    if(!isset($_POST['zeo_blog_keywords']) ) {$_POST['zeo_blog_keywords'] = '';}
+    if(!isset($_POST['zeo_common_frontpage_title']) ) {$_POST['zeo_common_frontpage_title'] = '';}
+    if(!isset($_POST['zeo_common_page_title']) ) {$_POST['zeo_common_page_title'] = '';}
+    if(!isset($_POST['zeo_common_post_title']) ) {$_POST['zeo_common_post_title'] = '';}
+    if(!isset($_POST['zeo_common_category_title']) ) {$_POST['zeo_common_category_title'] = '';}
+    if(!isset($_POST['zeo_common_archive_title']) ) {$_POST['zeo_common_archive_title'] = '';}
+    if(!isset($_POST['zeo_common_tag_title']) ) {$_POST['zeo_common_tag_title'] = '';}
+    if(!isset($_POST['zeo_common_search_title']) ) {$_POST['zeo_common_search_title'] = '';}
+    if(!isset($_POST['zeo_common_error_title']) ) {$_POST['zeo_common_error_title'] = '';}
+    if(!isset($_POST['zeo_canonical_url']) ) {$_POST['zeo_canonical_url'] = '';}
+    if(!isset($_POST['zeo_nofollow']) ) {$_POST['zeo_nofollow'] = '';}
+    if(!isset($_POST['zeo_activate_title']) ) {$_POST['zeo_activate_title'] = '';}
+    if(!isset($_POST['zeo_category_nofollow']) ) {$_POST['zeo_category_nofollow'] = '';}
+    if(!isset($_POST['zeo_tag_nofollow']) ) {$_POST['zeo_tag_nofollow'] = '';}
+    if(!isset($_POST['zeo_date_nofollow']) ) {$_POST['zeo_date_nofollow'] = '';}
+    if(!isset($_POST['zeo_post_types']) ) {$_POST['zeo_post_types'] = '';}
 
 	//Sanitising the POST values	
 	
@@ -243,17 +245,25 @@ function zeooptions_update(){
                 <tr><td>
 
 					<select name='zeo_post_types[]' size=5 width='300px' style="width: 300px" multiple>
-                    <option value="" <?php if(in_array('', esc_html(get_option('zeo_post_types')))){ echo 'selected';} ?> > Select None</option>
+                    <option value="" <?php 
+                    //if(in_array('', esc_html(get_option('zeo_post_types')))){ echo 'selected';} 
+                    ?> > Select None</option>
                 <?php
-					$post_types=get_post_types('','names');
-					foreach ($post_types as $post_type ) {
+					//$post_types=get_post_types('','names');
+					//foreach ($post_types as $post_type ) {
 					
 				?>
                         
-					<option value="<?php echo $post_type; ?>" <?php if(in_array($post_type, esc_html(get_option('zeo_post_types')))){ echo 'selected';} ?> > <?php echo $post_type ?></option>
+					<option value="<?php 
+                    //echo $post_type; 
+                    ?>" <?php 
+                    //if(in_array($post_type, esc_html(get_option('zeo_post_types')))){ echo 'selected';} 
+                    ?> > <?php 
+                    //echo $post_type 
+                    ?></option>
                     
                     <?php					
-					}
+					//}
 				?>
                 	</select>
                 </td></tr>

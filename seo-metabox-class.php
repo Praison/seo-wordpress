@@ -158,7 +158,11 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
 
  		foreach ($this->zeo_uniqueid as $uid){			
 		
-		$mytitle = sanitize_text_field($_POST[$uid]);			
+
+		$postuid = (isset($_POST[$uid]) ? $_POST[$uid] : null);
+
+
+		$mytitle = sanitize_text_field($postuid);			
 		$uniqueid = $uid;
 		
 		

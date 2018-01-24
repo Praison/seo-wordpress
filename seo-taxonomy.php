@@ -2,7 +2,7 @@
 
 class ZEO_Taxonomy {
 	
-	function ZEO_Taxonomy() {
+	function __construct() {
 		$options = get_mervin_options();
 		
 		if (is_admin() && isset($_GET['taxonomy']) && 

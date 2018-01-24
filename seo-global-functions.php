@@ -17,12 +17,12 @@ add_action( 'admin_menu', 'zeo_options_menu' );
 function zeo_options_menu(){
 	
 	 // add_options_page('Wordpress SEO Plugin' , 'Wordpress SEO', 9,  SEO_ADMIN_DIRECTORY.'/seo-dashboard.php');
-	add_menu_page( 'Wordpress SEO','Wordpress SEO',	0, SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', '', plugins_url('/images/icon.png', __FILE__));
-	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Dashboard ', 'Dashboard', 0,SEO_ADMIN_DIRECTORY.'/seo-dashboard.php' );
-	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Authorship, Analytics', 'Authorship, Analytics', 9, SEO_ADMIN_DIRECTORY.'/seo-authorship.php' );
-	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'XML Sitemap', 'XML Sitemap', 9, SEO_ADMIN_DIRECTORY.'/seo-xml-sitemap.php' );
-	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Breadcrumbs', 'Breadcrumbs', 9, SEO_ADMIN_DIRECTORY.'/seo-breadcrumbs.php' );
-	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'RSS', 'RSS', 9, SEO_ADMIN_DIRECTORY.'/seo-rss.php' );
+	add_menu_page( 'Wordpress SEO','Wordpress SEO',	'manage_options', SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', '', plugins_url('/images/icon.png', __FILE__));
+	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Dashboard ', 'Dashboard', 'manage_options',SEO_ADMIN_DIRECTORY.'/seo-dashboard.php' );
+	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Authorship, Analytics', 'Authorship, Analytics', 'manage_options', SEO_ADMIN_DIRECTORY.'/seo-authorship.php' );
+	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'XML Sitemap', 'XML Sitemap', 'manage_options', SEO_ADMIN_DIRECTORY.'/seo-xml-sitemap.php' );
+	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Breadcrumbs', 'Breadcrumbs', 'manage_options', SEO_ADMIN_DIRECTORY.'/seo-breadcrumbs.php' );
+	add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'RSS', 'RSS', 'manage_options', SEO_ADMIN_DIRECTORY.'/seo-rss.php' );
 	//add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Advanced', 'Advanced', 9, SEO_ADMIN_DIRECTORY.'/seo-advanced.php' );
 	// add_submenu_page( SEO_ADMIN_DIRECTORY.'/seo-dashboard.php', 'Import', 'Import', 9, SEO_ADMIN_DIRECTORY.'/seo-import-export.php' );
 	

@@ -11,7 +11,11 @@ function move_me_around_scripts() {
     <h1>Breadcrumbs Settings</h1>
 </div>
 
-<?php if ( $_POST['update_sitemapoptions'] == 'true' ) {   
+<?php
+$update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['update_sitemapoptions'] : null);
+?>
+
+<?php if ( $update_sitemapoptions == 'true' ) {   
 	
 	/*NONCE Verification*/
 	

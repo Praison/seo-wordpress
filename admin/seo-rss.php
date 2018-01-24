@@ -11,7 +11,11 @@ function move_me_around_scripts() {
     <h1>RSS Settings</h1>
 </div>
 
-<?php if ( $_POST['update_rss'] == 'true' ) { 
+<?php
+$update_rss = (isset($_POST['update_rss']) ? $_POST['update_rss'] : null);
+?>
+
+<?php if ( $update_rss == 'true' ) { 
 
 	/*NONCE Verification*/ 
 	
