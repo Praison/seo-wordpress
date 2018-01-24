@@ -13,7 +13,7 @@ class zeo_rewrite_title {
 	$seo_data_class = new seo_data_class();
 	$individual_title = $seo_data_class->zeo_get_post_meta($uid);
 
-    $bloghome = get_settings('home');
+    $bloghome = get_option('home');
     if (substr($bloghome, count($bloghome) - 1, 1) != '/') {
       $pattern = preg_quote($bloghome, '/');
       $content = preg_replace("/$pattern\"/", "$bloghome/\"", $content);
@@ -74,7 +74,7 @@ class zeo_rewrite_title {
     }
     
     if ($title) {
-      $blogname = get_settings('blogname');
+      $blogname = get_option('blogname');
 
       $content = preg_replace("/<title>.*<\/title>/", "<title>$title</title>", $content);
       //$content = preg_replace("/>$blogname</", ">$title - $blogname<", $content);

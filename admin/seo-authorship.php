@@ -25,7 +25,12 @@ function zeo_ischecked($chkname,$value)
 
 
 ?>
-<?php if ( $_POST['update_authorshipoptions'] == 'true' ) {  
+
+<?php
+$update_authorshipoptions = (isset($_POST['update_authorshipoptions']) ? $_POST['update_authorshipoptions'] : null);
+?>
+
+<?php if ( $update_authorshipoptions == 'true' ) {  
 	
 	/*NONCE Verification*/
 	
@@ -56,8 +61,8 @@ function authorshipoptions_update(){
 
 	// Sanitise POST values
 
-	update_usermeta( $current_user->ID, 'zeoauthor', sanitize_text_field($_POST['zeoauthor'] ));
-	update_usermeta( $current_user->ID, 'zeopreferredname', sanitize_text_field($_POST['zeopreferredname'] ));
+	update_user_meta( $current_user->ID, 'zeoauthor', sanitize_text_field($_POST['zeoauthor'] ));
+	update_user_meta( $current_user->ID, 'zeopreferredname', sanitize_text_field($_POST['zeopreferredname'] ));
 	
 	echo '<div class="container float-left updated">
 		<p>
@@ -67,7 +72,12 @@ function authorshipoptions_update(){
 	
 }
 ?>
-  <?php if ( $_POST['update_analyticsoptions'] == 'true' ) {   
+
+<?php
+$update_analyticsoptions = (isset($_POST['update_analyticsoptions']) ? $_POST['update_analyticsoptions'] : null);
+?>
+
+  <?php if ( $update_analyticsoptions == 'true' ) {   
 	
 	/*NONCE Verification*/
 	
@@ -131,7 +141,7 @@ $options = get_mervin_options();
 						        <div class="border border-secondary p-3 mb-4" id="support">
 						        	<h3>Google Authorship Settings</h3>  
 									
-									<?php global $current_user;	get_currentuserinfo();  ?>
+									<?php global $current_user;	wp_get_current_user();  ?>
 									<div class="form-group">
 										<label for="mpgpauthor">Google Plus Profile URL (Required)</label>
 									
