@@ -79,12 +79,20 @@ $options = get_mervin_options();
 						<div class="form-group">
 							<label for="rsshead">Content Before Each Post</label>
 
-							<textarea class="form-control" cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php echo esc_html($options['rss-header-content'])?></textarea> 
+							<textarea class="form-control" cols="50" rows="5" name="rss-header-content" id="rsshead" class="regular-text" ><?php 
+								if(isset($options['rss-header-content'])){
+									echo esc_html($options['rss-header-content']);	
+								}
+							?></textarea> 
 						</div> 
 						<div class="form-group">
 
 							<label for="rssfoot">Content After each Post</label>
-							<textarea class="form-control" cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php echo esc_html($options['rss-footer-content'])?></textarea>             
+							<textarea class="form-control" cols="50" rows="5" name="rss-footer-content" id="rssfoot" class="regular-text" ><?php 
+								if(isset($options['rss-footer-content'])){
+									echo esc_html($options['rss-footer-content']);	
+								}
+								?></textarea>             
 										
 							Note: HTML Allowed
 						</div>

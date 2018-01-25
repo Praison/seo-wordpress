@@ -137,7 +137,7 @@ $options = get_mervin_options();
 
 
 						<?php
-						if ( $options['enablexmlsitemap'] )
+						if ( isset($options['enablexmlsitemap']) )
 						   echo '<div >'.sprintf(__('You can find your XML Sitemap here: %sXML Sitemap%s', 'seo-wordpress' ), '<a target="_blank" class="btn btn-primary" href="'.home_url('/sitemap_index.xml').'">', '</a>').'</div>';
 								
 						?>
