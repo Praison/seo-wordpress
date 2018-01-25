@@ -6,19 +6,54 @@ function call_seo_metabox_class() {
 	
 }
 if ( is_admin() ){
-add_action( 'load-post.php', 'call_seo_metabox_class' );
+	add_action( 'load-post.php', 'call_seo_metabox_class' );
 }
 
 
 class seo_metabox_class {
+
+
 	
 
 public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo_index'	);
+
+public static $post_meta_fields = array (
+			'default' => array(
+				'zeo_title'=> array(
+					'field' => 'zeo_title',
+					'type'=> 'text',
+					'label' => 'Title'
+				),
+				'zeo_description'=> array(
+					'field' => 'zeo_description',
+					'type'=> 'textarea',
+					'label' => 'Description'
+				),
+				'zeo_keywords'=> array(
+					'field' => 'zeo_keywords',
+					'type'=> 'text',
+					'label' => 'Keywords'
+				), 
+				'zeo_index'=> array(
+					'field' => 'zeo_index',
+					'type'=> 'radio',
+					'label' => 'Index',
+					'options' => array(
+						'index, follow',
+						'index, nofollow',
+						'noindex, follow',
+						'noindex, nofollow'
+					)
+				)
+			)
+		);
 
 	public function __construct(){	
 		
 		add_action( 'add_meta_boxes', array( &$this, 'add_some_meta_box' ) );
 		add_action( 'save_post', array( &$this, 'myplugin_save_postdata' ));
+
+
 		
 		
 	}
@@ -71,66 +106,38 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename( __FILE__ ), 'myplugin_noncename' );
 		$seo_data_class = new seo_data_class();
-		
-		$i=0;
-		
-		foreach ($this->zeo_uniqueid as $uid){
-			if($i==0)$mytitle=$uid;
-			if($i==1)$mydescription=$uid;
-			if($i==2)$mykeywords=$uid;
-			if($i==3)$myindex=$uid;
-			$i+=1;
+
+		$output_m_fields = '';
+
+		foreach(self::$post_meta_fields as $post_meta_field){
+			foreach($post_meta_field as $meta_field){
+				$output_m_fields .= '<tr><td width="27%"><b>'.$meta_field['label'].'</b></td>';
+				if($meta_field['type']=='text'){
+					$output_m_fields .= '<td><input id="'.$meta_field['field'].'" type="text" size="82" name="'.$meta_field['field'].'" value="'.$seo_data_class->zeo_get_post_meta($meta_field['field']).'" ></input><span id="'.$meta_field['field'].'_count"></span></td>';
+				}elseif($meta_field['type']=='textarea'){
+					$output_m_fields .= '<td><textarea id="'.$meta_field['field'].'" name="'.$meta_field['field'].'" rows="4" cols="84" >'.$seo_data_class->zeo_get_post_meta($meta_field['field']).'</textarea><span id="'.$meta_field['field'].'_count"></span></td>';					
+				}elseif($meta_field['type']=='radio'){
+					$output_m_fields .= '<td>';
+					foreach($meta_field['options'] as $radio_option){
+						$output_m_fields .= '<input type="radio" name="'.$meta_field['field'].'" value="'.$radio_option.'"';
+
+						if($radio_option==$seo_data_class->zeo_get_post_meta($meta_field['field'])) {
+								$output_m_fields .=  ' checked';
+							}
+
+						$output_m_fields .= ' />'.$radio_option.' &nbsp;&nbsp;';
+						
+					}
+					$output_m_fields .= '</td>';
+				}
+
+				$output_m_fields .= '<td><span id="'.$meta_field['field'].'_count"></span></td></tr>';
+			}
 		}
 		
-		$titlevalue = $seo_data_class->zeo_get_post_meta($mytitle);
-		$descriptionvalue = $seo_data_class->zeo_get_post_meta($mydescription);
-		$keywordsvalue = $seo_data_class->zeo_get_post_meta($mykeywords);
-		$indexvalue = $seo_data_class->zeo_get_post_meta($myindex);
+		echo '<form method="POST" action=""><table>'.$output_m_fields.'</table></form>';		
 		
 		
-        echo '<table>
-		<tr>
-		<td width="30%"><b>Title</b></td>
-		<td><form method="POST" action=""> 
-		<input id="meta_title" type="text" size="82" name="zeo_title" value="';
-		echo $titlevalue;
-
-		echo '" ></input>
-		<span id="meta_title_count"></span>
-		</td>
-		
-		</tr>
-		<tr>
-		<td><b>Description</b></td>
-		<td>
-		
-		<textarea id="meta_desc" name="zeo_description" rows="4" cols="84" >';
-		echo $descriptionvalue;
-		echo '</textarea>
-		<span id="meta_desc_count"></span>
-		</td>
-		
-		</tr>
-		<tr>
-		<td><b>Keywords</b></td>
-		<td><input type="text" size="82" name="zeo_keywords" value="';
-		echo $keywordsvalue;
-		
-		echo '" ></input></form></td>';
-		?>
-		</tr>
-		<tr>
-		<td><b>Index, Follow Settings</b></td>
-		<td><input type="radio" name="zeo_index" value="index, follow" <?php if($indexvalue=='index, follow')echo 'checked'; ?> />Index, Follow &nbsp;&nbsp;
-		<input type="radio" name="zeo_index" value="index, nofollow" <?php if($indexvalue=='index, nofollow')echo 'checked'; ?> /> Index, NoFollow &nbsp;&nbsp;
-        <input type="radio" name="zeo_index" value="noindex, follow" <?php if($indexvalue=='noindex, follow')echo 'checked'; ?> /> NoIndex, Follow &nbsp;&nbsp;
-		<input type="radio" name="zeo_index" value="noindex, nofollow" <?php if($indexvalue=='noindex, nofollow')echo 'checked'; ?> /> NoIndex, NoFollow &nbsp;
-		</form></td>
-		
-		</tr>
-		
-		<?php
-		echo '</table>';
     }
 	
 	
