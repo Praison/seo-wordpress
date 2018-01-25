@@ -61,6 +61,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= Version 4.0.10 =
+
+* Parsing Meta Box Effectively
+
 = Version 4.0.9 =
 
 * PHP Warnings Fixed
@@ -146,6 +150,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 3. Meta Data Optimisation
 
 == Upgrade Notice ==
+
+= 4.0.10 =
+
+* Parsing Meta Box Effectively
 
 = 4.0.9 =
 
