@@ -43,6 +43,12 @@ Customize according to your Need.
 <a href="https://mer.vin/seo-wordpress/" >SEO Wordpress Plugin</a> By Mervin Praison
 <a href="https://seomanageruk.com/">SEO Manager UK</a>
 
+= Feature Request and Issues =
+
+<a href="https://github.com/Praison/seo-wordpress/issues/new" > Submit Feature Request</a>
+<a href="https://github.com/Praison/seo-wordpress/issues/new" > Submit Issues</a>
+
+
 == Installation ==
 
 = Step 1 =
