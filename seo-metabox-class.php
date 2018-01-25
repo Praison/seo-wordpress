@@ -165,35 +165,32 @@ public static $post_meta_fields = array (
 
  	 // OK, we're authenticated: we need to find and save the data
 
- 		foreach ($this->zeo_uniqueid as $uid){			
-		
+ 		foreach(self::$post_meta_fields as $post_meta_field){
+			foreach($post_meta_field as $meta_field){
+				
+				$postuid = (isset($_POST[$meta_field['field']]) ? $_POST[$meta_field['field']] : null );
 
-		$postuid = (isset($_POST[$uid]) ? $_POST[$uid] : null);
-
-
-		$mytitle = sanitize_text_field($postuid);			
-		$uniqueid = $uid;
-		
-		
-		$seo_data_class = new seo_data_class();
-		$checkvalue = $seo_data_class->zeo_get_post_meta($uniqueid);
-		
-		
-		if($mytitle!=NULL){
-		if(isset($checkvalue)){
-			$seo_data_class->zeo_update_post_meta($uniqueid, $mytitle);
+				$meta_data = sanitize_text_field($postuid);			
+				$meta_key = $meta_field['field'];
+				
+				$seo_data_class = new seo_data_class();
+				$checkvalue = $seo_data_class->zeo_get_post_meta($meta_key);
+				
+				if($meta_data!=NULL){
+					if(isset($checkvalue)){
+						$seo_data_class->zeo_update_post_meta($meta_key, $meta_data);
+					}
+					else{
+						$seo_data_class->zeo_add_post_meta($meta_key, $meta_data);	
+					}
+				}
+				else{
+					$seo_data_class->zeo_delete_post_meta($meta_key, $meta_data);	
+				
+				}
+			}
 		}
-		else{
-			$seo_data_class->zeo_add_post_meta($uniqueid, $mytitle);	
-			
-		}
-		}
-		else{
-		$seo_data_class->zeo_delete_post_meta($uniqueid, $mytitle);	
-		
-		}
-		
-		}
+ 		
 		
 	}
 	
@@ -333,7 +330,7 @@ public function zeo_head(){
 		}
 	$i=1;
 	$options = get_mervin_options();
-	echo "\n<!-- Wordpress SEO Plugin by Mervin Praison ( http://mervin.info/seo-wordpress/ ) --> \n";
+	echo "\n<!-- Wordpress SEO Plugin by Mervin Praison ( https://mer.vin/seo-wordpress/ ) --> \n";
 	foreach ($this->zeo_uniqueid as $uid){
 	$seo_data_class = new seo_data_class();
 	$checkvalue = $seo_data_class->zeo_get_post_meta($uid);	
