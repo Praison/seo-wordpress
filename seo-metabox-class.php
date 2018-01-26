@@ -330,12 +330,14 @@ public function zeo_head(){
 		}
 	$i=1;
 	$options = get_mervin_options();
+	$post_meta_fields = seo_metabox_class::$post_meta_fields;	
 	echo "\n<!-- Wordpress SEO Plugin by Mervin Praison ( https://mer.vin/seo-wordpress/ ) --> \n";
-	foreach ($this->zeo_uniqueid as $uid){
-	$seo_data_class = new seo_data_class();
-	$checkvalue = $seo_data_class->zeo_get_post_meta($uid);	
-	
-		
+	foreach($post_meta_fields as $post_meta_field){
+	foreach($post_meta_field as $meta_field){
+		$uid =$meta_field['field'];
+		$seo_data_class = new seo_data_class();
+		$checkvalue = $seo_data_class->zeo_get_post_meta($uid);			
+			
 		if (is_front_page()&& $i==1){
 			if(get_option('zeo_home_description')!=NULL)echo "<meta name='description' content='".get_option('zeo_home_description')."'/> ";
 			if(get_option('zeo_home_keywords')!=NULL)echo " <meta name='keywords' content='".get_option('zeo_home_keywords')."'/>";
@@ -381,6 +383,7 @@ public function zeo_head(){
 			
 		}
 				
+	}
 	}
 
 
