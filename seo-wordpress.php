@@ -37,6 +37,7 @@ require_once ( 'seo-authorship-icon.php');
 require_once ( 'seo-taxonomy.php');
 require_once ( 'seo-breadcrumbs.php');
 require_once ( 'seo-sitemaps.php');
+require_once ( 'inc/seo-deprecated.php');
 
 // custom css and js
 add_action('admin_enqueue_scripts', 'cstm_css_and_js');
