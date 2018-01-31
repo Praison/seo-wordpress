@@ -357,7 +357,6 @@ public function zeo_head(){
 		$hm_keywords = get_post_meta($blog_id, 'zeo_keywords', true);
 		if($hm_desc)echo "<meta name='description' content='".$hm_desc."'/>\n";
 		if($hm_keywords)echo "<meta name='keywords' content='".$hm_keywords."'/>\n";
-		//$i=2;
 	} else {
 	// All other pages	
 
