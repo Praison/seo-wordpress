@@ -331,69 +331,87 @@ public function zeo_head(){
 	$i=1;
 	$options = get_mervin_options();
 	$post_meta_fields = seo_metabox_class::$post_meta_fields;	
+	$frontpage_id = get_option( 'page_on_front' );
+	$blog_id = get_option( 'page_for_posts' );
+
 	echo "\n<!-- Wordpress SEO Plugin by Mervin Praison ( https://mer.vin/seo-wordpress/ ) --> \n";
-	foreach($post_meta_fields as $post_meta_field){
-	foreach($post_meta_field as $meta_field){
-		$uid =$meta_field['field'];
-		$seo_data_class = new seo_data_class();
-		$checkvalue = $seo_data_class->zeo_get_post_meta($uid);			
-			
-		if (is_front_page()&& $i==1){
-			if(get_option('zeo_home_description')!=NULL)echo "<meta name='description' content='".get_option('zeo_home_description')."'/> ";
-			if(get_option('zeo_home_keywords')!=NULL)echo " <meta name='keywords' content='".get_option('zeo_home_keywords')."'/>";
-			
-			/*  Adding Google Bing and Alexa Verifications  */	
-			
-			if ( is_front_page() ) {
-			if (!empty($options['verification-google'])) {
-				$google_meta = $options['verification-google'];
-				if ( strpos($google_meta, 'content') ) {
-					preg_match('/content="([^"]+)"/', $google_meta, $match);
-					$google_meta = $match[1];
+
+	// Start of Primary Meta Data
+	// "Your Latest Posts" option Selected
+	if ( is_front_page() && is_home() ){
+		if(get_option('zeo_home_description')!=NULL)echo "<meta name='description' content='".get_option('zeo_home_description')."'/>\n";
+		if(get_option('zeo_home_keywords')!=NULL)echo "<meta name='keywords' content='".get_option('zeo_home_keywords')."'/>\n";
+	}
+	// Static Home Page Selected
+	elseif (is_front_page()){
+		echo "<meta name='description' content='".get_post_meta($frontpage_id, 'zeo_description', true)."'/>\n";
+		echo "<meta name='keywords' content='".get_post_meta($frontpage_id, 'zeo_keywords', true)."'/>\n";
+	}
+	// Static Blog Page Selected
+	elseif(is_home()){
+		echo "<meta name='description' content='".get_post_meta($blog_id, 'zeo_description', true)."'/>\n";
+		echo "<meta name='keywords' content='".get_post_meta($blog_id, 'zeo_keywords', true)."'/>\n";
+		//$i=2;
+	} else {
+	// All other pages	
+
+		foreach($post_meta_fields as $post_meta_field){
+			foreach($post_meta_field as $meta_field){
+				$uid =$meta_field['field'];
+				$seo_data_class = new seo_data_class();
+				$checkvalue = $seo_data_class->zeo_get_post_meta($uid);
+
+				if($checkvalue!=NULL ){
+					if($uid=='zeo_description')echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
+					if($uid=='zeo_keywords')echo "<meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
+					if($uid=='zeo_index' && !is_front_page())echo " <meta name='robots' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
+					
 				}
-				echo "<meta name=\"google-site-verification\" content=\"$google_meta\" />\n";
+						
 			}
-				
-			if (!empty($options['verification-bing'])) {
-				$bing_meta = $options['verification-bing'];
-				if ( strpos($bing_meta, 'content') ) {
-					preg_match('/content="([^"]+)"/', $bing_meta, $match);
-					$bing_meta = $match[1];
-				}								
-				echo "<meta name=\"msvalidate.01\" content=\"$bing_meta\" />\n";
-			}
-			
-			if (!empty($options['verification-alexa'])) {
-				echo "<meta name=\"alexaVerifyID\" content=\"".esc_attr($options['verification-alexa'])."\" />\n";
-			}	
 		}
-			
-			/*  Adding Google Bing and Alexa Verifications  */
-			$i=2;
-		}
-		elseif(is_home() && $i==1){
-			if(get_option('zeo_blog_description')!=NULL)echo "<meta name='description' content='".get_option('zeo_blog_description')."'/> ";
-			if(get_option('zeo_blog_keywords')!=NULL)echo " <meta name='keywords' content='".get_option('zeo_blog_keywords')."'/>";
-			$i=2;
-		}
-		elseif($checkvalue!=NULL && $i==1){
-			if($uid=='zeo_description')echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
-			if($uid=='zeo_keywords')echo " <meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
-			if($uid=='zeo_index' && !is_front_page())echo " <meta name='robots' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>";
-			
-		}
-				
-	}
-	}
+	} // End of Primary Meta Data
 
 
 	global $wp_query;
 	$url = $this->zeo_get_url($wp_query);
 	if(get_option('zeo_canonical_url')!=NULL && get_option('zeo_canonical_url')=='yes'&& $url!=NULL )echo "<link rel='canonical' href='".$url."' />";
-	if(is_category()&& $this->zeo_ischeck_head('zeo_category_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />';
-	if(is_tag()&& $this->zeo_ischeck_head('zeo_tag_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />';
-	if(is_date()&& $this->zeo_ischeck_head('zeo_date_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />';
+	if(is_category()&& $this->zeo_ischeck_head('zeo_category_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
+	if(is_tag()&& $this->zeo_ischeck_head('zeo_tag_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
+	if(is_date()&& $this->zeo_ischeck_head('zeo_date_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
+	
+	/*  Adding Google Bing and Alexa Verifications  */	
+
+	if ( is_front_page() ) {
+		if (!empty($options['verification-google'])) {
+			$google_meta = $options['verification-google'];
+			if ( strpos($google_meta, 'content') ) {
+				preg_match('/content="([^"]+)"/', $google_meta, $match);
+				$google_meta = $match[1];
+			}
+			echo "<meta name=\"google-site-verification\" content=\"$google_meta\" />\n";
+		}
+			
+		if (!empty($options['verification-bing'])) {
+			$bing_meta = $options['verification-bing'];
+			if ( strpos($bing_meta, 'content') ) {
+				preg_match('/content="([^"]+)"/', $bing_meta, $match);
+				$bing_meta = $match[1];
+			}								
+			echo "<meta name=\"msvalidate.01\" content=\"$bing_meta\" />\n";
+		}
+		
+		if (!empty($options['verification-alexa'])) {
+			echo "<meta name=\"alexaVerifyID\" content=\"".esc_attr($options['verification-alexa'])."\" />";
+		}	
+	}
+
+	/*  Adding Google Bing and Alexa Verifications  */
+
 	echo "\n<!-- End of Wordpress SEO Plugin by Mervin Praison --> \n";	
+	
+
+
 	}	
 	
 		

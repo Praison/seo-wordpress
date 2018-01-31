@@ -109,6 +109,15 @@ function zeooptions_update(){
                 <div class="border border-secondary p-3 mb-4" id="support">
             
     	            <h2>Home Page Settings</h2>
+
+                    <?php
+                        $frontpage_id = get_option( 'page_on_front' );
+                        $blog_id = get_option( 'page_for_posts' );
+                        if($frontpage_id || $blog_id ){
+                            if($frontpage_id) echo '<a href="'.get_edit_post_link($frontpage_id).'" >Edit Front Page</a><br />';
+                            if($blog_id) echo '<a href="'.get_edit_post_link($blog_id).'" >Edit Blog</a>';
+                        } else {  
+                    ?>
                     
                     <div class="form-group">
         				<label for="homePageTitle">Home Page Title:</label>
@@ -124,17 +133,8 @@ function zeooptions_update(){
         				<label for="homePageMetaKeywords">Home Page  Meta Keywords:</label>
         				
                     	<input id="homePageMetaKeywords" class="form-control" size="55" type="text" value="<?php echo esc_html(get_option('zeo_home_keywords')); ?>" name="zeo_home_keywords"  />  
-                	</div>
-                    <div class="form-group">
-        				<label for="blogPageMetaDescription">Blog Page  Meta Description (if exists):</label>
-        				
-                    	<textarea id="blogPageMetaDescription" class="form-control" size="50" rows="3" cols="52" name="zeo_blog_description" ><?php echo esc_html(get_option('zeo_blog_description')); ?></textarea>  
-                	</div>
-                    <div class="form-group">
-        				<label for="blogPageMetaKeywords">Blog Page  Meta Keywords (if exists):</label>
-        				
-                    	<input id="blogPageMetaKeywords" class="form-control" size="55" type="text" value="<?php echo esc_html(get_option('zeo_blog_keywords')); ?>" name="zeo_blog_keywords"  />  
-            	    </div>
+                	</div>                   
+                    <?php    } ?>
                 
                 </div>
                 
