@@ -339,18 +339,24 @@ public function zeo_head(){
 	// Start of Primary Meta Data
 	// "Your Latest Posts" option Selected
 	if ( is_front_page() && is_home() ){
-		if(get_option('zeo_home_description')!=NULL)echo "<meta name='description' content='".get_option('zeo_home_description')."'/>\n";
-		if(get_option('zeo_home_keywords')!=NULL)echo "<meta name='keywords' content='".get_option('zeo_home_keywords')."'/>\n";
+		$fphm_desc = get_option('zeo_home_description');
+		$fphm_keywords = get_option('zeo_home_keywords');
+		if($fphm_desc!=NULL)echo "<meta name='description' content='".$fphm_desc."'/>\n";
+		if($fphm_keywords!=NULL)echo "<meta name='keywords' content='".$fphm_keywords."'/>\n";
 	}
 	// Static Home Page Selected
 	elseif (is_front_page()){
-		echo "<meta name='description' content='".get_post_meta($frontpage_id, 'zeo_description', true)."'/>\n";
-		echo "<meta name='keywords' content='".get_post_meta($frontpage_id, 'zeo_keywords', true)."'/>\n";
+		$fp_desc = get_post_meta($frontpage_id, 'zeo_description', true)
+		$fp_keywords = get_post_meta($frontpage_id, 'zeo_keywords', true)
+		if($fp_desc)echo "<meta name='description' content='".$fp_desc."'/>\n";
+		if($fp_keywords)echo "<meta name='keywords' content='".$fp_keywords."'/>\n";
 	}
 	// Static Blog Page Selected
 	elseif(is_home()){
-		echo "<meta name='description' content='".get_post_meta($blog_id, 'zeo_description', true)."'/>\n";
-		echo "<meta name='keywords' content='".get_post_meta($blog_id, 'zeo_keywords', true)."'/>\n";
+		$hm_desc = get_post_meta($blog_id, 'zeo_description', true)
+		$hm_keywords = get_post_meta($blog_id, 'zeo_keywords', true)
+		if($hm_desc)echo "<meta name='description' content='".$hm_desc."'/>\n";
+		if($hm_keywords)echo "<meta name='keywords' content='".$hm_keywords."'/>\n";
 		//$i=2;
 	} else {
 	// All other pages	
