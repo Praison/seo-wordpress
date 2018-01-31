@@ -40,8 +40,7 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress/" >SEO Wordpress Plugin</a> By Mervin Praison
-<a href="https://seomanageruk.com/">SEO Manager UK</a>
+<a href="https://mer.vin/seo-wordpress/" >SEO Wordpress Plugin</a> By Mervin Praison <a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 = Feature Request and Issues =
 
@@ -58,14 +57,11 @@ Customize according to your Need.
 3. Upload the folder `seo-wordpress` to your WP plugin folder `/wp-content/plugins/` directory
 4. Go to Plugins > Plugins, and activate the plugin
 
-
-= SEO Wordpress Plugin Documentation =
-
-<a href="https://mer.vin/seo-wordpress/" >Wordpress SEO Plugin</a> By Mervin Praison
-<a href="https://seomanageruk.com/">SEO Manager UK</a>
-
-
 == ChangeLog ==
+
+= 4.0.12 =
+
+* Optimised Home, Blog page meta data
 
 = Version 4.0.11 =
 
@@ -152,7 +148,6 @@ Customize according to your Need.
 
 = How to Setup? =
 Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
-<a href="https://seomanageruk.com/">SEO Manager UK</a>
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -160,6 +155,10 @@ Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By 
 3. Meta Data Optimisation
 
 == Upgrade Notice ==
+
+= 4.0.12 =
+
+* Optimised Home, Blog page meta data
 
 = 4.0.11 =
 
@@ -243,4 +242,3 @@ Created the Perfect Wordpress SEO Bundle
 = Wordpress SEO Plugin Documentation =
 
 <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
-<a href="https://seomanageruk.com/">SEO Manager UK</a>
