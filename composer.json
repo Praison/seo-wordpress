@@ -14,5 +14,9 @@
 			"homepage": "https://praison.com"
 		 }
 	  ],
-	  "type": "wordpress-plugin"
+	"type": "wordpress-plugin",
+	"require": {
+		"composer/installers": "~1.0",
+		"xrstf/composer-php52": "^1.0.20"
+	},
 }
