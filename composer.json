@@ -22,5 +22,16 @@
 		"codeclimate/php-test-reporter": "dev-master"
 	},
 	"minimum-stability": "dev",
-	"prefer-stable": true
+	"prefer-stable": true,
+	
+    "autoload": {
+	"classmap": [
+	    "src/"
+	]
+    },
+    "extra": {
+	"branch-alias": {
+	    "dev-master": "4.0.12"
+	}
+    }
 }
