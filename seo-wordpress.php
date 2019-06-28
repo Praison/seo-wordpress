@@ -12,11 +12,7 @@
     Version: 4.0.12
     License: GPL
     Author URI: https://seomanageruk.com/
-<<<<<<< HEAD
-    Last change: 30.01.2018
-=======
     Last change: 27.06.2019
->>>>>>> master
 */
 
 
