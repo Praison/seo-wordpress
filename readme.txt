@@ -3,11 +3,7 @@ Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
-<<<<<<< HEAD
-Tested up to: 4.9.3
-=======
 Tested up to: 5.2.2
->>>>>>> master
 Stable tag: trunk
 License: GPLv2 or later
 
