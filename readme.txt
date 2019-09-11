@@ -1,4 +1,4 @@
-=== Praison SEO ===
+=== SEO WordPress ===
 Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
@@ -40,7 +40,7 @@ Customize according to your Need.
 
 = SEO Wordpress Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress/" >SEO Wordpress Plugin</a> By Mervin Praison <a href="https://seomanageruk.com/">SEO Manager UK</a>
+<a href="https://praison.com/wordpress/plugins/seo/" >SEO Wordpress Plugin</a> By <a href="https://praison/">Mervin Praison</a>
 
 = Feature Request and Issues =
 
@@ -147,7 +147,7 @@ Customize according to your Need.
 == Frequently Asked Questions ==
 
 = How to Setup? =
-Check this <a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
+Check this <a href="https://praison.com/wordpress/plugins/seo/" >Wordpress SEO Plugin</a> By <a href="https://praison/">Mervin Praison</a>
 
 == Screenshots ==
 1. Wordpress SEO Settings Page
@@ -241,4 +241,4 @@ Created the Perfect Wordpress SEO Bundle
 
 = Wordpress SEO Plugin Documentation =
 
-<a href="https://mer.vin/seo-wordpress" >Wordpress SEO Plugin</a> By Mervin Praison
+<a href="https://praison.com/wordpress/plugins/seo/" >Wordpress SEO Plugin</a> By Mervin Praison
