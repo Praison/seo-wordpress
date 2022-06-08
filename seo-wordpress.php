@@ -2,17 +2,17 @@
 /**
  * @package Praison SEO WordPress
  * @author Mervin Praison
- * @version 4.0.12
+ * @version 4.0.13
  */
 /*
     Plugin Name: Praison SEO WordPress
-    Plugin URI: https://praison.com/wordpress/plugins/seo/
+    Plugin URI: https://mer.vin/wordpress/plugins/seo/
     Description: SEO Wordpress Plugin by Mervin Praison is a Powerfull Best Optimisation Plugin which has many SEO Features. Google Webmasters and Google Analytics Integration. Very Easy to Setup. Check all benefits here https://mer.vin/seo-wordpress/
     Author: Mervin Praison
-    Version: 4.0.12
+    Version: 4.0.13
     License: GPL
-    Author URI: https://praison.com/
-    Last change: 11.09.2019
+    Author URI: https://mer.vin/
+    Last change: 08.06.2022
 */
 
 
