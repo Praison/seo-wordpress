@@ -61,6 +61,10 @@ Customize according to your Need.
 
 == ChangeLog ==
 
+= 4.0.15 =
+
+* Title Rewrite fix
+
 = 4.0.12 =
 
 * Optimised Home, Blog page meta data
