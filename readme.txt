@@ -3,8 +3,8 @@ Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
 Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
 Requires at least: 3.0
-Tested up to: 5.2.2
-Stable tag: trunk
+Tested up to: 6.8
+Stable tag: 4.0.16
 License: GPLv2 or later
 
 SEO Wordpress Plugin by Mervin Praison is a Powerfull Plugin which has many SEO Features. Google Authorship and Google Analytics Integration. 

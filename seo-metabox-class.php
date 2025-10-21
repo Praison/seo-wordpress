@@ -113,9 +113,9 @@ public static $post_meta_fields = array (
 			foreach($post_meta_field as $meta_field){
 				$output_m_fields .= '<tr><td width="27%"><b>'.$meta_field['label'].'</b></td>';
 				if($meta_field['type']=='text'){
-					$output_m_fields .= '<td><input id="'.$meta_field['field'].'" type="text" size="82" name="'.$meta_field['field'].'" value="'.$seo_data_class->zeo_get_post_meta($meta_field['field']).'" ></input><span id="'.$meta_field['field'].'_count"></span></td>';
+					$output_m_fields .= '<td><input id="'.$meta_field['field'].'" type="text" size="82" name="'.$meta_field['field'].'" value="'.esc_attr($seo_data_class->zeo_get_post_meta($meta_field['field'])).'" ></input><span id="'.$meta_field['field'].'_count"></span></td>';
 				}elseif($meta_field['type']=='textarea'){
-					$output_m_fields .= '<td><textarea id="'.$meta_field['field'].'" name="'.$meta_field['field'].'" rows="4" cols="84" >'.$seo_data_class->zeo_get_post_meta($meta_field['field']).'</textarea><span id="'.$meta_field['field'].'_count"></span></td>';					
+					$output_m_fields .= '<td><textarea id="'.$meta_field['field'].'" name="'.$meta_field['field'].'" rows="4" cols="84" >'.esc_textarea($seo_data_class->zeo_get_post_meta($meta_field['field'])).'</textarea><span id="'.$meta_field['field'].'_count"></span></td>';					
 				}elseif($meta_field['type']=='radio'){
 					$output_m_fields .= '<td>';
 					foreach($meta_field['options'] as $radio_option){
@@ -341,22 +341,22 @@ public function zeo_head(){
 	if ( is_front_page() && is_home() ){
 		$fphm_desc = get_option('zeo_home_description');
 		$fphm_keywords = get_option('zeo_home_keywords');
-		if($fphm_desc!=NULL)echo "<meta name='description' content='".$fphm_desc."'/>\n";
-		if($fphm_keywords!=NULL)echo "<meta name='keywords' content='".$fphm_keywords."'/>\n";
+		if($fphm_desc!=NULL)echo "<meta name='description' content='" . esc_attr($fphm_desc) . "'/>\n";
+		if($fphm_keywords!=NULL)echo "<meta name='keywords' content='" . esc_attr($fphm_keywords) . "'/>\n";
 	}
 	// Static Home Page Selected
 	elseif (is_front_page()){
 		$fp_desc = get_post_meta($frontpage_id, 'zeo_description', true);
 		$fp_keywords = get_post_meta($frontpage_id, 'zeo_keywords', true);
-		if($fp_desc)echo "<meta name='description' content='".$fp_desc."'/>\n";
-		if($fp_keywords)echo "<meta name='keywords' content='".$fp_keywords."'/>\n";
+		if($fp_desc)echo "<meta name='description' content='" . esc_attr($fp_desc) . "'/>\n";
+		if($fp_keywords)echo "<meta name='keywords' content='" . esc_attr($fp_keywords) . "'/>\n";
 	}
 	// Static Blog Page Selected
 	elseif(is_home()){
 		$hm_desc = get_post_meta($blog_id, 'zeo_description', true);
 		$hm_keywords = get_post_meta($blog_id, 'zeo_keywords', true);
-		if($hm_desc)echo "<meta name='description' content='".$hm_desc."'/>\n";
-		if($hm_keywords)echo "<meta name='keywords' content='".$hm_keywords."'/>\n";
+		if($hm_desc)echo "<meta name='description' content='" . esc_attr($hm_desc) . "'/>\n";
+		if($hm_keywords)echo "<meta name='keywords' content='" . esc_attr($hm_keywords) . "'/>\n";
 	} else {
 	// All other pages	
 
@@ -367,9 +367,9 @@ public function zeo_head(){
 				$checkvalue = $seo_data_class->zeo_get_post_meta($uid);
 
 				if($checkvalue!=NULL ){
-					if($uid=='zeo_description')echo "<meta name='description' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
-					if($uid=='zeo_keywords')echo "<meta name='keywords' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
-					if($uid=='zeo_index' && !is_front_page())echo " <meta name='robots' content='".$seo_data_class->zeo_get_post_meta($uid)."'/>\n";
+					if($uid=='zeo_description')echo "<meta name='description' content='" . esc_attr($seo_data_class->zeo_get_post_meta($uid)) . "'/>\n";
+					if($uid=='zeo_keywords')echo "<meta name='keywords' content='" . esc_attr($seo_data_class->zeo_get_post_meta($uid)) . "'/>\n";
+					if($uid=='zeo_index' && !is_front_page())echo " <meta name='robots' content='" . esc_attr($seo_data_class->zeo_get_post_meta($uid)) . "'/>\n";
 					
 				}
 						
@@ -380,7 +380,7 @@ public function zeo_head(){
 
 	global $wp_query;
 	$url = $this->zeo_get_url($wp_query);
-	if(get_option('zeo_canonical_url')!=NULL && get_option('zeo_canonical_url')=='yes'&& $url!=NULL )echo "<link rel='canonical' href='".$url."' />";
+	if(get_option('zeo_canonical_url')!=NULL && get_option('zeo_canonical_url')=='yes'&& $url!=NULL )echo "<link rel='canonical' href='" . esc_url($url) . "' />";
 	if(is_category()&& $this->zeo_ischeck_head('zeo_category_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
 	if(is_tag()&& $this->zeo_ischeck_head('zeo_tag_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
 	if(is_date()&& $this->zeo_ischeck_head('zeo_date_nofollow', 'yes' ))echo ' <meta name="robots" content="noindex,follow" />\n';
@@ -394,7 +394,7 @@ public function zeo_head(){
 				preg_match('/content="([^"]+)"/', $google_meta, $match);
 				$google_meta = $match[1];
 			}
-			echo "<meta name=\"google-site-verification\" content=\"$google_meta\" />\n";
+			echo "<meta name=\"google-site-verification\" content=\"" . esc_attr($google_meta) . "\" />\n";
 		}
 			
 		if (!empty($options['verification-bing'])) {
