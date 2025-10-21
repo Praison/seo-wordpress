@@ -59,7 +59,11 @@ Customize according to your Need.
 
 == ChangeLog ==
 
-= 4.0.12 =
+= 4.0.16 =
+* Security Fix: Patched Cross-Site Scripting (XSS) vulnerabilities in the meta box and meta tag outputs.
+* Updated 'Tested up to' version to 6.8.
+
+
 
 * Optimised Home, Blog page meta data
 
@@ -156,7 +160,7 @@ Check this <a href="https://praison.com/wordpress/plugins/seo/" >Wordpress SEO P
 
 == Upgrade Notice ==
 
-= 4.0.12 =
+
 
 * Optimised Home, Blog page meta data
 

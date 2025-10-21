@@ -2,7 +2,7 @@
 /**
  * @package Praison SEO WordPress
  * @author Mervin Praison
- * @version 4.0.12
+ * @version 4.0.16
  */
 /*
     Plugin Name: Praison SEO WordPress
@@ -12,7 +12,7 @@
     Version: 4.0.16
     License: GPL
     Author URI: https://praison.com/
-    Last change: 11.09.2019
+    Last change: 21.10.2025
 */
 
 
