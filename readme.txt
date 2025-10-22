@@ -1,10 +1,10 @@
 === Praison SEO WordPress ===
 Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
-Tags: seo, sitemap, breadcrumbs, meta, optimization
+Tags: seo, seo wordpress, wordpress seo, wordpress seo plugin, seo wordpress plugin
 Requires at least: 3.0
 Tested up to: 6.8
-Stable tag: 4.0.16
+Stable tag: 4.0.17
 License: GPLv2 or later
 
 SEO Wordpress Plugin by Mervin Praison is a Powerfull Plugin which has many SEO Features. Google Authorship and Google Analytics Integration. 
