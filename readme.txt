@@ -63,7 +63,11 @@ Customize according to your Need.
 * Security Fix: Patched Cross-Site Scripting (XSS) vulnerabilities in the meta box and meta tag outputs.
 * Updated 'Tested up to' version to 6.8.
 
+= 4.0.15 =
 
+* Title Rewrite fix
+
+= 4.0.12 =
 
 * Optimised Home, Blog page meta data
 
