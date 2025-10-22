@@ -1,7 +1,7 @@
 === Praison SEO WordPress ===
 Contributors: mervinpraison
 Donate Link: https://goo.gl/Q4oiBG
-Tags: wordpress, seo, plugin, wordpress seo, wordpress plugin, seo plugin, wordpress seo plugin, seo wordpress, wordpress seo, search engine optimisation
+Tags: seo, sitemap, breadcrumbs, meta, optimization
 Requires at least: 3.0
 Tested up to: 6.8
 Stable tag: 4.0.16
