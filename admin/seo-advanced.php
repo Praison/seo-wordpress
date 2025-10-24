@@ -9,12 +9,12 @@ function move_me_around_scripts() {
 <div class="wrap">
 <h1>Advanced Settings</h1>
 
-<?php if ( $_POST['update_rss'] == 'true' ) { 
+<?php if ( isset($_POST['update_rss']) && sanitize_text_field( wp_unslash( $_POST['update_rss'] ) ) == 'true' ) { 
 
 	/*NONCE Verification*/
 
 	if ( ! isset( $_POST['seo_advanced_nonce_field'] ) 
-	    || ! wp_verify_nonce( $_POST['seo_advanced_nonce_field'], 'seo_advanced' ) 
+	    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_advanced_nonce_field'] ) ), 'seo_advanced' ) 
 	) {
 	   print 'Sorry, your nonce did not verify.';
 	   exit;
@@ -35,13 +35,13 @@ function rss_update(){
 	
 	// Validating and Santising POST Values
 	
-	if(isset($_POST['advanced-categorybase'])){
+	if(isset($_POST['advanced-categorybase']) && sanitize_text_field( wp_unslash( $_POST['advanced-categorybase'] ) )){
 		$mervin_advanced['advanced-categorybase']='yes';
 	}
-	if(isset($_POST['advanced-categorytrailing'])){
+	if(isset($_POST['advanced-categorytrailing']) && sanitize_text_field( wp_unslash( $_POST['advanced-categorytrailing'] ) )){
 		$mervin_advanced['advanced-categorytrailing']='yes';
 	}
-	if(isset($_POST['advanced-attachmentredirect'])){
+	if(isset($_POST['advanced-attachmentredirect']) && sanitize_text_field( wp_unslash( $_POST['advanced-attachmentredirect'] ) )){
 		$mervin_advanced['advanced-attachmentredirect']='yes';
 	}
 	

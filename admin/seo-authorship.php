@@ -27,7 +27,7 @@ function zeo_ischecked($chkname,$value)
 ?>
 
 <?php
-$update_authorshipoptions = (isset($_POST['update_authorshipoptions']) ? $_POST['update_authorshipoptions'] : null);
+$update_authorshipoptions = isset($_POST['update_authorshipoptions']) ? sanitize_text_field( wp_unslash( $_POST['update_authorshipoptions'] ) ) : null;
 ?>
 
 <?php if ( $update_authorshipoptions == 'true' ) {  
@@ -35,7 +35,7 @@ $update_authorshipoptions = (isset($_POST['update_authorshipoptions']) ? $_POST[
 	/*NONCE Verification*/
 	
 	if ( ! isset( $_POST['seo_authorship_nonce_field'] ) 
-	    || ! wp_verify_nonce( $_POST['seo_authorship_nonce_field'], 'seo_authorship' ) 
+	    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_authorship_nonce_field'] ) ), 'seo_authorship' ) 
 	) {
 	   print 'Sorry, your nonce did not verify.';
 	   exit;
@@ -56,13 +56,13 @@ function authorshipoptions_update(){
 
 	// Validate POST Values
 
-	if(!$_POST['zeoauthor'] ) {$_POST['zeoauthor'] = '';}
-	if(!$_POST['zeopreferredname'] ) {$_POST['zeopreferredname'] = '';}
+	$zeoauthor = isset($_POST['zeoauthor']) ? sanitize_text_field( wp_unslash( $_POST['zeoauthor'] ) ) : '';
+	$zeopreferredname = isset($_POST['zeopreferredname']) ? sanitize_text_field( wp_unslash( $_POST['zeopreferredname'] ) ) : '';
 
 	// Sanitise POST values
 
-	update_user_meta( $current_user->ID, 'zeoauthor', sanitize_text_field($_POST['zeoauthor'] ));
-	update_user_meta( $current_user->ID, 'zeopreferredname', sanitize_text_field($_POST['zeopreferredname'] ));
+	update_user_meta( $current_user->ID, 'zeoauthor', $zeoauthor );
+	update_user_meta( $current_user->ID, 'zeopreferredname', $zeopreferredname );
 	
 	echo '<div class="container float-left updated">
 		<p>
@@ -74,7 +74,7 @@ function authorshipoptions_update(){
 ?>
 
 <?php
-$update_analyticsoptions = (isset($_POST['update_analyticsoptions']) ? $_POST['update_analyticsoptions'] : null);
+$update_analyticsoptions = isset($_POST['update_analyticsoptions']) ? sanitize_text_field( wp_unslash( $_POST['update_analyticsoptions'] ) ) : null;
 ?>
 
   <?php if ( $update_analyticsoptions == 'true' ) {   
@@ -82,7 +82,7 @@ $update_analyticsoptions = (isset($_POST['update_analyticsoptions']) ? $_POST['u
 	/*NONCE Verification*/
 	
 	if ( ! isset( $_POST['seo_analytics_nonce_field'] ) 
-	    || ! wp_verify_nonce( $_POST['seo_analytics_nonce_field'], 'seo_analytics' ) 
+	    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_analytics_nonce_field'] ) ), 'seo_analytics' ) 
 	) {
 	   print 'Sorry, your nonce did not verify.';
 	   exit;
@@ -105,20 +105,20 @@ function analyticsoptions_update(){
 	// Validating and Santising POST Values
 
 	if(isset($_POST['verification-google'])){
-		$mervin_verification['verification-google']=stripslashes(sanitize_text_field($_POST['verification-google']));
+		$mervin_verification['verification-google']=sanitize_text_field( wp_unslash( $_POST['verification-google'] ) );
 	}
 	if(isset($_POST['verification-bing'])){
-		$mervin_verification['verification-bing']=stripslashes(sanitize_text_field($_POST['verification-bing']));
+		$mervin_verification['verification-bing']=sanitize_text_field( wp_unslash( $_POST['verification-bing'] ) );
 	}
 	if(isset($_POST['verification-alexa'])){
-		$mervin_verification['verification-alexa']=stripslashes(sanitize_text_field($_POST['verification-alexa']));
+		$mervin_verification['verification-alexa']=sanitize_text_field( wp_unslash( $_POST['verification-alexa'] ) );
 	}
 	
-	if(!$_POST['zeo_analytics_id'] ) {$_POST['zeo_analytics_id'] = '';}
+	$zeo_analytics_id = isset($_POST['zeo_analytics_id']) ? sanitize_text_field( wp_unslash( $_POST['zeo_analytics_id'] ) ) : '';
 	
 	update_option('mervin_verification', $mervin_verification);
 	
-	update_option('zeo_analytics_id', sanitize_text_field($_POST['zeo_analytics_id'])); 
+	update_option('zeo_analytics_id', $zeo_analytics_id); 
 	
 	echo '<div class="container float-left updated">
 		<p>
