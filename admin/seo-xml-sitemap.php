@@ -12,7 +12,7 @@ function move_me_around_scripts() {
 </div>	
 
 <?php
-$update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['update_sitemapoptions'] : null);
+$update_sitemapoptions = isset($_POST['update_sitemapoptions']) ? sanitize_text_field( wp_unslash( $_POST['update_sitemapoptions'] ) ) : null;
 ?>
 
 <?php if ( $update_sitemapoptions == 'true' ) {  
@@ -20,7 +20,7 @@ $update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['updat
 	/*NONCE Verification*/ 
 	
 	if ( ! isset( $_POST['seo_xml_sitemap_nonce_field'] ) 
-	    || ! wp_verify_nonce( $_POST['seo_xml_sitemap_nonce_field'], 'seo_xml_sitemap' ) 
+	    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_xml_sitemap_nonce_field'] ) ), 'seo_xml_sitemap' ) 
 	) {
 	   print 'Sorry, your nonce did not verify.';
 	   exit;
