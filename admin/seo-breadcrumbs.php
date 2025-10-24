@@ -12,7 +12,7 @@ function move_me_around_scripts() {
 </div>
 
 <?php
-$update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['update_sitemapoptions'] : null);
+$update_sitemapoptions = isset($_POST['update_sitemapoptions']) ? sanitize_text_field( wp_unslash( $_POST['update_sitemapoptions'] ) ) : null;
 ?>
 
 <?php if ( $update_sitemapoptions == 'true' ) {   
@@ -20,7 +20,7 @@ $update_sitemapoptions = (isset($_POST['update_sitemapoptions']) ? $_POST['updat
 	/*NONCE Verification*/
 	
 	if ( ! isset( $_POST['seo_breadcrumbs_nonce_field'] ) 
-	    || ! wp_verify_nonce( $_POST['seo_breadcrumbs_nonce_field'], 'seo_breadcrumbs' ) 
+	    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_breadcrumbs_nonce_field'] ) ), 'seo_breadcrumbs' ) 
 	) {
 	   print 'Sorry, your nonce did not verify.';
 	   exit;
@@ -47,12 +47,12 @@ function sitemapoptions_update(){
 
 	foreach ($listtoupdate as $list){
 	if(isset($_POST[$list])){
-		$mervin_breadcrumbs[$list]=stripslashes(sanitize_text_field($_POST[$list]));
+		$mervin_breadcrumbs[$list]=sanitize_text_field( wp_unslash( $_POST[$list] ) );
 	}
 	}
 	
 	if(isset($_POST['mervin_breadcrumbs'])){
-	$mervin_breadcrumbs = array_merge( $mervin_breadcrumbs, stripslashes_deep($_POST['mervin_breadcrumbs']) );
+	$mervin_breadcrumbs = array_merge( $mervin_breadcrumbs, array_map( 'sanitize_text_field', wp_unslash( $_POST['mervin_breadcrumbs'] ) ) );
 	}
 	
 	update_option('mervin_breadcrumbs', $mervin_breadcrumbs);
@@ -194,7 +194,7 @@ $options = get_mervin_options();
 
 							$taxonomies = get_object_taxonomies($pt);
 							if (count($taxonomies) > 0) {
-								$values = array(0 => __('None','wordpress-seo') );
+								$values = array(0 => __('None','seo-wordpress') );
 								foreach (get_object_taxonomies($pt) as $tax) {
 									$taxobj = get_taxonomy($tax);
 									$values[$tax] = $taxobj->labels->singular_name;
@@ -203,7 +203,7 @@ $options = get_mervin_options();
 								$content .= select('post_types-'.$pt.'-maintax', $ptobj->labels->name, $values);					
 							}
 							}
-							echo $content;
+							echo wp_kses_post( $content );
 							?> 
 					    </div>
 					    
@@ -215,9 +215,9 @@ $options = get_mervin_options();
 							foreach (get_taxonomies(array('public'=>true)) as $taxonomy) {
 								if ( !in_array( $taxonomy, array('nav_menu','link_category','post_format', 'category', 'post_tag') ) ) {
 								$tax = get_taxonomy($taxonomy);
-								$values = array( '' => __( 'None', 'wordpress-seo' ) );
+								$values = array( '' => __( 'None', 'seo-wordpress' ) );
 								if ( get_option('show_on_front') == 'page' )
-									$values['post'] = __( 'Blog', 'wordpress-seo' );
+									$values['post'] = __( 'Blog', 'seo-wordpress' );
 								
 								foreach (get_post_types( array('public' =>true) ) as $pt) {
 									if (in_array($pt, array('revision', 'attachment', 'nav_menu_item')))
@@ -229,7 +229,7 @@ $options = get_mervin_options();
 									$content .= select('taxonomy-'.$taxonomy.'-ptparent', $tax->labels->singular_name, $values);					
 								}
 							} 
-						      echo $content;    
+						      echo wp_kses_post( $content );    
 							?>
 					       <br />
 					       <strong>Use this code to insert Breadcrumbs in your theme:</strong>

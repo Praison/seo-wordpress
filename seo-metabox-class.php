@@ -64,7 +64,7 @@ public static $post_meta_fields = array (
 		
         add_meta_box( 
              'some_meta_box_name'
-            ,__( 'Wordpress SEO Plugin Settings')
+            ,__( 'Wordpress SEO Plugin Settings', 'seo-wordpress')
             ,array( &$this, 'render_meta_box_content' )
             ,'post' 
             ,'advanced'
@@ -72,7 +72,7 @@ public static $post_meta_fields = array (
         );
 		add_meta_box( 
              'some_meta_box_name'
-            ,__( 'Wordpress SEO Plugin Settings')
+            ,__( 'Wordpress SEO Plugin Settings', 'seo-wordpress')
             ,array( &$this, 'render_meta_box_content' )
             ,'page' 
             ,'advanced'
@@ -88,7 +88,7 @@ public static $post_meta_fields = array (
 			
 			add_meta_box( 
              'some_meta_box_name'
-            ,__( 'Wordpress SEO Plugin Settings')
+            ,__( 'Wordpress SEO Plugin Settings', 'seo-wordpress')
             ,array( &$this, 'render_meta_box_content' )
             ,$post_type 
             ,'advanced'
@@ -111,31 +111,31 @@ public static $post_meta_fields = array (
 
 		foreach(self::$post_meta_fields as $post_meta_field){
 			foreach($post_meta_field as $meta_field){
-				$output_m_fields .= '<tr><td width="27%"><b>'.$meta_field['label'].'</b></td>';
+				$output_m_fields .= '<tr><td width="27%"><b>'.esc_html($meta_field['label']).'</b></td>';
 				if($meta_field['type']=='text'){
-					$output_m_fields .= '<td><input id="'.$meta_field['field'].'" type="text" size="82" name="'.$meta_field['field'].'" value="'.esc_attr($seo_data_class->zeo_get_post_meta($meta_field['field'])).'" ></input><span id="'.$meta_field['field'].'_count"></span></td>';
+					$output_m_fields .= '<td><input id="'.esc_attr($meta_field['field']).'" type="text" size="82" name="'.esc_attr($meta_field['field']).'" value="'.esc_attr($seo_data_class->zeo_get_post_meta($meta_field['field'])).'" ></input><span id="'.esc_attr($meta_field['field']).'_count"></span></td>';
 				}elseif($meta_field['type']=='textarea'){
-					$output_m_fields .= '<td><textarea id="'.$meta_field['field'].'" name="'.$meta_field['field'].'" rows="4" cols="84" >'.esc_textarea($seo_data_class->zeo_get_post_meta($meta_field['field'])).'</textarea><span id="'.$meta_field['field'].'_count"></span></td>';					
+					$output_m_fields .= '<td><textarea id="'.esc_attr($meta_field['field']).'" name="'.esc_attr($meta_field['field']).'" rows="4" cols="84" >'.esc_textarea($seo_data_class->zeo_get_post_meta($meta_field['field'])).'</textarea><span id="'.esc_attr($meta_field['field']).'_count"></span></td>';					
 				}elseif($meta_field['type']=='radio'){
 					$output_m_fields .= '<td>';
 					foreach($meta_field['options'] as $radio_option){
-						$output_m_fields .= '<input type="radio" name="'.$meta_field['field'].'" value="'.$radio_option.'"';
+						$output_m_fields .= '<input type="radio" name="'.esc_attr($meta_field['field']).'" value="'.esc_attr($radio_option).'"';
 
 						if($radio_option==$seo_data_class->zeo_get_post_meta($meta_field['field'])) {
 								$output_m_fields .=  ' checked';
 							}
 
-						$output_m_fields .= ' />'.$radio_option.' &nbsp;&nbsp;';
+						$output_m_fields .= ' />'.esc_html($radio_option).' &nbsp;&nbsp;';
 						
 					}
 					$output_m_fields .= '</td>';
 				}
 
-				$output_m_fields .= '<td><span id="'.$meta_field['field'].'_count"></span></td></tr>';
+				$output_m_fields .= '<td><span id="'.esc_attr($meta_field['field']).'_count"></span></td></tr>';
 			}
 		}
 		
-		echo '<form method="POST" action=""><table>'.$output_m_fields.'</table></form>';		
+		echo '<form method="POST" action=""><table>'.wp_kses_post($output_m_fields).'</table></form>';		
 		
 		
     }
@@ -147,12 +147,12 @@ public static $post_meta_fields = array (
  		 if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
    	   return;
 		
-   		$myplugin_noncename = (isset($_POST['myplugin_noncename']) ? $_POST['myplugin_noncename'] : null);
+   		$myplugin_noncename = isset($_POST['myplugin_noncename']) ? sanitize_text_field( wp_unslash( $_POST['myplugin_noncename'] ) ) : null;
 
  		 if ( !wp_verify_nonce( $myplugin_noncename, plugin_basename( __FILE__ ) ) )
     	  return;
 	  
- 		 if ( 'page' == $_POST['post_type'] ) 
+ 		 if ( isset($_POST['post_type']) && 'page' == sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) ) 
 		  {
  		   if ( !current_user_can( 'edit_page', $post_id ) )
      	   return;
@@ -168,9 +168,9 @@ public static $post_meta_fields = array (
  		foreach(self::$post_meta_fields as $post_meta_field){
 			foreach($post_meta_field as $meta_field){
 				
-				$postuid = (isset($_POST[$meta_field['field']]) ? $_POST[$meta_field['field']] : null );
+				$postuid = isset($_POST[$meta_field['field']]) ? sanitize_text_field( wp_unslash( $_POST[$meta_field['field']] ) ) : null;
 
-				$meta_data = sanitize_text_field($postuid);			
+				$meta_data = $postuid;			
 				$meta_key = $meta_field['field'];
 				
 				$seo_data_class = new seo_data_class();
@@ -248,11 +248,11 @@ public $zeo_uniqueid = array ('zeo_title','zeo_description','zeo_keywords', 'zeo
         		$author = get_userdata(get_query_var('author'));
      			if ($author === false)
         			return false;
-       			$link = get_author_link(false, $author->ID, $author->user_nicename);
+       			$link = get_author_posts_url($author->ID, $author->user_nicename);
    			} else {
         		global $cache_userdata;
 	            $userid = get_query_var('author');
-	            $link = get_author_link(false, $userid, $cache_userdata[$userid]->user_nicename);
+	            $link = get_author_posts_url($userid, $cache_userdata[$userid]->user_nicename);
       		}
   		} elseif ($query->is_category && $haspost) {
     		$link = get_category_link(get_query_var('cat'));
@@ -403,7 +403,7 @@ public function zeo_head(){
 				preg_match('/content="([^"]+)"/', $bing_meta, $match);
 				$bing_meta = $match[1];
 			}								
-			echo "<meta name=\"msvalidate.01\" content=\"$bing_meta\" />\n";
+			echo "<meta name=\"msvalidate.01\" content=\"".esc_attr($bing_meta)."\" />\n";
 		}
 		
 		if (!empty($options['verification-alexa'])) {
