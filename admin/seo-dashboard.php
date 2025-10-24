@@ -14,14 +14,14 @@ function zeo_ischecked($chkname,$value)
         	return false;
 	}
 
-$update_zeooptions = (isset($_POST['update_zeooptions']) ? $_POST['update_zeooptions'] : null);
+$update_zeooptions = isset($_POST['update_zeooptions']) ? sanitize_text_field( wp_unslash( $_POST['update_zeooptions'] ) ) : null;
 
 if ( $update_zeooptions == 'true' ) {     
     
     /*NONCE Verification*/
 
     if ( ! isset( $_POST['seo_dashboard_nonce_field'] ) 
-        || ! wp_verify_nonce( $_POST['seo_dashboard_nonce_field'], 'seo_dashboard' ) 
+        || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['seo_dashboard_nonce_field'] ) ), 'seo_dashboard' ) 
     ) {
        print 'Sorry, your nonce did not verify.';
        exit;
@@ -65,26 +65,26 @@ function zeooptions_update(){
 
 	//Sanitising the POST values	
 	
-	update_option('zeo_common_home_title', sanitize_text_field($_POST['zeo_common_home_title']));
-	update_option('zeo_home_description', sanitize_textarea_field($_POST['zeo_home_description']));
-	update_option('zeo_home_keywords', sanitize_text_field($_POST['zeo_home_keywords'])); 
-	update_option('zeo_blog_description', sanitize_textarea_field($_POST['zeo_blog_description']));
-	update_option('zeo_blog_keywords', sanitize_text_field($_POST['zeo_blog_keywords'])); 
-	update_option('zeo_common_frontpage_title', sanitize_text_field($_POST['zeo_common_frontpage_title']));
-	update_option('zeo_common_page_title', sanitize_text_field($_POST['zeo_common_page_title'])); 
-	update_option('zeo_common_post_title', sanitize_text_field($_POST['zeo_common_post_title'])); 
-	update_option('zeo_common_category_title', sanitize_text_field($_POST['zeo_common_category_title'])); 
-	update_option('zeo_common_archive_title', sanitize_text_field($_POST['zeo_common_archive_title'])); 
-	update_option('zeo_common_tag_title', sanitize_text_field($_POST['zeo_common_tag_title'])); 
-	update_option('zeo_common_search_title', sanitize_text_field($_POST['zeo_common_search_title'])); 
-	update_option('zeo_common_error_title', sanitize_text_field($_POST['zeo_common_error_title']));
-	update_option('zeo_canonical_url', sanitize_text_field($_POST['zeo_canonical_url']));
-	update_option('zeo_nofollow', sanitize_text_field($_POST['zeo_nofollow']));
-	update_option('zeo_activate_title', sanitize_text_field($_POST['zeo_activate_title']));	
-	update_option('zeo_category_nofollow', sanitize_text_field($_POST['zeo_category_nofollow']));
-	update_option('zeo_tag_nofollow', sanitize_text_field($_POST['zeo_tag_nofollow']));
-	update_option('zeo_date_nofollow', sanitize_text_field($_POST['zeo_date_nofollow']));
-	update_option('zeo_post_types', sanitize_text_field($_POST['zeo_post_types']));
+	update_option('zeo_common_home_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_home_title'] ) ));
+	update_option('zeo_home_description', sanitize_textarea_field( wp_unslash( $_POST['zeo_home_description'] ) ));
+	update_option('zeo_home_keywords', sanitize_text_field( wp_unslash( $_POST['zeo_home_keywords'] ) )); 
+	update_option('zeo_blog_description', sanitize_textarea_field( wp_unslash( $_POST['zeo_blog_description'] ) ));
+	update_option('zeo_blog_keywords', sanitize_text_field( wp_unslash( $_POST['zeo_blog_keywords'] ) )); 
+	update_option('zeo_common_frontpage_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_frontpage_title'] ) ));
+	update_option('zeo_common_page_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_page_title'] ) )); 
+	update_option('zeo_common_post_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_post_title'] ) )); 
+	update_option('zeo_common_category_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_category_title'] ) )); 
+	update_option('zeo_common_archive_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_archive_title'] ) )); 
+	update_option('zeo_common_tag_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_tag_title'] ) )); 
+	update_option('zeo_common_search_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_search_title'] ) )); 
+	update_option('zeo_common_error_title', sanitize_text_field( wp_unslash( $_POST['zeo_common_error_title'] ) ));
+	update_option('zeo_canonical_url', sanitize_text_field( wp_unslash( $_POST['zeo_canonical_url'] ) ));
+	update_option('zeo_nofollow', sanitize_text_field( wp_unslash( $_POST['zeo_nofollow'] ) ));
+	update_option('zeo_activate_title', sanitize_text_field( wp_unslash( $_POST['zeo_activate_title'] ) ));	
+	update_option('zeo_category_nofollow', sanitize_text_field( wp_unslash( $_POST['zeo_category_nofollow'] ) ));
+	update_option('zeo_tag_nofollow', sanitize_text_field( wp_unslash( $_POST['zeo_tag_nofollow'] ) ));
+	update_option('zeo_date_nofollow', sanitize_text_field( wp_unslash( $_POST['zeo_date_nofollow'] ) ));
+	update_option('zeo_post_types', sanitize_text_field( wp_unslash( $_POST['zeo_post_types'] ) ));
 	
 	echo '<div class="container float-left updated">
 		<p>
