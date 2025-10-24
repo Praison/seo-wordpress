@@ -1,6 +1,8 @@
 # WP Plugin Check - Issue Tracking
 
-**Last Updated:** 2025-10-24T20:35:47+01:00
+**Last Updated:** 2025-10-24T20:46:41+01:00
+
+**Version 4.0.18 Released:** Multiple security and coding standard fixes applied
 
 ## Summary
 This document tracks all issues found by `wp plugin check seo-wordpress` command.
@@ -169,6 +171,24 @@ wp plugin check seo-wordpress --require=./web/app/plugins/plugin-check/cli.php
 
 - [ ] `trademarked_term` - Plugin name contains "wordpress" (IGNORE)
 - [ ] `trademarked_term` - Plugin slug contains "wordpress" (IGNORE)
+
+---
+
+### 13. admin/seo-xml-sitemap.php
+**Status:** 🔄 Partially Fixed (nonce verification done, remaining POST data inside nonce-protected function)
+
+- [x] Line 15: `ValidatedSanitizedInput` - FIXED: Added proper sanitization to $_POST['update_sitemapoptions']
+- [x] Line 23: `ValidatedSanitizedInput` - FIXED: Added wp_unslash and sanitize_text_field to nonce
+- [x] Line 46: `ValidatedSanitizedInput` - FIXED: Added wp_unslash and sanitize_text_field to post types checkbox
+- [ ] Lines 46-72: Minor nonce verification warnings (false positives inside nonce-protected function)
+
+---
+
+### 14. seo-rewritetitle-class.php
+**Status:** 🔄 Partially Fixed (input sanitization done)
+
+- [x] Line 50: `ValidatedSanitizedInput` - FIXED: Added isset() check and wp_unslash to $_REQUEST['s']
+- [ ] Lines 50: Minor nonce verification warnings (recommended, not required for search)
 
 ---
 

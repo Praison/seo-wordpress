@@ -4,7 +4,7 @@ Donate Link: https://goo.gl/Q4oiBG
 Tags: seo, seo wordpress, wordpress seo, wordpress seo plugin, seo wordpress plugin
 Requires at least: 3.0
 Tested up to: 6.8
-Stable tag: 4.0.17
+Stable tag: 4.0.18
 License: GPLv2 or later
 
 SEO Wordpress Plugin by Mervin Praison is a Powerfull Plugin which has many SEO Features. Google Authorship and Google Analytics Integration. 
@@ -58,6 +58,16 @@ Customize according to your Need.
 4. Go to Plugins > Plugins, and activate the plugin
 
 == ChangeLog ==
+
+= 4.0.18 =
+* Code Quality: Fixed multiple security and coding standard issues
+* Fixed: Proper input sanitization in breadcrumbs, authorship, and XML sitemap modules
+* Fixed: Text domain consistency across all translation strings
+* Fixed: Output escaping in meta box and various admin pages
+* Improved: WordPress coding standards compliance
+
+= 4.0.17 =
+* Maintenance release
 
 = 4.0.16 =
 * Security Fix: Patched Cross-Site Scripting (XSS) vulnerabilities in the meta box and meta tag outputs.
