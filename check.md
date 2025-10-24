@@ -60,16 +60,21 @@ wp plugin check seo-wordpress --require=./web/app/plugins/plugin-check/cli.php
 ---
 
 ### 4. seo-authorship-icon.php
-**Status:** ❌ Not Fixed
+**Status:** ✅ FIXED
 
-- [ ] Line 12: `EscapeOutput.OutputNotEscaped` - Output not escaped in shortcode return value
+- [x] Line 22: `EscapeOutput.OutputNotEscaped` - FIXED: Added wp_kses_post() when echoing shortcode
+- [x] Line 50: `EscapeOutput.OutputNotEscaped` - FIXED: Added esc_url() to $mpgp_author_url
+- [x] Line 55: `EscapeOutput.OutputNotEscaped` - FIXED: Added esc_attr() to $authorizing
+- [ ] Line 56: `OffloadedContent` - External Google image (separate issue, not output escaping)
 
 ---
 
 ### 5. seo-authorship-badge.php
-**Status:** ❌ Not Fixed
+**Status:** ✅ FIXED
 
-- [ ] Line 12: `EscapeOutput.OutputNotEscaped` - Output not escaped in shortcode return value
+- [x] Line 22: `EscapeOutput.OutputNotEscaped` - FIXED: Added wp_kses_post() when echoing shortcode
+- [x] Line 62: `EscapeOutput.OutputNotEscaped` - FIXED: Added esc_url() to $mpgp_author_url
+- [x] Line 67: `EscapeOutput.OutputNotEscaped` - FIXED: Added esc_attr() to $authorizing
 
 ---
 

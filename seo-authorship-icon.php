@@ -19,7 +19,7 @@
 */
 
 function get_google_authorship_icon () {
-	echo seo_authorship_icon_short();
+	echo wp_kses_post( seo_authorship_icon_short() );
 }
 
 
@@ -47,12 +47,12 @@ if($mpgp_author_name==NULL)
 					}
 
 				$mpgpreturn = "<a href='";
-				$mpgpreturn .= $mpgp_author_url;
+				$mpgpreturn .= esc_url( $mpgp_author_url );
 				$mpgpreturn .= "?prsrc=3' rel='";
 				if(is_author){ $mpgpreturn .="author";}
 				else {$mpgpreturn .= "me";}
 				$mpgpreturn .= "' style='text-decoration:none;' title='Google Plus Profile for ";
-				$mpgpreturn .= $authorizing; 
+				$mpgpreturn .= esc_attr( $authorizing ); 
 				$mpgpreturn .="'><img src='https://ssl.gstatic.com/images/icons/gplus-32.png' alt='' style='border:0;width:32px;height:32px;'/>";
 				$mpgpreturn .= "</a>";
 }

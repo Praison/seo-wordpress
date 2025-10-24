@@ -19,7 +19,7 @@
 */
 
 function get_google_authorship_badge () {
-	echo seo_authorship_badge_short();
+	echo wp_kses_post( seo_authorship_badge_short() );
 }
 
 /* Google Plus Badge Header Code */
@@ -59,12 +59,12 @@ if($mpgp_author_name==NULL)
 					}
 
 				$mpgpreturn = "<g:plus href='";
-				$mpgpreturn .= $mpgp_author_url;
+				$mpgpreturn .= esc_url( $mpgp_author_url );
 				$mpgpreturn .= "' rel='";
 				if(is_author){ $mpgpreturn .="author";}
 				else {$mpgpreturn .= "me";}
 				$mpgpreturn .= "' width='170' height='69' title='Google Plus Profile for ";
-				$mpgpreturn .= $authorizing; 
+				$mpgpreturn .= esc_attr( $authorizing ); 
 				$mpgpreturn .="'>";
 				$mpgpreturn .= "</g:plus>";
 }
