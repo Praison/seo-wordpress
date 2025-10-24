@@ -47,7 +47,7 @@ class zeo_rewrite_title {
     $title .= get_option('zeo_common_tag_title');
     }
     } else if (is_search()) {
-      $title = trim(sanitize_text_field($_REQUEST[s])); $title .= " ";
+      $title = isset($_REQUEST['s']) ? trim(sanitize_text_field( wp_unslash( $_REQUEST['s'] ) )) : ''; $title .= " ";
     $title .= get_option('zeo_common_search_title');
     }else if (is_home()) {
     if(is_front_page())   

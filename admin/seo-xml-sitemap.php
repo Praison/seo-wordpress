@@ -43,7 +43,7 @@ function sitemapoptions_update(){
 	$post_types=get_post_types('','names');
 	if ( !in_array( $post_types, array('revision','nav_menu_item','attachment') ) ) {
 	foreach ($post_types as $post_type ) {					
-		if(isset($_POST['post_types-'.$post_type.'-not_in_sitemap']))	
+		if(isset($_POST['post_types-'.$post_type.'-not_in_sitemap']) && sanitize_text_field( wp_unslash( $_POST['post_types-'.$post_type.'-not_in_sitemap'] ) ))	
 		$mervin_sitemap['post_types-'.$post_type.'-not_in_sitemap'] = 'yes';
 
 		}
