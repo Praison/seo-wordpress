@@ -19,6 +19,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Image SEO & Alt Text** - Automatic AI-powered alt text generation (NEW in v1.1.0)
 - ✅ **Advanced SEO Analysis** - Comprehensive 40+ factor analysis (NEW in v1.1.0)
 - ✅ **Bulk Editing Interface** - Edit metadata for multiple posts at once (NEW in v1.2.0)
+- ✅ **Import/Export Functionality** - Import from Yoast, Rank Math, AIOSEO; Export to JSON/CSV (NEW in v1.2.0)
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -65,6 +66,12 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/bulk/update` | POST | **Bulk update multiple posts** (NEW) |
 | `/wp-json/aiseo/v1/bulk/generate` | POST | **Bulk generate metadata with AI** (NEW) |
 | `/wp-json/aiseo/v1/bulk/preview` | POST | **Preview bulk changes** (NEW) |
+| `/wp-json/aiseo/v1/export/json` | GET | **Export metadata to JSON** (NEW) |
+| `/wp-json/aiseo/v1/export/csv` | GET | **Export metadata to CSV** (NEW) |
+| `/wp-json/aiseo/v1/import/json` | POST | **Import from JSON** (NEW) |
+| `/wp-json/aiseo/v1/import/yoast` | POST | **Import from Yoast SEO** (NEW) |
+| `/wp-json/aiseo/v1/import/rankmath` | POST | **Import from Rank Math** (NEW) |
+| `/wp-json/aiseo/v1/import/aioseo` | POST | **Import from AIOSEO** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -115,6 +122,33 @@ curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate \
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/preview \
   -H "Content-Type: application/json" \
   -d '{"updates": [{"post_id": 123, "meta_title": "New Title"}]}'
+
+# Import/Export (NEW)
+# Export to JSON
+curl "https://yoursite.test/wp-json/aiseo/v1/export/json?post_type=post"
+
+# Export to CSV
+curl "https://yoursite.test/wp-json/aiseo/v1/export/csv?post_type=post" > export.csv
+
+# Import from JSON
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/json \
+  -H "Content-Type: application/json" \
+  -d @export.json
+
+# Import from Yoast SEO
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/yoast \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "post", "overwrite": false}'
+
+# Import from Rank Math
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/rankmath \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "post", "overwrite": false}'
+
+# Import from AIOSEO
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/aioseo \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "post", "overwrite": false}'
 ```
 
 #### 5. **WP-CLI Commands**
@@ -139,6 +173,12 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo bulk update` | **Bulk update metadata** (NEW) |
 | `wp aiseo bulk generate` | **Bulk generate metadata with AI** (NEW) |
 | `wp aiseo bulk preview` | **Preview bulk changes** (NEW) |
+| `wp aiseo export json` | **Export to JSON** (NEW) |
+| `wp aiseo export csv` | **Export to CSV** (NEW) |
+| `wp aiseo import json` | **Import from JSON file** (NEW) |
+| `wp aiseo import yoast` | **Import from Yoast SEO** (NEW) |
+| `wp aiseo import rankmath` | **Import from Rank Math** (NEW) |
+| `wp aiseo import aioseo` | **Import from AIOSEO** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -216,6 +256,34 @@ wp aiseo bulk preview 123,456 --focus-keyword="new keyword"
 
 # Advanced: Export IDs and pipe to bulk generate
 wp aiseo bulk list --format=ids | xargs wp aiseo bulk generate
+
+# Import/Export Commands (NEW in v1.2.0)
+# Export to JSON
+wp aiseo export json --output=aiseo-export.json
+
+# Export to CSV
+wp aiseo export csv --output=aiseo-export.csv
+
+# Export specific post type
+wp aiseo export json --post-type=page --output=pages-export.json
+
+# Import from JSON file
+wp aiseo import json aiseo-export.json
+
+# Import with overwrite
+wp aiseo import json aiseo-export.json --overwrite
+
+# Import from Yoast SEO
+wp aiseo import yoast
+
+# Import from Yoast with overwrite
+wp aiseo import yoast --post-type=post --overwrite
+
+# Import from Rank Math
+wp aiseo import rankmath --limit=100
+
+# Import from AIOSEO
+wp aiseo import aioseo --post-type=page
 ```
 
 #### 6. **Performance Optimization**
@@ -938,6 +1006,33 @@ curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate \
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/preview \
   -H "Content-Type: application/json" \
   -d '{"updates": [{"post_id": 123, "meta_title": "New Title"}]}'
+
+# Import/Export Tests (NEW)
+# Test 16: Export to JSON
+curl "https://yoursite.test/wp-json/aiseo/v1/export/json?post_type=post" > export.json
+
+# Test 17: Export to CSV
+curl "https://yoursite.test/wp-json/aiseo/v1/export/csv?post_type=post" > export.csv
+
+# Test 18: Import from JSON
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/json \
+  -H "Content-Type: application/json" \
+  -d @export.json
+
+# Test 19: Import from Yoast SEO
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/yoast \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "post", "overwrite": false}'
+
+# Test 20: Import from Rank Math
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/rankmath \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "post", "overwrite": true}'
+
+# Test 21: Import from AIOSEO
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/aioseo \
+  -H "Content-Type: application/json" \
+  -d '{"post_type": "page"}'
 ```
 
 #### 2. **WP-CLI Testing** (Best for automation)
@@ -1011,6 +1106,31 @@ wp aiseo bulk generate --all --limit=10 --overwrite
 
 # Test 22: Preview bulk changes
 wp aiseo bulk preview 123,456 --focus-keyword="new keyword"
+
+# Import/Export Tests (NEW)
+# Test 23: Export to JSON
+wp aiseo export json --output=aiseo-export.json
+
+# Test 24: Export to CSV
+wp aiseo export csv --output=aiseo-export.csv
+
+# Test 25: Export specific post type
+wp aiseo export json --post-type=page --output=pages.json
+
+# Test 26: Import from JSON
+wp aiseo import json aiseo-export.json
+
+# Test 27: Import with overwrite
+wp aiseo import json aiseo-export.json --overwrite
+
+# Test 28: Import from Yoast SEO
+wp aiseo import yoast --post-type=post
+
+# Test 29: Import from Rank Math with overwrite
+wp aiseo import rankmath --overwrite --limit=100
+
+# Test 30: Import from AIOSEO
+wp aiseo import aioseo --post-type=page
 ```
 
 #### 3. **Admin Interface Testing** (Visual)
@@ -1049,13 +1169,21 @@ wp aiseo bulk preview 123,456 --focus-keyword="new keyword"
    - Generate AI metadata in bulk with progress tracking
    - Preview changes before applying
 
-6. **Settings Page**
+6. **Import/Export Functionality** (NEW)
+   - Export AISEO metadata to JSON or CSV
+   - Import from JSON files
+   - Import from Yoast SEO plugin
+   - Import from Rank Math plugin
+   - Import from AIOSEO plugin
+   - Backup and restore functionality
+
+7. **Settings Page**
    - Navigate to `wp-admin/admin.php?page=aiseo-settings`
    - Configure OpenAI API key
    - Test API connection
    - View usage statistics
 
-7. **Dashboard Widget**
+8. **Dashboard Widget**
    - View WordPress dashboard
    - Check "AISEO Overview" widget
    - See total posts analyzed, average score, API usage
@@ -1156,6 +1284,16 @@ time wp aiseo analyze --all --format=count
 - Preview changes before applying
 - Progress tracking for bulk operations
 - Success/failure reporting per post
+
+✅ **Import/Export** should provide:
+- Export to JSON with all metadata fields
+- Export to CSV for spreadsheet editing
+- Import from JSON files
+- Import from Yoast SEO (meta title, description, keywords, canonical, robots)
+- Import from Rank Math (all SEO fields)
+- Import from AIOSEO (title, description, keywords)
+- Overwrite or skip existing metadata options
+- Success/skip/failure reporting
 
 ## 📚 Documentation
 

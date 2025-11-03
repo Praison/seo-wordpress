@@ -303,6 +303,109 @@ class AISEO_REST {
                 ),
             ),
         ));
+        
+        // Import/Export: Export to JSON
+        register_rest_route(self::NAMESPACE, '/export/json', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'export_json'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+            ),
+        ));
+        
+        // Import/Export: Export to CSV
+        register_rest_route(self::NAMESPACE, '/export/csv', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'export_csv'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+            ),
+        ));
+        
+        // Import/Export: Import from JSON
+        register_rest_route(self::NAMESPACE, '/import/json', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'import_json'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'data' => array(
+                    'required' => true,
+                    'type' => 'object',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Import/Export: Import from Yoast
+        register_rest_route(self::NAMESPACE, '/import/yoast', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'import_yoast'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Import/Export: Import from Rank Math
+        register_rest_route(self::NAMESPACE, '/import/rankmath', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'import_rankmath'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Import/Export: Import from AIOSEO
+        register_rest_route(self::NAMESPACE, '/import/aioseo', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'import_aioseo'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
     }
     
     /**
@@ -772,6 +875,152 @@ class AISEO_REST {
         return new WP_REST_Response([
             'success' => true,
             'preview' => $preview
+        ], 200);
+    }
+    
+    /**
+     * Export to JSON
+     */
+    public function export_json($request) {
+        $post_type = $request->get_param('post_type');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->export_to_json(['post_type' => $post_type]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Export to CSV
+     */
+    public function export_csv($request) {
+        $post_type = $request->get_param('post_type');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->export_to_csv(['post_type' => $post_type]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result,
+            'content_type' => 'text/csv'
+        ], 200);
+    }
+    
+    /**
+     * Import from JSON
+     */
+    public function import_json($request) {
+        $data = $request->get_param('data');
+        $overwrite = $request->get_param('overwrite');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->import_from_json($data, ['overwrite' => $overwrite]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Import from Yoast SEO
+     */
+    public function import_yoast($request) {
+        $post_type = $request->get_param('post_type');
+        $overwrite = $request->get_param('overwrite');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->import_from_yoast([
+            'post_type' => $post_type,
+            'overwrite' => $overwrite
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Import from Rank Math
+     */
+    public function import_rankmath($request) {
+        $post_type = $request->get_param('post_type');
+        $overwrite = $request->get_param('overwrite');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->import_from_rankmath([
+            'post_type' => $post_type,
+            'overwrite' => $overwrite
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Import from AIOSEO
+     */
+    public function import_aioseo($request) {
+        $post_type = $request->get_param('post_type');
+        $overwrite = $request->get_param('overwrite');
+        
+        $import_export = new AISEO_Import_Export();
+        $result = $import_export->import_from_aioseo([
+            'post_type' => $post_type,
+            'overwrite' => $overwrite
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
         ], 200);
     }
     

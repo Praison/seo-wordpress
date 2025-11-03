@@ -245,4 +245,5 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-image-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-advanced-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-bulk-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-import-export-cli.php';
 }
