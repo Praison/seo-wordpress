@@ -754,6 +754,7 @@ class AISEO_CLI_Command {
         global $wpdb;
 
         // Delete all AISEO transients
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing all plugin transients
         $wpdb->query(
             "DELETE FROM {$wpdb->options} 
              WHERE option_name LIKE '_transient_aiseo_%' 

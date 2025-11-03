@@ -316,8 +316,11 @@ class AISEO_Admin {
         // Get statistics
         global $wpdb;
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dashboard stats from custom tables
         $total_requests = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}aiseo_logs");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dashboard stats from custom tables
         $failed_requests = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}aiseo_failed_requests");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dashboard stats from custom tables
         $total_tokens = $wpdb->get_var("SELECT SUM(tokens_used) FROM {$wpdb->prefix}aiseo_usage_stats");
         
         // Get sitemap stats
@@ -431,7 +434,9 @@ class AISEO_Admin {
     public function render_dashboard_widget() {
         global $wpdb;
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dashboard widget stats from custom tables
         $total_requests = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}aiseo_logs WHERE created_at > DATE_SUB(NOW(), INTERVAL 7 DAY)");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Dashboard widget stats from custom tables
         $total_tokens = $wpdb->get_var("SELECT SUM(tokens_used) FROM {$wpdb->prefix}aiseo_usage_stats WHERE date > DATE_SUB(CURDATE(), INTERVAL 7 DAY)");
         
         ?>
