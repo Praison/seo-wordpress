@@ -11,6 +11,8 @@ also add that to README.md file before confirming that the feature is working.
 
 wp cli test, rest api test and Add all features , all tests, all endpoints and all wp cli commands to README.md file 
 
+workflow: create core class → REST API → WP-CLI → test both → update docs!
+
 ---
 
 ## Plugin Information

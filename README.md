@@ -20,6 +20,8 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Advanced SEO Analysis** - Comprehensive 40+ factor analysis (NEW in v1.1.0)
 - ✅ **Bulk Editing Interface** - Edit metadata for multiple posts at once (NEW in v1.2.0)
 - ✅ **Import/Export Functionality** - Import from Yoast, Rank Math, AIOSEO; Export to JSON/CSV (NEW in v1.2.0)
+- ✅ **Multilingual SEO Support** - WPML, Polylang, TranslatePress; hreflang tags (NEW in v1.3.0)
+- ✅ **Custom Post Type Support** - Extend SEO to any custom post type; bulk operations (NEW in v1.3.0)
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -72,6 +74,18 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/import/yoast` | POST | **Import from Yoast SEO** (NEW) |
 | `/wp-json/aiseo/v1/import/rankmath` | POST | **Import from Rank Math** (NEW) |
 | `/wp-json/aiseo/v1/import/aioseo` | POST | **Import from AIOSEO** (NEW) |
+| `/wp-json/aiseo/v1/multilingual/plugin` | GET | **Get active multilingual plugin** (NEW) |
+| `/wp-json/aiseo/v1/multilingual/languages` | GET | **Get available languages** (NEW) |
+| `/wp-json/aiseo/v1/multilingual/translations/{id}` | GET | **Get post translations** (NEW) |
+| `/wp-json/aiseo/v1/multilingual/hreflang/{id}` | GET | **Get hreflang tags** (NEW) |
+| `/wp-json/aiseo/v1/multilingual/sync/{id}` | POST | **Sync metadata across translations** (NEW) |
+| `/wp-json/aiseo/v1/cpt/list` | GET | **List all custom post types** (NEW) |
+| `/wp-json/aiseo/v1/cpt/supported` | GET | **Get supported post types** (NEW) |
+| `/wp-json/aiseo/v1/cpt/enable` | POST | **Enable SEO for post type** (NEW) |
+| `/wp-json/aiseo/v1/cpt/disable` | POST | **Disable SEO for post type** (NEW) |
+| `/wp-json/aiseo/v1/cpt/posts/{post_type}` | GET | **Get posts by type** (NEW) |
+| `/wp-json/aiseo/v1/cpt/stats/{post_type}` | GET | **Get post type statistics** (NEW) |
+| `/wp-json/aiseo/v1/cpt/bulk-generate` | POST | **Bulk generate metadata** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -179,6 +193,20 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo import yoast` | **Import from Yoast SEO** (NEW) |
 | `wp aiseo import rankmath` | **Import from Rank Math** (NEW) |
 | `wp aiseo import aioseo` | **Import from AIOSEO** (NEW) |
+| `wp aiseo multilingual plugin` | **Get active multilingual plugin** (NEW) |
+| `wp aiseo multilingual languages` | **List available languages** (NEW) |
+| `wp aiseo multilingual translations` | **Get post translations** (NEW) |
+| `wp aiseo multilingual hreflang` | **Get hreflang tags** (NEW) |
+| `wp aiseo multilingual sync` | **Sync metadata across translations** (NEW) |
+| `wp aiseo multilingual bulk-sync` | **Bulk sync multiple posts** (NEW) |
+| `wp aiseo cpt list` | **List all custom post types** (NEW) |
+| `wp aiseo cpt supported` | **List supported post types** (NEW) |
+| `wp aiseo cpt enable` | **Enable SEO for post type** (NEW) |
+| `wp aiseo cpt disable` | **Disable SEO for post type** (NEW) |
+| `wp aiseo cpt posts` | **Get posts by type** (NEW) |
+| `wp aiseo cpt stats` | **Get post type statistics** (NEW) |
+| `wp aiseo cpt bulk-generate` | **Bulk generate metadata** (NEW) |
+| `wp aiseo cpt export` | **Export post type data** (NEW) |
 
 **Example Usage:**
 ```bash

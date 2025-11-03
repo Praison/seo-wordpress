@@ -406,6 +406,158 @@ class AISEO_REST {
                 ),
             ),
         ));
+        
+        // Multilingual: Get active plugin
+        register_rest_route(self::NAMESPACE, '/multilingual/plugin', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_multilingual_plugin'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Multilingual: Get languages
+        register_rest_route(self::NAMESPACE, '/multilingual/languages', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_multilingual_languages'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Multilingual: Get post translations
+        register_rest_route(self::NAMESPACE, '/multilingual/translations/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_post_translations'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+        
+        // Multilingual: Get hreflang tags
+        register_rest_route(self::NAMESPACE, '/multilingual/hreflang/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_hreflang_tags'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+        
+        // Multilingual: Sync metadata
+        register_rest_route(self::NAMESPACE, '/multilingual/sync/(?P<id>\d+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'sync_multilingual_metadata'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // CPT: Get all custom post types
+        register_rest_route(self::NAMESPACE, '/cpt/list', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_cpt_list'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // CPT: Get supported post types
+        register_rest_route(self::NAMESPACE, '/cpt/supported', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_supported_cpt'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // CPT: Enable post type
+        register_rest_route(self::NAMESPACE, '/cpt/enable', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'enable_cpt'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // CPT: Disable post type
+        register_rest_route(self::NAMESPACE, '/cpt/disable', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'disable_cpt'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // CPT: Get posts by type
+        register_rest_route(self::NAMESPACE, '/cpt/posts/(?P<post_type>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_cpt_posts'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'post_type' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 20,
+                ),
+            ),
+        ));
+        
+        // CPT: Get statistics
+        register_rest_route(self::NAMESPACE, '/cpt/stats/(?P<post_type>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_cpt_stats'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'post_type' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // CPT: Bulk generate
+        register_rest_route(self::NAMESPACE, '/cpt/bulk-generate', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_generate_cpt'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => -1,
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
     }
     
     /**
@@ -1017,6 +1169,211 @@ class AISEO_REST {
                 'error' => $result->get_error_message()
             ], 400);
         }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get active multilingual plugin
+     */
+    public function get_multilingual_plugin($request) {
+        $multilingual = new AISEO_Multilingual();
+        $plugin = $multilingual->get_active_plugin();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'plugin' => $plugin,
+            'supported_plugins' => ['wpml', 'polylang', 'translatepress']
+        ], 200);
+    }
+    
+    /**
+     * Get multilingual languages
+     */
+    public function get_multilingual_languages($request) {
+        $multilingual = new AISEO_Multilingual();
+        $languages = $multilingual->get_languages();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'plugin' => $multilingual->get_active_plugin(),
+            'languages' => $languages,
+            'count' => count($languages)
+        ], 200);
+    }
+    
+    /**
+     * Get post translations
+     */
+    public function get_post_translations($request) {
+        $post_id = $request->get_param('id');
+        
+        $multilingual = new AISEO_Multilingual();
+        $translations = $multilingual->get_post_translations($post_id);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_id' => $post_id,
+            'translations' => $translations,
+            'count' => count($translations)
+        ], 200);
+    }
+    
+    /**
+     * Get hreflang tags for a post
+     */
+    public function get_hreflang_tags($request) {
+        $post_id = $request->get_param('id');
+        
+        $multilingual = new AISEO_Multilingual();
+        $hreflang_tags = $multilingual->generate_hreflang_tags($post_id);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_id' => $post_id,
+            'hreflang_tags' => $hreflang_tags,
+            'count' => count($hreflang_tags)
+        ], 200);
+    }
+    
+    /**
+     * Sync metadata across translations
+     */
+    public function sync_multilingual_metadata($request) {
+        $post_id = $request->get_param('id');
+        $overwrite = $request->get_param('overwrite');
+        
+        $multilingual = new AISEO_Multilingual();
+        $result = $multilingual->sync_metadata_across_translations($post_id, $overwrite);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get custom post types list
+     */
+    public function get_cpt_list($request) {
+        $cpt = new AISEO_CPT();
+        $post_types = $cpt->get_custom_post_types();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_types' => $post_types,
+            'count' => count($post_types)
+        ], 200);
+    }
+    
+    /**
+     * Get supported custom post types
+     */
+    public function get_supported_cpt($request) {
+        $cpt = new AISEO_CPT();
+        $supported = $cpt->get_supported_post_types();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'supported_post_types' => $supported,
+            'count' => count($supported)
+        ], 200);
+    }
+    
+    /**
+     * Enable custom post type
+     */
+    public function enable_cpt($request) {
+        $post_type = $request->get_param('post_type');
+        
+        $cpt = new AISEO_CPT();
+        $result = $cpt->enable_post_type($post_type);
+        
+        if ($result) {
+            return new WP_REST_Response([
+                'success' => true,
+                'message' => sprintf('SEO enabled for post type: %s', $post_type)
+            ], 200);
+        }
+        
+        return new WP_REST_Response([
+            'success' => false,
+            'message' => sprintf('Post type %s already enabled', $post_type)
+        ], 400);
+    }
+    
+    /**
+     * Disable custom post type
+     */
+    public function disable_cpt($request) {
+        $post_type = $request->get_param('post_type');
+        
+        $cpt = new AISEO_CPT();
+        $result = $cpt->disable_post_type($post_type);
+        
+        if ($result) {
+            return new WP_REST_Response([
+                'success' => true,
+                'message' => sprintf('SEO disabled for post type: %s', $post_type)
+            ], 200);
+        }
+        
+        return new WP_REST_Response([
+            'success' => false,
+            'message' => sprintf('Post type %s not found in supported list', $post_type)
+        ], 400);
+    }
+    
+    /**
+     * Get posts by custom post type
+     */
+    public function get_cpt_posts($request) {
+        $post_type = $request->get_param('post_type');
+        $limit = $request->get_param('limit');
+        
+        $cpt = new AISEO_CPT();
+        $posts = $cpt->get_posts_by_type($post_type, ['posts_per_page' => $limit]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_type' => $post_type,
+            'posts' => $posts,
+            'count' => count($posts)
+        ], 200);
+    }
+    
+    /**
+     * Get statistics for custom post type
+     */
+    public function get_cpt_stats($request) {
+        $post_type = $request->get_param('post_type');
+        
+        $cpt = new AISEO_CPT();
+        $stats = $cpt->get_post_type_stats($post_type);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_type' => $post_type,
+            'stats' => $stats
+        ], 200);
+    }
+    
+    /**
+     * Bulk generate metadata for custom post type
+     */
+    public function bulk_generate_cpt($request) {
+        $post_type = $request->get_param('post_type');
+        $limit = $request->get_param('limit');
+        $overwrite = $request->get_param('overwrite');
+        
+        $cpt = new AISEO_CPT();
+        $result = $cpt->bulk_generate_for_type($post_type, [
+            'limit' => $limit,
+            'overwrite' => $overwrite
+        ]);
         
         return new WP_REST_Response([
             'success' => true,
