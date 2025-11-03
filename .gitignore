@@ -1,0 +1,131 @@
+# WordPress Core Files
+*.log
+.htaccess
+wp-config.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/mu-plugins/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
+
+# WordPress Specific
+/.wordpress-org/
+sitemap.xml
+sitemap.xml.gz
+wp-sitemap.xml
+wp-sitemap.xml.gz
+
+# Large/binary files
+*.sql
+*.tar.gz
+*.zip
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor/IDE Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+.externalToolBuilders/
+.metadata
+.phpintel/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+yarn.lock
+.npm/
+.yarn/
+.pnp.*
+
+# Build files
+/build/
+/dist/
+/vendor/
+/assets/dist/
+/assets/build/
+*.min.js
+*.min.css
+*.map
+
+# Composer
+/vendor/
+composer.lock
+composer.phar
+
+# Testing
+/tests/tmp/
+/tests/cache/
+/tmp/
+/temp/
+phpunit.xml
+.phpunit.result.cache
+coverage/
+.coverage
+*.cover
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+error_log
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+
+# SVN
+.svn/
+
+# Git
+.git/
+.gitattributes
+
+# Deployment
+/deploy/
+/releases/
+
+# Plugin specific (optional - uncomment if needed)
+# /languages/*.pot
+# /languages/*.mo
+
+.vscode
