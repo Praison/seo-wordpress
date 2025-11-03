@@ -558,6 +558,94 @@ class AISEO_REST {
                 ),
             ),
         ));
+        
+        // Competitor: Get all competitors
+        register_rest_route(self::NAMESPACE, '/competitor/list', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_competitors_list'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Competitor: Add competitor
+        register_rest_route(self::NAMESPACE, '/competitor/add', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'add_competitor'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'url' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'name' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => '',
+                ),
+            ),
+        ));
+        
+        // Competitor: Remove competitor
+        register_rest_route(self::NAMESPACE, '/competitor/remove/(?P<id>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'DELETE',
+            'callback' => array($this, 'remove_competitor'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Competitor: Analyze competitor
+        register_rest_route(self::NAMESPACE, '/competitor/analyze/(?P<id>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'analyze_competitor'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Competitor: Get analysis
+        register_rest_route(self::NAMESPACE, '/competitor/analysis/(?P<id>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_competitor_analysis'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Competitor: Compare with site
+        register_rest_route(self::NAMESPACE, '/competitor/compare/(?P<id>[a-zA-Z0-9_-]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'compare_competitor'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'post_id' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+        
+        // Competitor: Get summary
+        register_rest_route(self::NAMESPACE, '/competitor/summary', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_competitor_summary'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -1378,6 +1466,147 @@ class AISEO_REST {
         return new WP_REST_Response([
             'success' => true,
             'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get competitors list
+     */
+    public function get_competitors_list($request) {
+        $competitor = new AISEO_Competitor();
+        $competitors = $competitor->get_competitors();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'competitors' => $competitors,
+            'count' => count($competitors)
+        ], 200);
+    }
+    
+    /**
+     * Add competitor
+     */
+    public function add_competitor($request) {
+        $url = $request->get_param('url');
+        $name = $request->get_param('name');
+        
+        $competitor = new AISEO_Competitor();
+        $result = $competitor->add_competitor($url, $name);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'competitor_id' => $result,
+            'message' => 'Competitor added successfully'
+        ], 200);
+    }
+    
+    /**
+     * Remove competitor
+     */
+    public function remove_competitor($request) {
+        $id = $request->get_param('id');
+        
+        $competitor = new AISEO_Competitor();
+        $result = $competitor->remove_competitor($id);
+        
+        if ($result) {
+            return new WP_REST_Response([
+                'success' => true,
+                'message' => 'Competitor removed successfully'
+            ], 200);
+        }
+        
+        return new WP_REST_Response([
+            'success' => false,
+            'error' => 'Competitor not found'
+        ], 404);
+    }
+    
+    /**
+     * Analyze competitor
+     */
+    public function analyze_competitor($request) {
+        $id = $request->get_param('id');
+        
+        $competitor = new AISEO_Competitor();
+        $result = $competitor->analyze_competitor($id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'analysis' => $result,
+            'message' => 'Competitor analyzed successfully'
+        ], 200);
+    }
+    
+    /**
+     * Get competitor analysis
+     */
+    public function get_competitor_analysis($request) {
+        $id = $request->get_param('id');
+        
+        $competitor = new AISEO_Competitor();
+        $analysis = $competitor->get_analysis($id);
+        
+        if (!$analysis) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'No analysis data found'
+            ], 404);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'analysis' => $analysis
+        ], 200);
+    }
+    
+    /**
+     * Compare with site
+     */
+    public function compare_competitor($request) {
+        $id = $request->get_param('id');
+        $post_id = $request->get_param('post_id');
+        
+        $competitor = new AISEO_Competitor();
+        $result = $competitor->compare_with_site($id, $post_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'comparison' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get competitor summary
+     */
+    public function get_competitor_summary($request) {
+        $competitor = new AISEO_Competitor();
+        $summary = $competitor->get_summary();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'summary' => $summary
         ], 200);
     }
     
