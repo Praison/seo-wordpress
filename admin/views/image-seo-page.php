@@ -29,6 +29,7 @@ if (!defined('ABSPATH')) {
             <p class="stat-number success">
                 <?php
                 global $wpdb;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Counting AI-generated alt texts
                 $ai_generated = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = '_aiseo_ai_generated_alt' AND meta_value = '1'");
                 echo number_format($ai_generated);
                 ?>

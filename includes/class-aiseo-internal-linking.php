@@ -48,7 +48,9 @@ class AISEO_Internal_Linking {
      */
     public function clear_all_caches() {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing transients
         $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_aiseo_linking_%'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing transients
         $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_aiseo_linking_%'");
     }
     
@@ -147,6 +149,7 @@ class AISEO_Internal_Linking {
             'post_type' => 'post',
             'post_status' => 'publish',
             'posts_per_page' => $posts_per_page,
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Necessary to exclude current post
             'post__not_in' => array_merge([$post_id], $options['exclude_ids']),
             'orderby' => 'date',
             'order' => 'DESC',

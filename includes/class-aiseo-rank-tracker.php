@@ -167,7 +167,6 @@ class AISEO_Rank_Tracker {
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT position, url, date, location, serp_features 
              FROM {$table_name} 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe, complex subquery
              WHERE keyword = %s 
              AND DATE(date) >= %s 
              ORDER BY date ASC",
@@ -235,10 +234,9 @@ class AISEO_Rank_Tracker {
         }
         
         // Get our latest position
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         $our_position = $wpdb->get_var($wpdb->prepare(
             "SELECT position FROM {$table_name} 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe
              WHERE keyword = %s 
              ORDER BY date DESC LIMIT 1",
             $keyword
@@ -318,7 +316,6 @@ class AISEO_Rank_Tracker {
         
         if (is_wp_error($response)) {
             return $response;
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         }
         
         $content = $response['choices'][0]['message']['content'] ?? '';
@@ -455,9 +452,9 @@ class AISEO_Rank_Tracker {
         $summary['tracked_posts'] = $wpdb->get_var("SELECT COUNT(DISTINCT post_id) FROM {$table_name} WHERE post_id > 0");
         
         // Get latest positions for all keywords
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, complex subquery
         $latest_positions = $wpdb->get_results(
             "SELECT DISTINCT keyword, 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe, complex subquery
              (SELECT position FROM {$table_name} rt2 
               WHERE rt2.keyword = rt1.keyword 
               ORDER BY date DESC LIMIT 1) as position

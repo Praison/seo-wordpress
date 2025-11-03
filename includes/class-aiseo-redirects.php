@@ -232,8 +232,7 @@ class AISEO_Redirects {
         $table_name = $wpdb->prefix . 'aiseo_redirects';
         
         // Check if redirect already exists
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching , WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table query
         $existing = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM {$table_name} WHERE source_url = %s",
             $source
@@ -409,7 +408,6 @@ class AISEO_Redirects {
         $table_name = $wpdb->prefix . 'aiseo_redirects';
         
         // Check for exact match
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared , WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table query
         $redirect = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$table_name} WHERE source_url = %s AND is_regex = 0",
@@ -418,7 +416,6 @@ class AISEO_Redirects {
         
         // Check for regex match if no exact match
         if (!$redirect) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared , WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed, simple query with no user input
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table query
             $regex_redirects = $wpdb->get_results(
                 "SELECT * FROM {$table_name} WHERE is_regex = 1",
@@ -467,12 +464,10 @@ class AISEO_Redirects {
         $total_redirects = $wpdb->get_var("SELECT COUNT(*) FROM {$redirects_table}");
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared , WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $total_404s = $wpdb->get_var("SELECT COUNT(*) FROM {$errors_table}");
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are prefixed and safe
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         $total_hits = $wpdb->get_var("SELECT SUM(hits) FROM {$redirects_table}");
         
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
-        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         $top_404s = $wpdb->get_results(
             "SELECT url, COUNT(*) as hits 
              FROM {$errors_table} 
@@ -480,10 +475,8 @@ class AISEO_Redirects {
              ORDER BY hits DESC 
              LIMIT 10",
             ARRAY_A
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         );
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are prefixed and safe
-        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         $top_redirects = $wpdb->get_results(
             "SELECT source_url, target_url, hits 
              FROM {$redirects_table} 

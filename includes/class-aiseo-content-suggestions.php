@@ -569,9 +569,12 @@ Format as JSON array with keys: topic, priority, reason, traffic_potential";
         global $wpdb;
         
         if ($type === 'all') {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing transients
             $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_aiseo_content_%'");
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing transients
             $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_aiseo_content_%'");
         } else {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Clearing transients
             $wpdb->query($wpdb->prepare(
                 "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
                 '_transient_aiseo_content_' . $type . '_%'
