@@ -1329,48 +1329,66 @@ class AISEO_Admin {
         
         if (!class_exists('AISEO_Import_Export')) {
             try {
-                // Get posts with SEO data (limit to 1000 to prevent memory issues)
-                $posts = get_posts(array(
+                // Start with a very small query to test
+                $args = array(
                     'post_type' => array('post', 'page'),
-                    'posts_per_page' => 1000,
+                    'posts_per_page' => 100, // Reduced from 1000
                     'post_status' => array('publish', 'draft'),
                     'orderby' => 'date',
-                    'order' => 'DESC'
-                ));
+                    'order' => 'DESC',
+                    'fields' => 'ids' // Only get IDs first to reduce memory
+                );
                 
-                if (empty($posts)) {
-                    wp_send_json_success(array(
-                        'message' => 'No posts found to export',
-                        'data' => array()
-                    ));
+                $post_ids = get_posts($args);
+                
+                if (empty($post_ids)) {
+                    wp_send_json_success(array());
                     return;
                 }
                 
                 $export_data = array();
-                foreach ($posts as $post) {
-                    $meta_title = get_post_meta($post->ID, '_aiseo_title', true);
-                    $meta_desc = get_post_meta($post->ID, '_aiseo_description', true);
-                    $keyword = get_post_meta($post->ID, '_aiseo_focus_keyword', true);
+                
+                // Process posts one by one
+                foreach ($post_ids as $post_id) {
+                    $post = get_post($post_id);
+                    if (!$post) {
+                        continue;
+                    }
+                    
+                    $meta_title = get_post_meta($post_id, '_aiseo_title', true);
+                    $meta_desc = get_post_meta($post_id, '_aiseo_description', true);
+                    $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
                     
                     // Only include posts with SEO data
                     if ($meta_title || $meta_desc || $keyword) {
                         $export_data[] = array(
-                            'post_id' => $post->ID,
-                            'post_title' => $post->post_title,
+                            'post_id' => $post_id,
+                            'post_title' => $post->post_title ? $post->post_title : 'Untitled',
                             'post_type' => $post->post_type,
                             'post_status' => $post->post_status,
-                            'meta_title' => $meta_title,
-                            'meta_description' => $meta_desc,
-                            'focus_keyword' => $keyword,
-                            'seo_score' => get_post_meta($post->ID, '_aiseo_seo_score', true),
+                            'meta_title' => $meta_title ? $meta_title : '',
+                            'meta_description' => $meta_desc ? $meta_desc : '',
+                            'focus_keyword' => $keyword ? $keyword : '',
+                            'seo_score' => get_post_meta($post_id, '_aiseo_seo_score', true),
                         );
                     }
+                }
+                
+                // If no posts with SEO data, return empty array
+                if (empty($export_data)) {
+                    wp_send_json_success(array());
+                    return;
                 }
                 
                 wp_send_json_success($export_data);
                 return;
             } catch (Exception $e) {
+                error_log('AISEO Export Error: ' . $e->getMessage());
                 wp_send_json_error('Export failed: ' . $e->getMessage());
+                return;
+            } catch (Error $e) {
+                error_log('AISEO Export Fatal Error: ' . $e->getMessage());
+                wp_send_json_error('Export failed: Fatal error occurred');
                 return;
             }
         }
@@ -1380,6 +1398,7 @@ class AISEO_Admin {
         
         if (is_wp_error($result)) {
             wp_send_json_error($result->get_error_message());
+            return;
         }
         
         wp_send_json_success($result);

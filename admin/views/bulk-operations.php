@@ -179,7 +179,7 @@ jQuery(document).ready(function($) {
     
     function bulkOperation(action, buttonText, fieldType) {
         var selectedPosts = [];
-        $('.aiseo-bulk-select:checked').each(function() {
+        $('.aiseo-bulk-post:checked').each(function() {
             selectedPosts.push({
                 id: $(this).val(),
                 title: $(this).parent().text().trim()
@@ -188,6 +188,7 @@ jQuery(document).ready(function($) {
         
         if (selectedPosts.length === 0) {
             $('#aiseo-bulk-status').html('<span style="color: red;"><?php esc_html_e('Please select at least one post', 'aiseo'); ?></span>');
+            $('#aiseo-bulk-progress').show();
             return;
         }
         
@@ -253,22 +254,47 @@ jQuery(document).ready(function($) {
         var html = '';
         var fieldLabel = fieldType === 'title' ? 'Title' : (fieldType === 'description' ? 'Description' : 'Analysis');
         
+        console.log('Displaying results:', bulkResults);
+        
         $.each(bulkResults, function(i, result) {
             if (result.success) {
+                // Extract the actual generated content
+                var generatedText = '';
+                if (typeof result.generated === 'string') {
+                    generatedText = result.generated;
+                } else if (result.generated && result.generated.title) {
+                    generatedText = result.generated.title;
+                } else if (result.generated && result.generated.description) {
+                    generatedText = result.generated.description;
+                } else if (result.generated && result.generated.content) {
+                    generatedText = result.generated.content;
+                } else if (result.generated && result.generated.text) {
+                    generatedText = result.generated.text;
+                } else if (typeof result.generated === 'object') {
+                    generatedText = JSON.stringify(result.generated);
+                }
+                
+                // Escape for HTML attribute
+                var escapedValue = generatedText.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                
                 html += '<div class="aiseo-result-item" style="margin-bottom: 15px; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 3px;">';
                 html += '<label style="display: flex; align-items: start; cursor: pointer;">';
-                html += '<input type="checkbox" class="aiseo-approve-checkbox" data-post-id="' + result.postId + '" data-field="' + result.fieldType + '" data-value="' + result.generated.replace(/"/g, '&quot;') + '" checked style="margin-right: 10px; margin-top: 3px;">';
+                html += '<input type="checkbox" class="aiseo-approve-checkbox" data-post-id="' + result.postId + '" data-field="' + result.fieldType + '" data-value="' + escapedValue + '" checked style="margin-right: 10px; margin-top: 3px;">';
                 html += '<div style="flex: 1;"><strong>' + result.postTitle + '</strong><br>';
                 html += '<span style="color: #666; font-size: 12px;">New ' + fieldLabel + ':</span><br>';
-                html += '<span style="color: #0073aa;">' + result.generated + '</span></div>';
+                html += '<span style="color: #0073aa;">' + $('<div>').text(generatedText).html() + '</span></div>';
                 html += '</label></div>';
             } else {
                 html += '<div class="aiseo-result-item" style="margin-bottom: 15px; padding: 10px; background: #fee; border: 1px solid #fcc; border-radius: 3px;">';
                 html += '<strong>' + result.postTitle + '</strong><br>';
-                html += '<span style="color: red;">Error: ' + result.error + '</span>';
+                html += '<span style="color: red;">Error: ' + (result.error || 'Unknown error') + '</span>';
                 html += '</div>';
             }
         });
+        
+        if (html === '') {
+            html = '<div class="notice notice-warning" style="padding:10px;"><strong>Notice:</strong> No results to display. The operations may have failed.</div>';
+        }
         
         $('#aiseo-results-list').html(html);
         $('#aiseo-bulk-results').show();
@@ -419,9 +445,38 @@ jQuery(document).ready(function($) {
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
             },
             success: function(response) {
-                if (response.success) {
+                console.log('Export Response:', response);
+                if (response.success && response.data) {
+                    var content, mimeType;
+                    
+                    // Handle different formats
+                    if (format === 'csv') {
+                        // Convert JSON to CSV
+                        if (Array.isArray(response.data) && response.data.length > 0) {
+                            var headers = Object.keys(response.data[0]);
+                            var csv = headers.join(',') + '\n';
+                            response.data.forEach(function(row) {
+                                var values = headers.map(function(header) {
+                                    var val = row[header] || '';
+                                    // Escape commas and quotes
+                                    return '"' + String(val).replace(/"/g, '""') + '"';
+                                });
+                                csv += values.join(',') + '\n';
+                            });
+                            content = csv;
+                            mimeType = 'text/csv';
+                        } else {
+                            $resultDiv.html('<div class="notice notice-warning" style="padding:10px;"><strong>Notice:</strong> No data to export.</div>').show();
+                            return;
+                        }
+                    } else {
+                        // JSON format
+                        content = JSON.stringify(response.data, null, 2);
+                        mimeType = 'application/json';
+                    }
+                    
                     // Create download link
-                    var blob = new Blob([JSON.stringify(response.data, null, 2)], {type: 'application/json'});
+                    var blob = new Blob([content], {type: mimeType});
                     var url = window.URL.createObjectURL(blob);
                     var a = document.createElement('a');
                     a.href = url;
@@ -430,14 +485,26 @@ jQuery(document).ready(function($) {
                     a.click();
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
-                    $resultDiv.html('<div class="notice notice-success" style="padding:10px;"><strong>✓ Success!</strong> Export file downloaded.</div>').show();
+                    
+                    var count = Array.isArray(response.data) ? response.data.length : 0;
+                    $resultDiv.html('<div class="notice notice-success" style="padding:10px;"><strong>✓ Success!</strong> Exported ' + count + ' posts to ' + format.toUpperCase() + '.</div>').show();
                 } else {
-                    $resultDiv.html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + (response.data || 'Export failed') + '</div>').show();
+                    var errorMsg = response.data || 'Export failed';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $resultDiv.html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '</div>').show();
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Export error:', xhr, status, error);
-                $resultDiv.html('<div class="notice notice-error" style="padding:10px;"><strong>Connection Error:</strong> ' + error + '<br><small>Check browser console for details.</small></div>').show();
+                var errorMsg = 'Connection error';
+                if (xhr.status === 500) {
+                    errorMsg = 'Server error (500). Check PHP error logs or try refreshing the page.';
+                } else if (xhr.status === 403) {
+                    errorMsg = 'Security error (403). Please <a href="javascript:location.reload();">refresh the page</a> and try again.';
+                }
+                $resultDiv.html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '<br><small>Status: ' + xhr.status + '</small></div>').show();
             },
             complete: function() {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Export to ' + format.toUpperCase());

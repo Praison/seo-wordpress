@@ -703,3 +703,6 @@ curl -k -X POST https://wordpress.test/wp-admin/admin-ajax.php \
 - Returns single most relevant keyword phrase
 - Works alongside existing title and description generators
 
+### Wordpress Local path
+
+/Users/praison/Sites/localhost/wordpress

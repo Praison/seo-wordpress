@@ -407,12 +407,22 @@ jQuery(document).ready(function($) {
                 console.log('Internal Linking Response:', response);
                 if (response.success && response.data) {
                     var html = '<ul>';
-                    if (Array.isArray(response.data) && response.data.length > 0) {
-                        $.each(response.data, function(i, link) {
-                            var title = link.title || link.post_title || 'Untitled';
-                            var url = link.url || link.permalink || '#';
+                    var suggestions = [];
+                    
+                    // Extract suggestions from different response formats
+                    if (Array.isArray(response.data)) {
+                        suggestions = response.data;
+                    } else if (response.data.suggestions && Array.isArray(response.data.suggestions)) {
+                        suggestions = response.data.suggestions;
+                    }
+                    
+                    if (suggestions.length > 0) {
+                        $.each(suggestions, function(i, link) {
+                            var title = link.post_title || link.title || 'Untitled';
+                            var url = link.post_url || link.url || link.permalink || '#';
                             var reason = link.reason || link.description || 'Relevant content';
-                            html += '<li><a href="' + url + '" target="_blank">' + title + '</a> - ' + reason + '</li>';
+                            var score = link.relevance_score ? ' (Score: ' + Math.round(link.relevance_score * 100) + '%)' : '';
+                            html += '<li><a href="' + url + '" target="_blank">' + title + '</a>' + score + ' - ' + reason + '</li>';
                         });
                     } else {
                         html += '<li>No suggestions found</li>';
@@ -455,20 +465,37 @@ jQuery(document).ready(function($) {
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
             },
             success: function(response) {
-                if (response.success) {
-                    var html = '<ol>';
-                    $.each(response.data, function(i, variation) {
-                        html += '<li><strong>' + variation.text + '</strong> (Score: ' + variation.score + ')</li>';
-                    });
-                    html += '</ol>';
-                    $('#aiseo-variations-results').show().find('.aiseo-result-content').html(html);
+                console.log('Title Variations Response:', response);
+                if (response.success && response.data) {
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        var html = '<ol>';
+                        $.each(response.data, function(i, variation) {
+                            var text = variation.text || variation.title || variation;
+                            var score = variation.score || 0;
+                            html += '<li><strong>' + text + '</strong> (Score: ' + score + ')</li>';
+                        });
+                        html += '</ol>';
+                        $('#aiseo-variations-results').show().find('.aiseo-result-content').html(html);
+                    } else {
+                        $('#aiseo-variations-results').html('<div class="notice notice-warning" style="padding:10px;"><strong>Notice:</strong> No variations generated. Try a different post.</div>').show();
+                    }
                 } else {
-                    $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + (response.data || 'Failed') + '</div>').show();
+                    var errorMsg = response.data || 'Failed to generate variations';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '</div>').show();
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Variations error:', xhr, status, error);
-                $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + error + ' (Status: ' + xhr.status + ')<br><small>Check browser console for details.</small></div>').show();
+                var errorMsg = 'Connection error';
+                if (xhr.status === 500) {
+                    errorMsg = 'Server error (500). The post may not exist or there was a backend error. Check PHP error logs.';
+                } else if (xhr.status === 403) {
+                    errorMsg = 'Security error (403). Please <a href="javascript:location.reload();">refresh the page</a> and try again.';
+                }
+                $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '<br><small>Status: ' + xhr.status + '</small></div>').show();
             },
             complete: function() {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-admin-page"></span> <?php esc_html_e('Generate Title Variations', 'aiseo'); ?>');
@@ -498,20 +525,37 @@ jQuery(document).ready(function($) {
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
             },
             success: function(response) {
-                if (response.success) {
-                    var html = '<ol>';
-                    $.each(response.data, function(i, variation) {
-                        html += '<li><strong>' + variation.text + '</strong> (Score: ' + variation.score + ')</li>';
-                    });
-                    html += '</ol>';
-                    $('#aiseo-variations-results').show().find('.aiseo-result-content').html(html);
+                console.log('Description Variations Response:', response);
+                if (response.success && response.data) {
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        var html = '<ol>';
+                        $.each(response.data, function(i, variation) {
+                            var text = variation.text || variation.description || variation;
+                            var score = variation.score || 0;
+                            html += '<li><strong>' + text + '</strong> (Score: ' + score + ')</li>';
+                        });
+                        html += '</ol>';
+                        $('#aiseo-variations-results').show().find('.aiseo-result-content').html(html);
+                    } else {
+                        $('#aiseo-variations-results').html('<div class="notice notice-warning" style="padding:10px;"><strong>Notice:</strong> No variations generated. Try a different post.</div>').show();
+                    }
                 } else {
-                    $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + (response.data || 'Failed') + '</div>').show();
+                    var errorMsg = response.data || 'Failed to generate variations';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '</div>').show();
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Variations error:', xhr, status, error);
-                $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + error + ' (Status: ' + xhr.status + ')<br><small>Check browser console for details.</small></div>').show();
+                var errorMsg = 'Connection error';
+                if (xhr.status === 500) {
+                    errorMsg = 'Server error (500). The post may not exist or there was a backend error. Check PHP error logs.';
+                } else if (xhr.status === 403) {
+                    errorMsg = 'Security error (403). Please <a href="javascript:location.reload();">refresh the page</a> and try again.';
+                }
+                $('#aiseo-variations-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + errorMsg + '<br><small>Status: ' + xhr.status + '</small></div>').show();
             },
             complete: function() {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-admin-page"></span> <?php esc_html_e('Generate Description Variations', 'aiseo'); ?>');

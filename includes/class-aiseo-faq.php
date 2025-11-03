@@ -53,6 +53,11 @@ class AISEO_FAQ {
      * Parse FAQ response
      */
     private function parse_faq_response($response) {
+        // Remove markdown code blocks if present
+        $response = preg_replace('/```json\s*/', '', $response);
+        $response = preg_replace('/```\s*$/', '', $response);
+        $response = trim($response);
+        
         // Try to parse JSON
         $json = json_decode($response, true);
         

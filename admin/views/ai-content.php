@@ -53,8 +53,19 @@ if (class_exists('AISEO_Helpers')) {
                 </div>
                 
                 <div class="aiseo-form-group">
+                    <label class="aiseo-form-label"><?php esc_html_e('Post Type', 'aiseo'); ?></label>
+                    <select name="post_type" class="regular-text" <?php echo empty($api_key) ? 'disabled' : ''; ?>>
+                        <option value="post" selected><?php esc_html_e('Post', 'aiseo'); ?></option>
+                        <option value="page"><?php esc_html_e('Page', 'aiseo'); ?></option>
+                    </select>
+                    <span class="aiseo-form-description"><?php esc_html_e('Select the type of content to create', 'aiseo'); ?></span>
+                </div>
+                
+                <div class="aiseo-form-group">
                     <label class="aiseo-form-label"><?php esc_html_e('Content Length', 'aiseo'); ?></label>
                     <select name="content_length" class="regular-text" <?php echo empty($api_key) ? 'disabled' : ''; ?>>
+                        <option value="tiny"><?php esc_html_e('Tiny (~100 words)', 'aiseo'); ?></option>
+                        <option value="brief"><?php esc_html_e('Brief (~200 words)', 'aiseo'); ?></option>
                         <option value="short"><?php esc_html_e('Short (~500 words)', 'aiseo'); ?></option>
                         <option value="medium" selected><?php esc_html_e('Medium (~1000 words)', 'aiseo'); ?></option>
                         <option value="long"><?php esc_html_e('Long (~2000 words)', 'aiseo'); ?></option>
@@ -295,11 +306,35 @@ jQuery(document).ready(function($) {
                 mode: mode
             },
             success: function(response) {
-                if (response.success) {
-                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + response.data + '</div>');
+                console.log('Rewrite Response:', response);
+                if (response.success && response.data) {
+                    var content = '';
+                    // Handle different response formats
+                    if (typeof response.data === 'string') {
+                        content = response.data;
+                    } else if (response.data.rewritten) {
+                        content = response.data.rewritten;
+                    } else if (response.data.content) {
+                        content = response.data.content;
+                    } else if (response.data.rewritten_content) {
+                        content = response.data.rewritten_content;
+                    } else if (response.data.text) {
+                        content = response.data.text;
+                    } else {
+                        content = 'Rewrite completed but content format is unexpected. Check console.';
+                    }
+                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;white-space:pre-wrap;">' + $('<div>').text(content).html() + '</div>');
                 } else {
-                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + response.data + '</p>');
+                    var errorMsg = response.data || 'Rewrite failed';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Rewrite Error:', xhr, status, error);
+                $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<p style="color:red;">Connection error: ' + error + '</p>');
             },
             complete: function() {
                 $btn.prop('disabled', false).html('<span class="dashicons dashicons-update"></span> <?php esc_html_e('Rewrite Content', 'aiseo'); ?>');
@@ -309,9 +344,12 @@ jQuery(document).ready(function($) {
     
     // Content Suggestions
     $('.aiseo-suggestions-btn').on('click', function() {
+        console.log('Content Suggestions button clicked');
         var $btn = $(this);
         var $form = $('#aiseo-suggestions-form');
         var topic = $form.find('[name="topic"]').val();
+        
+        console.log('Topic:', topic);
         
         if (!topic) {
             $('#aiseo-suggestions-result').show().find('.aiseo-result-list').html('<li style="color:red;">Please enter a topic</li>');
@@ -329,15 +367,29 @@ jQuery(document).ready(function($) {
                 topic: topic
             },
             success: function(response) {
-                if (response.success) {
+                console.log('Content Suggestions Response:', response);
+                if (response.success && response.data) {
                     var html = '';
-                    $.each(response.data, function(i, suggestion) {
-                        html += '<li>' + suggestion + '</li>';
-                    });
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        $.each(response.data, function(i, suggestion) {
+                            var text = typeof suggestion === 'string' ? suggestion : (suggestion.title || suggestion.text || JSON.stringify(suggestion));
+                            html += '<li>' + text + '</li>';
+                        });
+                    } else {
+                        html = '<li style="color:orange;">No suggestions generated. Try a different topic.</li>';
+                    }
                     $('#aiseo-suggestions-result').show().find('.aiseo-result-list').html(html);
                 } else {
-                    $('#aiseo-suggestions-result').show().find('.aiseo-result-list').html('<li style="color:red;">Error: ' + response.data + '</li>');
+                    var errorMsg = response.data || 'Failed to get suggestions';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-suggestions-result').show().find('.aiseo-result-list').html('<li style="color:red;">Error: ' + errorMsg + '</li>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Content Suggestions Error:', xhr, status, error);
+                $('#aiseo-suggestions-result').show().find('.aiseo-result-list').html('<li style="color:red;">Connection error: ' + error + '</li>');
             },
             complete: function() {
                 $btn.prop('disabled', false).html('<span class="dashicons dashicons-lightbulb"></span> <?php esc_html_e('Get Suggestions', 'aiseo'); ?>');
@@ -370,28 +422,113 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 console.log('Outline Response:', response);
-                if (response.success) {
+                if (response.success && response.data) {
                     var html = '';
+                    
+                    // Handle string response
                     if (typeof response.data === 'string') {
-                        html = response.data;
-                    } else if (typeof response.data === 'object') {
-                        // Handle object response
-                        if (response.data.outline) {
-                            html = response.data.outline;
-                        } else if (Array.isArray(response.data)) {
+                        html = response.data.replace(/\n/g, '<br>');
+                    } 
+                    // Handle object with outline property (nested structure)
+                    else if (response.data.outline) {
+                        var outline = response.data.outline;
+                        
+                        // Check if outline has nested structure (introduction, sections, conclusion)
+                        if (outline.introduction || outline.sections || outline.conclusion) {
+                            html = '<div class="outline-structured">';
+                            
+                            // Introduction
+                            if (outline.introduction && outline.introduction.length > 0) {
+                                html += '<h4>Introduction</h4><ul>';
+                                $.each(outline.introduction, function(i, item) {
+                                    html += '<li>' + (item.text || item.title || item) + '</li>';
+                                });
+                                html += '</ul>';
+                            }
+                            
+                            // Sections
+                            if (outline.sections && outline.sections.length > 0) {
+                                html += '<h4>Main Sections</h4><ul>';
+                                $.each(outline.sections, function(i, section) {
+                                    html += '<li><strong>' + (section.title || section.heading || 'Section ' + (i+1)) + '</strong>';
+                                    if (section.subsections && section.subsections.length > 0) {
+                                        html += '<ul>';
+                                        $.each(section.subsections, function(j, sub) {
+                                            html += '<li>' + (sub.title || sub.text || sub) + '</li>';
+                                        });
+                                        html += '</ul>';
+                                    }
+                                    html += '</li>';
+                                });
+                                html += '</ul>';
+                            }
+                            
+                            // Conclusion
+                            if (outline.conclusion && outline.conclusion.length > 0) {
+                                html += '<h4>Conclusion</h4><ul>';
+                                $.each(outline.conclusion, function(i, item) {
+                                    html += '<li>' + (item.text || item.title || item) + '</li>';
+                                });
+                                html += '</ul>';
+                            }
+                            
+                            // CTA
+                            if (outline.cta && outline.cta.length > 0) {
+                                html += '<h4>Call to Action</h4><ul>';
+                                $.each(outline.cta, function(i, item) {
+                                    html += '<li>' + (item.text || item.title || item) + '</li>';
+                                });
+                                html += '</ul>';
+                            }
+                            
+                            html += '</div>';
+                        }
+                        // Simple string outline
+                        else if (typeof outline === 'string') {
+                            html = outline.replace(/\n/g, '<br>');
+                        }
+                        // Array outline
+                        else if (Array.isArray(outline)) {
                             html = '<ul>';
-                            $.each(response.data, function(i, item) {
-                                html += '<li>' + (item.title || item.heading || item) + '</li>';
+                            $.each(outline, function(i, item) {
+                                html += '<li>' + (item.title || item.heading || item.text || item) + '</li>';
                             });
                             html += '</ul>';
-                        } else {
-                            html = '<pre>' + JSON.stringify(response.data, null, 2) + '</pre>';
                         }
                     }
-                    $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + html + '</div>');
+                    // Handle object with content property
+                    else if (response.data.content) {
+                        html = response.data.content.replace(/\n/g, '<br>');
+                    }
+                    // Handle array response
+                    else if (Array.isArray(response.data)) {
+                        html = '<ul>';
+                        $.each(response.data, function(i, item) {
+                            if (typeof item === 'string') {
+                                html += '<li>' + item + '</li>';
+                            } else {
+                                html += '<li>' + (item.title || item.heading || item.text || JSON.stringify(item)) + '</li>';
+                            }
+                        });
+                        html += '</ul>';
+                    }
+                    
+                    if (html) {
+                        $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + html + '</div>');
+                    } else {
+                        $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<p style="color:orange;">⚠️ No outline generated. The API returned an empty result. Try with a different topic or check your API key.</p>');
+                    }
                 } else {
-                    $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + response.data + '</p>');
+                    var errorMsg = response.data || 'Failed to generate outline';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Outline Error:', xhr, status, error);
+                $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<p style="color:red;">Connection error: ' + error + '</p>');
             },
             complete: function() {
                 $btn.prop('disabled', false).html('<span class="dashicons dashicons-list-view"></span> <?php esc_html_e('Generate Outline', 'aiseo'); ?>');
@@ -424,23 +561,47 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 console.log('FAQ Response:', response);
-                if (response.success) {
+                if (response.success && response.data) {
                     var html = '';
-                    if (Array.isArray(response.data) && response.data.length > 0) {
-                        $.each(response.data, function(i, faq) {
+                    var faqs = [];
+                    
+                    // Extract FAQs from different response formats
+                    if (Array.isArray(response.data)) {
+                        faqs = response.data;
+                    } else if (response.data.faqs && Array.isArray(response.data.faqs)) {
+                        faqs = response.data.faqs;
+                    } else if (response.data.html && response.data.html !== '<div class="aiseo-faq"></div>') {
+                        // Use the HTML if provided and not empty
+                        html = response.data.html;
+                    }
+                    
+                    // Build HTML from FAQs array
+                    if (faqs.length > 0) {
+                        $.each(faqs, function(i, faq) {
                             var question = faq.question || faq.q || 'No question';
                             var answer = faq.answer || faq.a || 'No answer';
                             html += '<div class="faq-item" style="margin-bottom:15px;padding:10px;background:white;border-left:3px solid #0073aa;">';
                             html += '<strong>Q: ' + question + '</strong>';
                             html += '<p style="margin:5px 0 0 0;">A: ' + answer + '</p></div>';
                         });
+                    }
+                    
+                    if (html) {
                         $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + html + '</div>');
                     } else {
-                        $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: Invalid response format</p>');
+                        $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<p style="color:orange;">⚠️ No FAQs generated. The API returned an empty result. Try with different content or check your API key.</p>');
                     }
                 } else {
-                    $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + response.data + '</p>');
+                    var errorMsg = response.data || 'Failed to generate FAQs';
+                    if (typeof errorMsg === 'object') {
+                        errorMsg = JSON.stringify(errorMsg);
+                    }
+                    $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('FAQ Error:', xhr, status, error);
+                $('#aiseo-faq-result').show().find('.aiseo-result-content').html('<p style="color:red;">Connection error: ' + error + '</p>');
             },
             complete: function() {
                 $btn.prop('disabled', false).html('<span class="dashicons dashicons-editor-help"></span> <?php esc_html_e('Generate FAQs', 'aiseo'); ?>');
