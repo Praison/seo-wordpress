@@ -52,6 +52,7 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/schema/{id}` | GET | **Get schema markup** (JSON-LD) |
 | `/wp-json/aiseo/v1/meta-tags/{id}` | GET | **Get all meta tags** for a post |
 | `/wp-json/aiseo/v1/social-tags/{id}` | GET | **Get social media tags** (OG & Twitter) |
+| `/wp-json/aiseo/v1/sitemap/stats` | GET | **Get sitemap statistics** |
 | `/wp-json/aiseo/v1/generate/post/{id}` | POST | Generate metadata for post |
 
 **Example Usage:**
@@ -437,15 +438,58 @@ wp option update aiseo_twitter_site "@yoursite"
 | Twitter Summary | 120 x 120 px | 1:1 |
 | Twitter Large Image | 1200 x 628 px | 1.91:1 |
 
-### 🚧 In Progress / Coming Soon
+#### 13. **XML Sitemap Generator** ✅
+- ✅ **Automatic sitemap.xml generation** - Dynamic XML sitemap
+- ✅ **Sitemap index** - `/sitemap.xml` with post type sitemaps
+- ✅ **Post type sitemaps** - `/sitemap-post.xml`, `/sitemap-page.xml`
+- ✅ **Smart caching** - 12-hour cache with auto-invalidation
+- ✅ **Priority calculation** - Homepage (1.0), Pages (0.8), Posts (0.6)
+- ✅ **Change frequency** - Auto-calculated based on post age
+- ✅ **Image sitemap** - Featured images + content images
+- ✅ **Noindex exclusion** - Respects `_aiseo_noindex` meta
+- ✅ **robots.txt integration** - Automatic sitemap reference
+- ✅ **Search engine ping** - Google & Bing notification
 
-#### 13. **XML Sitemap Generator**
-- ⏳ Automatic sitemap creation
-- ⏳ Post type inclusion/exclusion
-- ⏳ Priority and frequency settings
-- ⏳ Automatic ping to search engines
-- ⏳ Image sitemap support
-- ⏳ Accessible at `/sitemap.xml`
+**Test the XML Sitemap Generator:**
+
+```bash
+# REST API - Get sitemap statistics
+curl https://yoursite.test/wp-json/aiseo/v1/sitemap/stats
+
+# Response: 107 total URLs across post types
+
+# IMPORTANT: Flush rewrite rules first!
+wp rewrite flush
+
+# Access sitemap index
+curl https://yoursite.test/sitemap.xml
+
+# Access post type sitemaps
+curl https://yoursite.test/sitemap-post.xml
+curl https://yoursite.test/sitemap-page.xml
+
+# Check robots.txt includes sitemap
+curl https://yoursite.test/robots.txt | grep Sitemap
+
+# WP-CLI - Set custom priority
+wp post meta update 123 _aiseo_sitemap_priority "0.9"
+
+# WP-CLI - Set custom changefreq
+wp post meta update 123 _aiseo_sitemap_changefreq "weekly"
+
+# Validate with Google Search Console
+# https://search.google.com/search-console
+```
+
+**Priority & Change Frequency:**
+
+| Content | Priority | Changefreq (age-based) |
+|---------|----------|------------------------|
+| Homepage | 1.0 | weekly |
+| Pages | 0.8 | monthly |
+| Posts | 0.6 | <7d: daily, <30d: weekly, <365d: monthly, >365d: yearly |
+
+### 🚧 In Progress / Coming Soon
 
 #### 14. **Admin Interface**
 - ⏳ Settings page with API configuration
