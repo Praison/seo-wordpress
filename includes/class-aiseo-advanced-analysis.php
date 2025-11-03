@@ -111,7 +111,7 @@ class AISEO_Advanced_Analysis {
         }
         
         $permalink = get_permalink($post_id);
-        $slug = basename(parse_url($permalink, PHP_URL_PATH));
+        $slug = basename(wp_parse_url($permalink, PHP_URL_PATH));
         
         if (stripos($slug, str_replace(' ', '-', strtolower($keyword))) !== false) {
             return ['score' => 10, 'max_score' => 10, 'status' => 'good', 'message' => __('Focus keyword found in URL', 'aiseo')];

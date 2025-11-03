@@ -1,6 +1,5 @@
-=== AISEO - AI-Powered SEO Plugin ===
-Contributors: praisonai
-Donate link: https://praison.ai/
+=== AISEO ===
+Contributors: MervinPraison
 Tags: seo, ai, openai, meta description, schema
 Requires at least: 5.0
 Tested up to: 6.8

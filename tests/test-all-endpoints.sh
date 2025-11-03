@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 # Configuration
 SITE_URL="${1:-https://wordpress.test}"
 VERBOSE=false
-WORDPRESS_PATH="/Users/praison/wordpress"
+WORDPRESS_PATH="/Users/praison/Sites/localhost/wordpress"
 
 # Parse arguments
 for arg in "$@"; do

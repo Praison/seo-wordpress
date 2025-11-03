@@ -115,7 +115,7 @@ class AISEO_Rank_Tracker {
         if (is_wp_error($response)) {
             // Fallback to simple simulation
             return [
-                'position' => rand(1, 100),
+                'position' => wp_rand(1, 100),
                 'url' => trailingslashit($site_url),
                 'serp_features' => []
             ];
@@ -126,7 +126,7 @@ class AISEO_Rank_Tracker {
         
         if (empty($matches[0])) {
             return [
-                'position' => rand(1, 100),
+                'position' => wp_rand(1, 100),
                 'url' => trailingslashit($site_url),
                 'serp_features' => []
             ];
@@ -136,14 +136,14 @@ class AISEO_Rank_Tracker {
         
         if (!is_array($data)) {
             return [
-                'position' => rand(1, 100),
+                'position' => wp_rand(1, 100),
                 'url' => trailingslashit($site_url),
                 'serp_features' => []
             ];
         }
         
         return [
-            'position' => isset($data['position']) ? absint($data['position']) : rand(1, 100),
+            'position' => isset($data['position']) ? absint($data['position']) : wp_rand(1, 100),
             'url' => isset($data['url']) ? esc_url_raw($data['url']) : trailingslashit($site_url),
             'serp_features' => isset($data['serp_features']) && is_array($data['serp_features']) ? $data['serp_features'] : []
         ];
@@ -263,7 +263,7 @@ class AISEO_Rank_Tracker {
     private function check_competitor_position($keyword, $competitor_url) {
         // In production, this would use a real SERP API
         // For now, return a simulated position
-        return rand(1, 100);
+        return wp_rand(1, 100);
     }
     
     /**

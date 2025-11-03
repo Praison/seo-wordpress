@@ -137,7 +137,7 @@ class AISEO_Outline_CLI {
             WP_CLI::line(json_encode($saved_outline, JSON_PRETTY_PRINT));
         } else {
             WP_CLI::line("\n=== Saved Outline for Post {$post_id} ===\n");
-            WP_CLI::line(print_r($saved_outline, true));
+            WP_CLI::success('Outline saved successfully.');
         }
         
         WP_CLI::success("Outline retrieved");

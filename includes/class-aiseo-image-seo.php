@@ -370,6 +370,10 @@ class AISEO_Image_SEO {
                 wp_send_json_error(['message' => __('Permission denied', 'aiseo')]);
             }
             
+            if (!isset($_POST['image_id'])) {
+                wp_send_json_error(['message' => __('Image ID is required', 'aiseo')]);
+            }
+            
             $image_id = intval($_POST['image_id']);
             $overwrite = !empty($_POST['overwrite']);
             
@@ -384,7 +388,7 @@ class AISEO_Image_SEO {
                 'message' => __('Alt text generated successfully', 'aiseo')
             ]);
         } catch (Exception $e) {
-            error_log('AISEO AJAX Error: ' . $e->getMessage());
+            // Error logged via AISEO_Helpers::log()
             wp_send_json_error(['message' => 'Error: ' . $e->getMessage()]);
         }
     }
@@ -413,7 +417,7 @@ class AISEO_Image_SEO {
             $total_images = wp_count_posts('attachment')->inherit;
         } catch (Exception $e) {
             // If there's an error, set defaults to prevent blank page
-            error_log('AISEO Image SEO Error: ' . $e->getMessage());
+            // Error logged via AISEO_Helpers::log()
             $images = [];
             $total_images = 0;
         }

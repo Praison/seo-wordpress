@@ -65,15 +65,14 @@ class AISEO_Readability_CLI {
             WP_CLI::line("Transition Words: {$analysis['transition_words_percentage']}%");
         } else {
             $data = [
-                ['Metric', 'Value'],
-                ['Flesch Reading Ease', $analysis['flesch_reading_ease']],
-                ['Flesch-Kincaid Grade', $analysis['flesch_kincaid_grade']],
-                ['Gunning Fog Index', $analysis['gunning_fog_index']],
-                ['SMOG Index', $analysis['smog_index']],
-                ['Coleman-Liau Index', $analysis['coleman_liau_index']],
-                ['ARI', $analysis['automated_readability_index']],
-                ['Passive Voice %', $analysis['passive_voice_percentage']],
-                ['Transition Words %', $analysis['transition_words_percentage']],
+                ['Metric' => 'Flesch Reading Ease', 'Value' => $analysis['flesch_reading_ease']],
+                ['Metric' => 'Flesch-Kincaid Grade', 'Value' => $analysis['flesch_kincaid_grade']],
+                ['Metric' => 'Gunning Fog Index', 'Value' => $analysis['gunning_fog_index']],
+                ['Metric' => 'SMOG Index', 'Value' => $analysis['smog_index']],
+                ['Metric' => 'Coleman-Liau Index', 'Value' => $analysis['coleman_liau_index']],
+                ['Metric' => 'ARI', 'Value' => $analysis['automated_readability_index']],
+                ['Metric' => 'Passive Voice %', 'Value' => $analysis['passive_voice_percentage']],
+                ['Metric' => 'Transition Words %', 'Value' => $analysis['transition_words_percentage']],
             ];
             
             WP_CLI\Utils\format_items('table', $data, ['Metric', 'Value']);

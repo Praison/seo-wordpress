@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: AISEO
- * Plugin URI: https://praisonai.com/aiseo
+ * Plugin URI: https://github.com/MervinPraison/WordPressAISEO
  * Description: AI-powered SEO optimization for WordPress. Automatically generate meta descriptions, titles, schema markup, and comprehensive SEO analysis using artificial intelligence.
  * Version: 1.0.0
- * Author: PraisonAI
- * Author URI: https://praisonai.com
+ * Author: MervinPraison
+ * Author URI: https://mer.vin
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: aiseo
