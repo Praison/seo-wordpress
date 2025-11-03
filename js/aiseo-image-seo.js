@@ -8,9 +8,32 @@
 (function($) {
     'use strict';
     
+    // Debug logging
+    console.log('AISEO Image SEO: Script loaded');
+    console.log('AISEO Image SEO: Config', typeof aiseoImageSeo !== 'undefined' ? aiseoImageSeo : 'NOT DEFINED');
+    
+    // Check if required variables are defined
+    if (typeof aiseoImageSeo === 'undefined') {
+        console.error('AISEO Image SEO: aiseoImageSeo is not defined! Script localization failed.');
+        return;
+    }
+    
+    if (!aiseoImageSeo.ajaxUrl) {
+        console.error('AISEO Image SEO: ajaxUrl is not defined!');
+        return;
+    }
+    
+    if (!aiseoImageSeo.nonce) {
+        console.error('AISEO Image SEO: nonce is not defined!');
+        return;
+    }
+    
+    console.log('AISEO Image SEO: All required variables are defined');
+    
     let cancelBulk = false;
     
     $(document).ready(function() {
+        console.log('AISEO Image SEO: DOM ready');
         
         // Select all checkbox
         $('#select-all-images').on('change', function() {

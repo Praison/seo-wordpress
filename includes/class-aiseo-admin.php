@@ -437,12 +437,7 @@ class AISEO_Admin {
      * Enqueue admin scripts
      */
     public function enqueue_admin_scripts($hook) {
-        // Only load on AISEO pages
-        if (strpos($hook, 'aiseo') === false) {
-            return;
-        }
-        
-        // Add custom admin styles if needed
-        wp_enqueue_style('aiseo-admin', plugins_url('assets/css/admin.css', dirname(__FILE__)), array(), '1.0.0');
+        // Load on all admin pages (for metabox styling)
+        wp_enqueue_style('aiseo-admin', AISEO_PLUGIN_URL . 'css/aiseo-admin.css', array(), AISEO_VERSION);
     }
 }

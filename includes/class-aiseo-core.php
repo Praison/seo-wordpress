@@ -27,6 +27,7 @@ class AISEO_Core {
     private $social;
     private $admin;
     private $metabox;
+    private $image_seo;
     
     /**
      * Constructor

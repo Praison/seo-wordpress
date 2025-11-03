@@ -188,7 +188,8 @@ class AISEO_Meta_Variations_CLI {
 
 // Register WP-CLI commands
 if (defined('WP_CLI') && WP_CLI) {
-    WP_CLI::add_command('aiseo meta variations', ['AISEO_Meta_Variations_CLI', 'variations']);
-    WP_CLI::add_command('aiseo meta variations-get', ['AISEO_Meta_Variations_CLI', 'variations_get']);
-    WP_CLI::add_command('aiseo meta variations-test', ['AISEO_Meta_Variations_CLI', 'variations_test']);
+    // Changed from 'aiseo meta variations' to 'aiseo meta-variations' to avoid conflict with 'wp aiseo meta' command
+    WP_CLI::add_command('aiseo meta-variations', ['AISEO_Meta_Variations_CLI', 'variations']);
+    WP_CLI::add_command('aiseo meta-variations-get', ['AISEO_Meta_Variations_CLI', 'variations_get']);
+    WP_CLI::add_command('aiseo meta-variations-test', ['AISEO_Meta_Variations_CLI', 'variations_test']);
 }

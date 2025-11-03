@@ -27,6 +27,11 @@ class AISEO_Metabox {
         
         // Enqueue metabox scripts
         add_action('admin_enqueue_scripts', array($this, 'enqueue_metabox_scripts'));
+        
+        // AJAX handlers for AI generation
+        add_action('wp_ajax_aiseo_generate_title', array($this, 'ajax_generate_title'));
+        add_action('wp_ajax_aiseo_generate_description', array($this, 'ajax_generate_description'));
+        add_action('wp_ajax_aiseo_analyze_content', array($this, 'ajax_analyze_content'));
     }
     
     /**
@@ -66,7 +71,7 @@ class AISEO_Metabox {
         
         // Get SEO score if available
         $analysis = new AISEO_Analysis();
-        $score_data = $analysis->analyze_content($post->ID, $focus_keyword);
+        $score_data = $analysis->analyze_post($post->ID, $focus_keyword);
         $seo_score = isset($score_data['overall_score']) ? $score_data['overall_score'] : 0;
         $seo_status = isset($score_data['status']) ? $score_data['status'] : 'poor';
         
@@ -377,8 +382,14 @@ class AISEO_Metabox {
         // Enqueue WordPress media library
         wp_enqueue_media();
         
-        // Add inline script for metabox functionality
-        wp_add_inline_script('jquery', $this->get_metabox_script());
+        // Enqueue metabox JavaScript (external file instead of inline)
+        wp_enqueue_script(
+            'aiseo-metabox',
+            AISEO_PLUGIN_URL . 'js/aiseo-metabox.js',
+            array('jquery'),
+            AISEO_VERSION,
+            true
+        );
     }
     
     /**
@@ -490,5 +501,91 @@ class AISEO_Metabox {
             });
         });
         ";
+    }
+    
+    /**
+     * AJAX handler for generating title
+     */
+    public function ajax_generate_title() {
+        check_ajax_referer('aiseo_metabox_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+        }
+        
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        
+        if (!$post_id) {
+            wp_send_json_error('Invalid post ID');
+        }
+        
+        $post = get_post($post_id);
+        $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        
+        $api = new AISEO_API();
+        $title = $api->generate_title($post->post_content, $keyword);
+        
+        if (is_wp_error($title)) {
+            wp_send_json_error($title->get_error_message());
+        }
+        
+        wp_send_json_success($title);
+    }
+    
+    /**
+     * AJAX handler for generating description
+     */
+    public function ajax_generate_description() {
+        check_ajax_referer('aiseo_metabox_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+        }
+        
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        
+        if (!$post_id) {
+            wp_send_json_error('Invalid post ID');
+        }
+        
+        $post = get_post($post_id);
+        $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        
+        $api = new AISEO_API();
+        $description = $api->generate_meta_description($post->post_content, $keyword);
+        
+        if (is_wp_error($description)) {
+            wp_send_json_error($description->get_error_message());
+        }
+        
+        wp_send_json_success($description);
+    }
+    
+    /**
+     * AJAX handler for analyzing content
+     */
+    public function ajax_analyze_content() {
+        check_ajax_referer('aiseo_metabox_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+        }
+        
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        
+        if (!$post_id) {
+            wp_send_json_error('Invalid post ID');
+        }
+        
+        $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        
+        $analysis = new AISEO_Analysis();
+        $results = $analysis->analyze_post($post_id, $keyword);
+        
+        if (is_wp_error($results)) {
+            wp_send_json_error($results->get_error_message());
+        }
+        
+        wp_send_json_success($results);
     }
 }

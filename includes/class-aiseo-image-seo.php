@@ -89,15 +89,22 @@ class AISEO_Image_SEO {
             return new WP_Error('alt_exists', __('Alt text already exists', 'aiseo'));
         }
         
-        // Prepare AI prompt
-        $prompt = $this->build_alt_text_prompt($context);
+        // Prepare context for AI with image URL
+        $image_url = wp_get_attachment_url($image_id);
+        
+        $image_context = [
+            'image_url' => $image_url,
+            'filename' => $context['filename'],
+            'title' => $context['title'],
+            'caption' => $context['caption'],
+            'description' => $context['description'],
+            'parent_title' => $context['parent_title'],
+            'parent_content' => $context['parent_content']
+        ];
         
         // Call OpenAI API
         $api = new AISEO_API();
-        $response = $api->generate_text($prompt, [
-            'max_tokens' => 50,
-            'temperature' => 0.7
-        ]);
+        $response = $api->generate_alt_text($image_context);
         
         if (is_wp_error($response)) {
             return $response;
@@ -356,25 +363,30 @@ class AISEO_Image_SEO {
      * AJAX: Generate alt text for single image
      */
     public function ajax_generate_single_alt() {
-        check_ajax_referer('aiseo_image_seo', 'nonce');
-        
-        if (!current_user_can('upload_files')) {
-            wp_send_json_error(['message' => __('Permission denied', 'aiseo')]);
+        try {
+            check_ajax_referer('aiseo_image_seo', 'nonce');
+            
+            if (!current_user_can('upload_files')) {
+                wp_send_json_error(['message' => __('Permission denied', 'aiseo')]);
+            }
+            
+            $image_id = intval($_POST['image_id']);
+            $overwrite = !empty($_POST['overwrite']);
+            
+            $alt_text = $this->generate_alt_text($image_id, ['overwrite' => $overwrite]);
+            
+            if (is_wp_error($alt_text)) {
+                wp_send_json_error(['message' => $alt_text->get_error_message()]);
+            }
+            
+            wp_send_json_success([
+                'alt_text' => $alt_text,
+                'message' => __('Alt text generated successfully', 'aiseo')
+            ]);
+        } catch (Exception $e) {
+            error_log('AISEO AJAX Error: ' . $e->getMessage());
+            wp_send_json_error(['message' => 'Error: ' . $e->getMessage()]);
         }
-        
-        $image_id = intval($_POST['image_id']);
-        $overwrite = !empty($_POST['overwrite']);
-        
-        $alt_text = $this->generate_alt_text($image_id, ['overwrite' => $overwrite]);
-        
-        if (is_wp_error($alt_text)) {
-            wp_send_json_error(['message' => $alt_text->get_error_message()]);
-        }
-        
-        wp_send_json_success([
-            'alt_text' => $alt_text,
-            'message' => __('Alt text generated successfully', 'aiseo')
-        ]);
     }
     
     /**
@@ -396,8 +408,15 @@ class AISEO_Image_SEO {
      * Render admin page
      */
     public function render_admin_page() {
-        $images = $this->detect_missing_alt_text(['posts_per_page' => 20]);
-        $total_images = wp_count_posts('attachment')->inherit;
+        try {
+            $images = $this->detect_missing_alt_text(['posts_per_page' => 20]);
+            $total_images = wp_count_posts('attachment')->inherit;
+        } catch (Exception $e) {
+            // If there's an error, set defaults to prevent blank page
+            error_log('AISEO Image SEO Error: ' . $e->getMessage());
+            $images = [];
+            $total_images = 0;
+        }
         
         include AISEO_PLUGIN_DIR . 'admin/views/image-seo-page.php';
     }

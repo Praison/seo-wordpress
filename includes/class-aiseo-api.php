@@ -179,20 +179,47 @@ class AISEO_API {
     }
     
     /**
-     * Generate alt text for image
+     * Generate alt text for image using Vision API
      *
-     * @param string $image_context Context around the image
+     * @param array $image_context Context array with image_url and page content
      * @return string|WP_Error Alt text or error
      */
     public function generate_alt_text($image_context) {
-        $prompt = "Generate descriptive alt text (max 125 characters) for an image in this context:\n\n";
-        $prompt .= $image_context;
-        $prompt .= "\n\nProvide ONLY the alt text, nothing else. Make it descriptive and SEO-friendly.";
+        $api_key = AISEO_Helpers::get_api_key();
         
-        $response = $this->make_request($prompt, array(
-            'max_tokens' => 50,
-            'temperature' => 0.6,
-        ));
+        if (empty($api_key)) {
+            return new WP_Error('no_api_key', __('OpenAI API key not configured', 'aiseo'));
+        }
+        
+        // Build context prompt
+        $context_text = "";
+        if (!empty($image_context['parent_title'])) {
+            $context_text .= "Page Title: " . $image_context['parent_title'] . "\n";
+        }
+        if (!empty($image_context['parent_content'])) {
+            $context_text .= "Page Content: " . substr($image_context['parent_content'], 0, 500) . "\n";
+        }
+        if (!empty($image_context['filename'])) {
+            $context_text .= "Filename: " . $image_context['filename'] . "\n";
+        }
+        
+        $prompt = "Analyze this image and generate descriptive alt text (max 125 characters).\n\n";
+        if (!empty($context_text)) {
+            $prompt .= "Context:\n" . $context_text . "\n\n";
+        }
+        $prompt .= "Provide ONLY the alt text, nothing else. Make it descriptive, accurate, and SEO-friendly.";
+        
+        // Check if we have an image URL
+        if (!empty($image_context['image_url'])) {
+            // Use Vision API (GPT-4 Vision)
+            $response = $this->make_vision_request($image_context['image_url'], $prompt);
+        } else {
+            // Fallback to text-only if no image URL
+            $response = $this->make_request($prompt, array(
+                'max_tokens' => 50,
+                'temperature' => 0.6,
+            ));
+        }
         
         if (is_wp_error($response)) {
             return $response;
@@ -326,6 +353,98 @@ class AISEO_API {
             'tokens_used' => $tokens_used,
             'duration_ms' => $duration,
             'model' => $this->model,
+        ));
+        
+        return $content;
+    }
+    
+    /**
+     * Make Vision API request to OpenAI
+     *
+     * @param string $image_url URL of the image to analyze
+     * @param string $prompt Prompt text
+     * @return string|WP_Error Response text or error
+     */
+    public function make_vision_request($image_url, $prompt) {
+        // Check API key
+        if (empty($this->api_key)) {
+            return new WP_Error('no_api_key', __('OpenAI API key not configured', 'aiseo'));
+        }
+        
+        // Use current model (gpt-4o-mini supports vision natively)
+        $vision_model = $this->model;
+        
+        $body = array(
+            'model' => $vision_model,
+            'messages' => array(
+                array(
+                    'role' => 'user',
+                    'content' => array(
+                        array(
+                            'type' => 'text',
+                            'text' => $prompt
+                        ),
+                        array(
+                            'type' => 'image_url',
+                            'image_url' => array(
+                                'url' => $image_url
+                            )
+                        )
+                    )
+                )
+            ),
+            'max_tokens' => 100
+        );
+        
+        $args = array(
+            'headers' => array(
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'Content-Type' => 'application/json',
+            ),
+            'body' => json_encode($body),
+            'timeout' => 60, // Vision API may take longer
+            'sslverify' => true,
+        );
+        
+        $start_time = microtime(true);
+        $response = wp_remote_post('https://api.openai.com/v1/chat/completions', $args);
+        $duration = (microtime(true) - $start_time) * 1000;
+        
+        if (is_wp_error($response)) {
+            $status_code = wp_remote_retrieve_response_code($response);
+            AISEO_Helpers::log('ERROR', 'vision_api_request', 'Vision API request failed', array(
+                'error' => $response->get_error_message(),
+                'status_code' => $status_code,
+            ));
+            return $response;
+        }
+        
+        $response_code = wp_remote_retrieve_response_code($response);
+        $response_body = wp_remote_retrieve_body($response);
+        
+        if ($response_code !== 200) {
+            $error_message = $this->parse_error_response($response_body, $response_code);
+            AISEO_Helpers::log('ERROR', 'vision_api_request', 'Vision API error', array(
+                'status_code' => $response_code,
+                'error' => $error_message,
+            ));
+            return new WP_Error('api_error', $error_message);
+        }
+        
+        $data = json_decode($response_body, true);
+        
+        if (!isset($data['choices'][0]['message']['content'])) {
+            return new WP_Error('invalid_response', __('Invalid API response', 'aiseo'));
+        }
+        
+        $content = $data['choices'][0]['message']['content'];
+        $tokens_used = isset($data['usage']['total_tokens']) ? $data['usage']['total_tokens'] : 0;
+        
+        $this->log_usage(true, $tokens_used, $duration);
+        
+        AISEO_Helpers::log('INFO', 'vision_api_request', 'Vision API request successful', array(
+            'tokens_used' => $tokens_used,
+            'duration_ms' => $duration,
         ));
         
         return $content;

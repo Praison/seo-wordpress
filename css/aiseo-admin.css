@@ -1,0 +1,343 @@
+/**
+ * AISEO Admin Styles
+ * Uses WordPress native admin UI components
+ */
+
+/* Metabox Container */
+.aiseo-metabox {
+    padding: 0;
+}
+
+/* SEO Score Section */
+.aiseo-score-section {
+    background: #f9f9f9;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.aiseo-score-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.aiseo-score-circle svg {
+    transform: rotate(-90deg);
+}
+
+.aiseo-score-circle circle {
+    fill: none;
+    stroke-width: 8;
+}
+
+.aiseo-score-circle .background {
+    stroke: #e0e0e0;
+}
+
+.aiseo-score-circle .progress {
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.aiseo-score-circle .progress.good {
+    stroke: #46b450;
+}
+
+.aiseo-score-circle .progress.ok {
+    stroke: #ffb900;
+}
+
+.aiseo-score-circle .progress.poor {
+    stroke: #dc3232;
+}
+
+.aiseo-score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.aiseo-score-number {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    color: #1d2327;
+}
+
+.aiseo-score-max {
+    font-size: 12px;
+    color: #646970;
+}
+
+.aiseo-score-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.aiseo-score-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.aiseo-score-status.good {
+    background: #d7f7dc;
+    color: #1e4620;
+}
+
+.aiseo-score-status.ok {
+    background: #fff8e5;
+    color: #614a00;
+}
+
+.aiseo-score-status.poor {
+    background: #f7dede;
+    color: #5a1a1a;
+}
+
+/* Form Fields */
+.aiseo-field {
+    margin-bottom: 20px;
+}
+
+.aiseo-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1d2327;
+    font-size: 13px;
+}
+
+.aiseo-field-description {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #646970;
+    font-style: normal;
+}
+
+.aiseo-field input[type="text"],
+.aiseo-field textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: 0 0 0 transparent;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.aiseo-field input[type="text"]:focus,
+.aiseo-field textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: 2px solid transparent;
+}
+
+.aiseo-field textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Character Counter */
+.aiseo-char-count {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #646970;
+}
+
+.aiseo-char-count.warning {
+    color: #d63638;
+}
+
+/* Button with Icon */
+.aiseo-button-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #2271b1;
+    color: #fff;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease-in-out;
+}
+
+.aiseo-button-with-icon:hover {
+    background: #135e96;
+    border-color: #135e96;
+    color: #fff;
+}
+
+.aiseo-button-with-icon:disabled {
+    background: #f0f0f1;
+    border-color: #dcdcde;
+    color: #a7aaad;
+    cursor: not-allowed;
+}
+
+.aiseo-button-with-icon .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+}
+
+/* Secondary Button */
+.aiseo-button-secondary {
+    background: #f6f7f7;
+    border-color: #2271b1;
+    color: #2271b1;
+}
+
+.aiseo-button-secondary:hover {
+    background: #f0f0f1;
+    border-color: #135e96;
+    color: #135e96;
+}
+
+/* Advanced Settings Toggle */
+.aiseo-toggle-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    margin: 20px 0 0 0;
+    border-top: 1px solid #dcdcde;
+    cursor: pointer;
+    font-weight: 600;
+    color: #2271b1;
+    font-size: 13px;
+}
+
+.aiseo-toggle-header:hover {
+    color: #135e96;
+}
+
+.aiseo-toggle-header .dashicons {
+    transition: transform 0.2s ease;
+}
+
+.aiseo-toggle-header.open .dashicons {
+    transform: rotate(180deg);
+}
+
+.aiseo-advanced-content {
+    display: none;
+    padding-top: 16px;
+}
+
+/* Checkbox Field */
+.aiseo-checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.aiseo-checkbox-field input[type="checkbox"] {
+    margin: 0;
+}
+
+.aiseo-checkbox-field label {
+    margin: 0;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+/* Action Buttons Row */
+.aiseo-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #dcdcde;
+}
+
+/* Analysis Results */
+.aiseo-analysis-results {
+    display: none;
+    margin-top: 16px;
+    padding: 16px;
+    background: #f9f9f9;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.aiseo-analysis-results h4 {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.aiseo-analysis-content ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.aiseo-analysis-content li {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Spinner */
+.aiseo-metabox .spinner {
+    float: none;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.aiseo-metabox .spinner.is-active {
+    display: inline-block;
+}
+
+/* Alt Text Result */
+.alt-text-result {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+.alt-text-result.success {
+    color: #46b450;
+}
+
+.alt-text-result.error {
+    color: #dc3232;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .aiseo-score-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .aiseo-actions {
+        flex-direction: column;
+    }
+    
+    .aiseo-button-with-icon {
+        width: 100%;
+        justify-content: center;
+    }
+}
