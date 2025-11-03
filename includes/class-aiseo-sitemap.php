@@ -29,6 +29,12 @@ class AISEO_Sitemap {
      * Initialize sitemap generator
      */
     public function init() {
+        // Disable WordPress core sitemaps (we're replacing them)
+        add_filter('wp_sitemaps_enabled', '__return_false');
+        
+        // Prevent trailing slash redirect for sitemap URLs
+        add_filter('redirect_canonical', array($this, 'prevent_sitemap_redirect'), 10, 2);
+        
         // Add rewrite rules for sitemap
         add_action('init', array($this, 'add_rewrite_rules'));
         
@@ -47,13 +53,21 @@ class AISEO_Sitemap {
      * Add rewrite rules for sitemap
      */
     public function add_rewrite_rules() {
-        add_rewrite_rule('^sitemap\.xml$', 'index.php?aiseo_sitemap=1', 'top');
-        add_rewrite_rule('^sitemap-([^/]+)\.xml$', 'index.php?aiseo_sitemap=$matches[1]', 'top');
-        
         // Add query vars
         add_filter('query_vars', function($vars) {
             $vars[] = 'aiseo_sitemap';
             return $vars;
+        });
+        
+        // Use rewrite_rules_array filter to ensure our rules come first
+        add_filter('rewrite_rules_array', function($rules) {
+            $new_rules = array(
+                '^wp-sitemap\.xml$' => 'index.php?aiseo_sitemap=index',
+                '^wp-sitemap-posts-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=posts-$matches[1]-$matches[2]',
+                '^wp-sitemap-taxonomies-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=taxonomies-$matches[1]-$matches[2]',
+                '^wp-sitemap-users-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=users-$matches[1]',
+            );
+            return $new_rules + $rules;
         });
     }
     
@@ -71,7 +85,26 @@ class AISEO_Sitemap {
         if ($sitemap === '1' || $sitemap === 'index') {
             $this->output_sitemap_index();
         } else {
-            $this->output_sitemap($sitemap);
+            // Parse WordPress standard format: posts-{type}-{page} or taxonomies-{type}-{page} or users-{page}
+            $parts = explode('-', $sitemap);
+            if (count($parts) >= 3 && $parts[0] === 'posts') {
+                // posts-post-1 format
+                $post_type = $parts[1];
+                $page = isset($parts[2]) ? intval($parts[2]) : 1;
+                $this->output_sitemap($post_type, $page);
+            } elseif (count($parts) >= 3 && $parts[0] === 'taxonomies') {
+                // taxonomies-category-1 format
+                $taxonomy = $parts[1];
+                $page = isset($parts[2]) ? intval($parts[2]) : 1;
+                $this->output_taxonomy_sitemap($taxonomy, $page);
+            } elseif (count($parts) >= 2 && $parts[0] === 'users') {
+                // users-1 format
+                $page = isset($parts[1]) ? intval($parts[1]) : 1;
+                $this->output_users_sitemap($page);
+            } else {
+                // Legacy format support
+                $this->output_sitemap($sitemap);
+            }
         }
         
         exit;
@@ -94,7 +127,7 @@ class AISEO_Sitemap {
             $lastmod = $this->get_post_type_lastmod($post_type);
             
             echo "\t<sitemap>\n";
-            echo "\t\t<loc>" . esc_url(home_url("/sitemap-{$post_type}.xml")) . "</loc>\n";
+            echo "\t\t<loc>" . esc_url(home_url("/wp-sitemap-posts-{$post_type}-1.xml")) . "</loc>\n";
             if ($lastmod) {
                 echo "\t\t<lastmod>" . esc_html($lastmod) . "</lastmod>\n";
             }
@@ -108,10 +141,11 @@ class AISEO_Sitemap {
      * Output sitemap for specific post type
      *
      * @param string $post_type Post type
+     * @param int $page Page number (default 1)
      */
-    private function output_sitemap($post_type) {
+    private function output_sitemap($post_type, $page = 1) {
         // Check cache
-        $cache_key = self::CACHE_KEY . '_' . $post_type;
+        $cache_key = self::CACHE_KEY . '_' . $post_type . '_' . $page;
         $cached = get_transient($cache_key);
         
         if ($cached !== false) {
@@ -394,6 +428,24 @@ class AISEO_Sitemap {
     }
     
     /**
+     * Prevent trailing slash redirect for sitemap URLs
+     *
+     * @param string $redirect_url The redirect URL
+     * @param string $requested_url The requested URL
+     * @return string|false Modified redirect URL or false to prevent redirect
+     */
+    public function prevent_sitemap_redirect($redirect_url, $requested_url) {
+        // Check if this is a sitemap request
+        if (strpos($requested_url, 'wp-sitemap') !== false || 
+            strpos($requested_url, 'sitemap') !== false && strpos($requested_url, '.xml') !== false) {
+            // Prevent redirect
+            return false;
+        }
+        
+        return $redirect_url;
+    }
+    
+    /**
      * Add sitemap to robots.txt
      *
      * @param string $output Robots.txt output
@@ -403,7 +455,7 @@ class AISEO_Sitemap {
     public function add_sitemap_to_robots($output, $public) {
         if ($public) {
             $output .= "\n# AISEO Sitemap\n";
-            $output .= "Sitemap: " . home_url('/sitemap.xml') . "\n";
+            $output .= "Sitemap: " . home_url('/wp-sitemap.xml') . "\n";
         }
         
         return $output;
@@ -413,7 +465,7 @@ class AISEO_Sitemap {
      * Ping search engines about sitemap update
      */
     public function ping_search_engines() {
-        $sitemap_url = urlencode(home_url('/sitemap.xml'));
+        $sitemap_url = urlencode(home_url('/wp-sitemap.xml'));
         
         // Google
         wp_remote_get("https://www.google.com/ping?sitemap={$sitemap_url}");

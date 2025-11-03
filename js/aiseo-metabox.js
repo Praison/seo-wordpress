@@ -31,11 +31,11 @@
         
         // Initialize character counters
         $('.aiseo-title-input').on('input', function() {
-            updateCharCount($(this), $(this).closest('div').find('.aiseo-char-count'));
+            updateCharCount($(this), $(this).parent().parent().find('.aiseo-char-count'));
         }).trigger('input');
         
         $('.aiseo-description-input').on('input', function() {
-            updateCharCount($(this), $(this).closest('div').find('.aiseo-char-count'));
+            updateCharCount($(this), $(this).parent().find('.aiseo-char-count'));
         }).trigger('input');
         
         // Advanced settings - native details/summary element handles toggle automatically

@@ -3378,11 +3378,27 @@ class AISEO_REST {
      * Check permission for protected endpoints
      *
      * @param WP_REST_Request $request Request object
-     * @return bool
+     * @return bool|WP_Error
      */
     public function check_permission($request) {
-        // For now, allow all requests
-        // In production, you'd check user capabilities
+        // Check if user is logged in
+        if (!is_user_logged_in()) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('You must be logged in to access this endpoint.', 'aiseo'),
+                array('status' => 401)
+            );
+        }
+        
+        // Check if user has edit_posts capability (minimum requirement)
+        if (!current_user_can('edit_posts')) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('You do not have permission to access this endpoint.', 'aiseo'),
+                array('status' => 403)
+            );
+        }
+        
         return true;
     }
 }

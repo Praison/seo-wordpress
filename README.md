@@ -739,11 +739,41 @@ This plugin connects to the OpenAI API to provide AI-powered SEO features.
 
 ---
 
-## REST API Examples
+## 🔐 API Authentication
 
-### Generate SEO Title
+### Security Notice
+
+As of version 1.0.0, all write operations (POST, PUT, DELETE) require authentication to protect your site from unauthorized access.
+
+**Protected Endpoints:**
+- All POST/PUT/DELETE operations (generate, update, import, etc.)
+- Bulk operations
+- Import/export operations
+- Settings modifications
+
+**Public Endpoints (Read-Only):**
+- `/status` - Plugin status
+- `/schema/{id}` - Schema markup
+- `/meta-tags/{id}` - Meta tags
+- `/analyze/advanced/{id}` - SEO analysis
+- And other GET endpoints that only retrieve data
+
+### Authentication Methods
+
+#### Method 1: WordPress Application Passwords (Recommended)
+
+1. **Create Application Password:**
+   - Go to WordPress Admin → Users → Your Profile
+   - Scroll to "Application Passwords"
+   - Enter a name (e.g., "AISEO API")
+   - Click "Add New Application Password"
+   - Copy the generated password
+
+2. **Use with cURL:**
 ```bash
+# Using Basic Auth with Application Password
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/generate/title \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
   -H "Content-Type: application/json" \
   -d '{
     "content": "Your post content here",
@@ -751,36 +781,98 @@ curl -X POST https://yoursite.test/wp-json/aiseo/v1/generate/title \
   }'
 ```
 
-### Analyze Post SEO
+#### Method 2: Cookie Authentication (Browser/JavaScript)
+
+For browser-based requests, WordPress automatically handles authentication via cookies:
+
+```javascript
+// JavaScript example (must be on same domain)
+fetch('/wp-json/aiseo/v1/generate/title', {
+  method: 'POST',
+  credentials: 'same-origin', // Include cookies
+  headers: {
+    'Content-Type': 'application/json',
+    'X-WP-Nonce': wpApiSettings.nonce // WordPress nonce
+  },
+  body: JSON.stringify({
+    content: 'Your post content',
+    keyword: 'wordpress seo'
+  })
+});
+```
+
+#### Method 3: OAuth (Advanced)
+
+For third-party applications, use WordPress OAuth plugins like:
+- WP OAuth Server
+- OAuth2 Provider
+
+### WP-CLI Authentication
+
+**WP-CLI commands automatically use WordPress authentication** and are not affected by API restrictions. All commands work as normal:
+
+```bash
+# WP-CLI commands work without additional authentication
+wp aiseo generate --id=123 --meta=title,description
+wp aiseo analyze --id=123
+wp aiseo bulk generate 123,456,789
+```
+
+**Why?** WP-CLI runs within the WordPress environment and has full access to all WordPress functions and capabilities.
+
+---
+
+## REST API Examples
+
+### Generate SEO Title (Authenticated)
+```bash
+# With Application Password
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/generate/title \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Your post content here",
+    "keyword": "wordpress seo"
+  }'
+```
+
+### Analyze Post SEO (Authenticated)
 ```bash
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/analyze \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
   -H "Content-Type: application/json" \
   -d '{"post_id": 123}'
 ```
 
-### Get Schema Markup
+### Get Schema Markup (Public - No Auth Required)
 ```bash
+# Read-only endpoints don't require authentication
 curl https://yoursite.test/wp-json/aiseo/v1/schema/123
 ```
 
-### Bulk Operations
+### Bulk Operations (Authenticated)
 ```bash
-# Get posts for bulk editing
-curl "https://yoursite.test/wp-json/aiseo/v1/bulk/posts?post_type=post&limit=10"
+# Get posts for bulk editing (requires auth)
+curl "https://yoursite.test/wp-json/aiseo/v1/bulk/posts?post_type=post&limit=10" \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx"
 
-# Bulk update posts
+# Bulk update posts (requires auth)
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/update \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
   -H "Content-Type: application/json" \
   -d '{"updates": [{"post_id": 123, "focus_keyword": "wordpress seo"}]}'
 ```
 
-### Import/Export
+### Import/Export (Authenticated)
 ```bash
-# Export to JSON
-curl "https://yoursite.test/wp-json/aiseo/v1/export/json?post_type=post" > export.json
+# Export to JSON (requires auth)
+curl "https://yoursite.test/wp-json/aiseo/v1/export/json?post_type=post" \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
+  > export.json
 
-# Import from Yoast SEO
+# Import from Yoast SEO (requires auth)
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/import/yoast \
+  --user "username:xxxx xxxx xxxx xxxx xxxx xxxx" \
   -H "Content-Type: application/json" \
   -d '{"post_type": "post", "overwrite": false}'
 ```

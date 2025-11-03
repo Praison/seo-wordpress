@@ -91,15 +91,16 @@ class AISEO_Image_SEO {
         
         // Prepare context for AI with image URL
         $image_url = wp_get_attachment_url($image_id);
+        $image_post = get_post($image_id);
         
         $image_context = [
             'image_url' => $image_url,
-            'filename' => $context['filename'],
-            'title' => $context['title'],
-            'caption' => $context['caption'],
-            'description' => $context['description'],
-            'parent_title' => $context['parent_title'],
-            'parent_content' => $context['parent_content']
+            'filename' => basename($image_url),
+            'title' => $context['image_title'],
+            'caption' => !empty($image_post->post_excerpt) ? $image_post->post_excerpt : '',
+            'description' => !empty($image_post->post_content) ? $image_post->post_content : '',
+            'parent_title' => $context['post_title'],
+            'parent_content' => $context['surrounding_text']
         ];
         
         // Call OpenAI API

@@ -69,6 +69,9 @@ class AISEO_API {
         
         $description = trim($response);
         
+        // Remove surrounding quotes if present (OpenAI sometimes adds them)
+        $description = trim($description, " \t\n\r\0\x0B\"'");
+        
         // Ensure it's within character limit
         if (strlen($description) > 160) {
             $description = AISEO_Helpers::truncate_text($description, 160, '');
@@ -105,6 +108,9 @@ class AISEO_API {
         }
         
         $title = trim($response);
+        
+        // Remove surrounding quotes if present (OpenAI sometimes adds them)
+        $title = trim($title, " \t\n\r\0\x0B\"'");
         
         // Ensure it's within character limit
         if (strlen($title) > 60) {
@@ -376,6 +382,12 @@ class AISEO_API {
         // Use current model (gpt-4o-mini supports vision natively)
         $vision_model = $this->model;
         
+        // Check if URL is local/inaccessible and convert to base64
+        $image_data = $this->prepare_image_for_vision($image_url);
+        if (is_wp_error($image_data)) {
+            return $image_data;
+        }
+        
         $body = array(
             'model' => $vision_model,
             'messages' => array(
@@ -389,7 +401,7 @@ class AISEO_API {
                         array(
                             'type' => 'image_url',
                             'image_url' => array(
-                                'url' => $image_url
+                                'url' => $image_data
                             )
                         )
                     )
@@ -450,6 +462,72 @@ class AISEO_API {
         ));
         
         return $content;
+    }
+    
+    /**
+     * Prepare image for Vision API
+     * Converts local/inaccessible URLs to base64 data URLs
+     *
+     * @param string $image_url Image URL
+     * @return string|WP_Error Image URL or base64 data URL, or error
+     */
+    private function prepare_image_for_vision($image_url) {
+        // Check if URL is local or inaccessible
+        $parsed_url = parse_url($image_url);
+        $is_local = false;
+        
+        if (isset($parsed_url['host'])) {
+            $local_domains = array('localhost', '127.0.0.1', '::1');
+            $is_local = in_array($parsed_url['host'], $local_domains) || 
+                       strpos($parsed_url['host'], '.local') !== false ||
+                       strpos($parsed_url['host'], '.test') !== false ||
+                       strpos($parsed_url['host'], '.dev') !== false;
+        }
+        
+        // If it's a local URL, convert to base64
+        if ($is_local) {
+            // Get the file path from the URL
+            $upload_dir = wp_upload_dir();
+            $base_url = $upload_dir['baseurl'];
+            
+            // Replace the base URL with the base path
+            $file_path = str_replace($base_url, $upload_dir['basedir'], $image_url);
+            
+            // Check if file exists
+            if (!file_exists($file_path)) {
+                AISEO_Helpers::log('ERROR', 'vision_api_request', 'Image file not found', array(
+                    'image_url' => $image_url,
+                    'file_path' => $file_path,
+                ));
+                return new WP_Error('file_not_found', __('Image file not found', 'aiseo'));
+            }
+            
+            // Read file and encode to base64
+            $image_data = file_get_contents($file_path);
+            if ($image_data === false) {
+                return new WP_Error('file_read_error', __('Failed to read image file', 'aiseo'));
+            }
+            
+            // Get mime type
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime_type = finfo_file($finfo, $file_path);
+            finfo_close($finfo);
+            
+            // Create base64 data URL
+            $base64 = base64_encode($image_data);
+            $data_url = "data:{$mime_type};base64,{$base64}";
+            
+            AISEO_Helpers::log('INFO', 'vision_api_request', 'Converted local image to base64', array(
+                'original_url' => $image_url,
+                'file_size' => strlen($image_data),
+                'mime_type' => $mime_type,
+            ));
+            
+            return $data_url;
+        }
+        
+        // For public URLs, return as-is
+        return $image_url;
     }
     
     /**
