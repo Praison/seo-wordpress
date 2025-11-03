@@ -62,7 +62,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - **Schema Markup Generator** - JSON-LD for Article, BlogPosting, WebPage, FAQ, HowTo
 - **Meta Tags Management** - Automatic injection of SEO meta tags in `<head>`
 - **Social Media Optimization** - Open Graph and Twitter Card tags
-- **XML Sitemap Generator** - Automatic sitemap.xml with smart caching
+- **XML Sitemap Generator** - Automatic **sitemap.xml** (also available at wp-sitemap.xml) with smart caching
 - **Canonical URLs** - Prevent duplicate content issues
 - **Robots Meta Tags** - Control indexing and following
 

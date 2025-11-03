@@ -62,7 +62,11 @@ class AISEO_Sitemap {
         // Use rewrite_rules_array filter to ensure our rules come first
         add_filter('rewrite_rules_array', function($rules) {
             $new_rules = array(
+                // Primary WordPress standard path
                 '^wp-sitemap\.xml$' => 'index.php?aiseo_sitemap=index',
+                // User-friendly alias (sitemap.xml redirects to wp-sitemap.xml)
+                '^sitemap\.xml$' => 'index.php?aiseo_sitemap=index',
+                // Sub-sitemaps
                 '^wp-sitemap-posts-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=posts-$matches[1]-$matches[2]',
                 '^wp-sitemap-taxonomies-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=taxonomies-$matches[1]-$matches[2]',
                 '^wp-sitemap-users-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=users-$matches[1]',
@@ -118,6 +122,7 @@ class AISEO_Sitemap {
         header('X-Robots-Tag: noindex, follow');
         
         echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        echo '<?xml-stylesheet type="text/xsl" href="' . esc_url(plugins_url('assets/sitemap.xsl', dirname(__FILE__))) . '"?>' . "\n";
         echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
         
         // Get enabled post types
@@ -177,6 +182,7 @@ class AISEO_Sitemap {
      */
     public function generate_sitemap($post_type) {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<?xml-stylesheet type="text/xsl" href="' . esc_url(plugins_url('assets/sitemap.xsl', dirname(__FILE__))) . '"?>' . "\n";
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
         $xml .= ' xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
         
@@ -455,7 +461,8 @@ class AISEO_Sitemap {
     public function add_sitemap_to_robots($output, $public) {
         if ($public) {
             $output .= "\n# AISEO Sitemap\n";
-            $output .= "Sitemap: " . home_url('/wp-sitemap.xml') . "\n";
+            $output .= "Sitemap: " . home_url('/sitemap.xml') . "\n";
+            $output .= "# Also available at: " . home_url('/wp-sitemap.xml') . "\n";
         }
         
         return $output;
