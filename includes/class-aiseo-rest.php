@@ -993,6 +993,41 @@ class AISEO_REST {
             'callback' => array($this, 'get_link_opportunities'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Content Suggestions: Get topic suggestions
+        register_rest_route(self::NAMESPACE, '/content/topics', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'get_content_topics'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Content Suggestions: Get optimization tips
+        register_rest_route(self::NAMESPACE, '/content/optimize/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_optimization_tips'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Content Suggestions: Get trending topics
+        register_rest_route(self::NAMESPACE, '/content/trending', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_trending_topics'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Content Suggestions: Generate content brief
+        register_rest_route(self::NAMESPACE, '/content/brief', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_content_brief'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Content Suggestions: Analyze content gaps
+        register_rest_route(self::NAMESPACE, '/content/gaps', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'analyze_content_gaps'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -2533,6 +2568,177 @@ class AISEO_REST {
         
         $linking = new AISEO_Internal_Linking();
         $result = $linking->get_opportunities($post_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get content topic suggestions
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_content_topics($request) {
+        $niche = $request->get_param('niche');
+        $keywords = $request->get_param('keywords');
+        $count = $request->get_param('count') ?: 10;
+        
+        $content_suggestions = new AISEO_Content_Suggestions();
+        $result = $content_suggestions->get_topic_suggestions([
+            'niche' => $niche,
+            'keywords' => is_array($keywords) ? $keywords : explode(',', $keywords),
+            'count' => absint($count)
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get optimization tips for a post
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_optimization_tips($request) {
+        $post_id = absint($request->get_param('post_id'));
+        $focus_keyword = $request->get_param('focus_keyword');
+        
+        $content_suggestions = new AISEO_Content_Suggestions();
+        $result = $content_suggestions->get_optimization_tips($post_id, [
+            'focus_keyword' => $focus_keyword
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get trending topics
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_trending_topics($request) {
+        $niche = $request->get_param('niche');
+        $count = $request->get_param('count') ?: 10;
+        $timeframe = $request->get_param('timeframe') ?: 'week';
+        
+        if (empty($niche)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'Niche parameter is required'
+            ], 400);
+        }
+        
+        $content_suggestions = new AISEO_Content_Suggestions();
+        $result = $content_suggestions->get_trending_topics($niche, [
+            'count' => absint($count),
+            'timeframe' => $timeframe
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Generate content brief
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function generate_content_brief($request) {
+        $topic = $request->get_param('topic');
+        $focus_keyword = $request->get_param('focus_keyword');
+        $target_audience = $request->get_param('target_audience');
+        $word_count = $request->get_param('word_count') ?: 1500;
+        
+        if (empty($topic)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'Topic parameter is required'
+            ], 400);
+        }
+        
+        $content_suggestions = new AISEO_Content_Suggestions();
+        $result = $content_suggestions->generate_content_brief($topic, [
+            'focus_keyword' => $focus_keyword,
+            'target_audience' => $target_audience,
+            'word_count' => absint($word_count)
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Analyze content gaps
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function analyze_content_gaps($request) {
+        $existing_topics = $request->get_param('existing_topics');
+        $niche = $request->get_param('niche');
+        
+        if (empty($existing_topics) || empty($niche)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'Both existing_topics and niche parameters are required'
+            ], 400);
+        }
+        
+        $content_suggestions = new AISEO_Content_Suggestions();
+        $result = $content_suggestions->analyze_content_gaps(
+            is_array($existing_topics) ? $existing_topics : explode(',', $existing_topics),
+            $niche
+        );
         
         if (is_wp_error($result)) {
             return new WP_REST_Response([

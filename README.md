@@ -23,8 +23,9 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Multilingual SEO Support** - WPML, Polylang, TranslatePress; hreflang tags (NEW in v1.3.0)
 - ✅ **Custom Post Type Support** - Extend SEO to any custom post type; bulk operations (NEW in v1.3.0)
 - ✅ **Internal Linking Suggestions** - AI-powered related content suggestions; orphan page detection; link distribution analysis (NEW in v1.7.0)
+- ✅ **Content Suggestions** - AI-powered topic ideas; optimization tips; trending topics; content briefs; gap analysis (NEW in v1.8.0)
 
-> **📋 Note:** Additional advanced features (Backlink Monitoring, Rank Tracking, Competitor Analysis, Content Suggestions, etc.) are planned for future releases. See [UPCOMING.md](UPCOMING.md) for detailed specifications and requirements.
+> **📋 Note:** Additional advanced features (Backlink Monitoring, Rank Tracking, Competitor Analysis, etc.) are planned for future releases. See [UPCOMING.md](UPCOMING.md) for detailed specifications and requirements.
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -93,6 +94,11 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/internal-linking/orphans` | GET | **Detect orphan pages** (NEW) |
 | `/wp-json/aiseo/v1/internal-linking/distribution/{post_id}` | GET | **Analyze link distribution** (NEW) |
 | `/wp-json/aiseo/v1/internal-linking/opportunities/{post_id}` | GET | **Get link opportunities** (NEW) |
+| `/wp-json/aiseo/v1/content/topics` | POST | **Get AI topic suggestions** (NEW) |
+| `/wp-json/aiseo/v1/content/optimize/{post_id}` | GET | **Get optimization tips for post** (NEW) |
+| `/wp-json/aiseo/v1/content/trending` | GET | **Get trending topics** (NEW) |
+| `/wp-json/aiseo/v1/content/brief` | POST | **Generate content brief** (NEW) |
+| `/wp-json/aiseo/v1/content/gaps` | POST | **Analyze content gaps** (NEW) |
 
 
 **Example Usage:**
@@ -220,6 +226,12 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo internal-linking distribution <post-id>` | **Analyze link distribution** (NEW) |
 | `wp aiseo internal-linking opportunities <post-id>` | **Get link opportunities** (NEW) |
 | `wp aiseo internal-linking bulk-analyze` | **Bulk analyze internal linking** (NEW) |
+| `wp aiseo content topics` | **Get AI-powered topic suggestions** (NEW) |
+| `wp aiseo content optimize <post-id>` | **Get optimization tips for post** (NEW) |
+| `wp aiseo content trending <niche>` | **Get trending topics** (NEW) |
+| `wp aiseo content brief <topic>` | **Generate content brief** (NEW) |
+| `wp aiseo content gaps <niche>` | **Analyze content gaps** (NEW) |
+| `wp aiseo content clear-cache` | **Clear content suggestions cache** (NEW) |
 
 
 **Example Usage:**

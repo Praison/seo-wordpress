@@ -272,4 +272,6 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-rank-tracker-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-internal-linking.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-internal-linking-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-content-suggestions.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-content-suggestions-cli.php';
 }
