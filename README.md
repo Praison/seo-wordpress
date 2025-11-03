@@ -1,6 +1,6 @@
 # AISEO - AI-Powered SEO Plugin for WordPress
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/praisonai/aiseo)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/MervinPraison/WordPressAISEO)
 [![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net)
 [![License](https://img.shields.io/badge/license-GPL--2.0-green.svg)](LICENSE)
@@ -125,7 +125,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 1. **Download the plugin**
    ```bash
    cd wp-content/plugins
-   git clone https://github.com/praisonai/aiseo.git
+   git clone https://github.com/MervinPraison/WordPressAISEO.git
    ```
 
 2. **Activate the plugin**
@@ -707,7 +707,7 @@ This project is licensed under the GPL-2.0-or-later License - see the [LICENSE](
 ## 📧 Support
 
 - Documentation: This README and linked docs
-- Issues: [GitHub Issues](https://github.com/praisonai/aiseo/issues)
+- Issues: [GitHub Issues](https://github.com/MervinPraison/WordPressAISEO/issues)
 - Website: [https://praison.ai](https://praison.ai)
 
 ---

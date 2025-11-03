@@ -147,8 +147,8 @@ Yes! AISEO is compatible with WPML, Polylang, and TranslatePress. It can sync me
 
 = How do I get support? =
 
-* Documentation: https://github.com/praisonai/aiseo
-* Issues: https://github.com/praisonai/aiseo/issues
+* Documentation: https://github.com/MervinPraison/WordPressAISEO
+* Issues: https://github.com/MervinPraison/WordPressAISEO/issues
 * Website: https://praison.ai
 
 == Screenshots ==
@@ -211,6 +211,6 @@ Your OpenAI API key is stored encrypted in your WordPress database using AES-256
 == Support ==
 
 For support, please visit:
-* Documentation: https://github.com/praisonai/aiseo
-* Issues: https://github.com/praisonai/aiseo/issues
+* Documentation: https://github.com/MervinPraison/WordPressAISEO
+* Issues: https://github.com/MervinPraison/WordPressAISEO/issues
 * Website: https://praison.ai
