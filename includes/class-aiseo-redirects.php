@@ -33,6 +33,7 @@ class AISEO_Redirects {
         $ip_address = $this->get_client_ip();
         
         // Insert log entry
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
         $result = $wpdb->insert(
             $table_name,
             [
