@@ -78,125 +78,144 @@ class AISEO_Metabox {
         ?>
         <div class="aiseo-metabox">
             <!-- SEO Score -->
-            <div class="aiseo-score-section">
-                <h3>SEO Score</h3>
-                <div class="aiseo-score-display">
-                    <div class="aiseo-score-circle aiseo-score-<?php echo esc_attr($seo_status); ?>">
-                        <span class="aiseo-score-number"><?php echo esc_html($seo_score); ?></span>
-                        <span class="aiseo-score-label">/100</span>
+            <div style="background: #f6f7f7; padding: 15px; margin: 0 0 20px 0; border-radius: 3px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="position: relative; width: 70px; height: 70px;">
+                        <svg width="70" height="70" style="transform: rotate(-90deg);">
+                            <circle cx="35" cy="35" r="30" fill="none" stroke="#ddd" stroke-width="6"/>
+                            <circle cx="35" cy="35" r="30" fill="none" stroke="<?php echo $seo_status === 'good' ? '#46b450' : ($seo_status === 'ok' ? '#ffb900' : '#dc3232'); ?>" stroke-width="6" 
+                                    stroke-dasharray="<?php echo ($seo_score / 100) * 188; ?> 188" stroke-linecap="round"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div style="font-size: 20px; font-weight: 600; line-height: 1;"><?php echo esc_html($seo_score); ?></div>
+                            <div style="font-size: 10px; color: #666;">/100</div>
+                        </div>
                     </div>
-                    <div class="aiseo-score-status">
-                        <strong>Status:</strong> <?php echo esc_html(ucfirst($seo_status)); ?>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 3px;">SEO Score</div>
+                        <div style="color: #666; font-size: 13px;">Status: <?php echo esc_html(ucfirst($seo_status)); ?></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Focus Keyword -->
-            <div class="aiseo-field">
-                <label for="aiseo_focus_keyword">
-                    <strong>Focus Keyword</strong>
-                    <span class="description">Main keyword to optimize for</span>
-                </label>
-                <input type="text" 
-                       id="aiseo_focus_keyword" 
-                       name="aiseo_focus_keyword" 
-                       value="<?php echo esc_attr($focus_keyword); ?>" 
-                       class="widefat" 
-                       placeholder="e.g., wordpress seo" />
-            </div>
-            
-            <!-- Meta Title -->
-            <div class="aiseo-field">
-                <label for="aiseo_meta_title">
-                    <strong>SEO Title</strong>
-                    <span class="description">Recommended: 50-60 characters</span>
-                </label>
-                <div class="aiseo-input-group">
+            <div style="padding: 0;">
+                <!-- Focus Keyword -->
+                <div style="margin-bottom: 20px;">
+                    <label for="aiseo_focus_keyword" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                        Focus Keyword
+                    </label>
                     <input type="text" 
-                           id="aiseo_meta_title" 
-                           name="aiseo_meta_title" 
-                           value="<?php echo esc_attr($meta_title); ?>" 
-                           class="widefat aiseo-title-input" 
-                           placeholder="Auto-generated if empty"
-                           maxlength="70" />
-                    <button type="button" class="button aiseo-generate-btn" data-field="title">
-                        <span class="dashicons dashicons-admin-generic"></span> Generate with AI
-                    </button>
+                           id="aiseo_focus_keyword" 
+                           name="aiseo_focus_keyword" 
+                           value="<?php echo esc_attr($focus_keyword); ?>" 
+                           class="regular-text" 
+                           placeholder="e.g., wordpress seo"
+                           style="width: 100%; max-width: 400px;" />
+                    <p class="description" style="margin: 5px 0 0 0;">Main keyword to optimize for</p>
                 </div>
-                <div class="aiseo-char-count">
-                    <span class="aiseo-current-count">0</span> / 60 characters
+                
+                <!-- Meta Title -->
+                <div style="margin-bottom: 20px;">
+                    <label for="aiseo_meta_title" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                        SEO Title
+                    </label>
+                    <div style="display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap;">
+                        <input type="text" 
+                               id="aiseo_meta_title" 
+                               name="aiseo_meta_title" 
+                               value="<?php echo esc_attr($meta_title); ?>" 
+                               class="aiseo-title-input" 
+                               placeholder="Auto-generated if empty"
+                               maxlength="70"
+                               style="flex: 1; min-width: 300px;" />
+                        <button type="button" class="button button-secondary aiseo-generate-btn" data-field="title">
+                            <span class="dashicons dashicons-admin-generic"></span> Generate with AI
+                        </button>
+                    </div>
+                    <p class="description" style="margin: 5px 0 0 0;">
+                        <span class="aiseo-char-count"><span class="aiseo-current-count">0</span> / 60 characters</span>
+                        <span style="color: #666;"> • Recommended: 50-60 characters</span>
+                    </p>
                 </div>
-            </div>
-            
-            <!-- Meta Description -->
-            <div class="aiseo-field">
-                <label for="aiseo_meta_description">
-                    <strong>Meta Description</strong>
-                    <span class="description">Recommended: 150-160 characters</span>
-                </label>
-                <div class="aiseo-input-group">
+                
+                <!-- Meta Description -->
+                <div style="margin-bottom: 20px;">
+                    <label for="aiseo_meta_description" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                        Meta Description
+                    </label>
                     <textarea id="aiseo_meta_description" 
                               name="aiseo_meta_description" 
-                              class="widefat aiseo-description-input" 
+                              class="aiseo-description-input" 
                               rows="3" 
                               placeholder="Auto-generated if empty"
-                              maxlength="200"><?php echo esc_textarea($meta_description); ?></textarea>
-                    <button type="button" class="button aiseo-generate-btn" data-field="description">
+                              maxlength="200"
+                              style="width: 100%; max-width: 600px; padding: 8px;"><?php echo esc_textarea($meta_description); ?></textarea>
+                    <button type="button" class="button button-secondary aiseo-generate-btn" data-field="description" style="margin-top: 8px;">
                         <span class="dashicons dashicons-admin-generic"></span> Generate with AI
                     </button>
-                </div>
-                <div class="aiseo-char-count">
-                    <span class="aiseo-current-count">0</span> / 160 characters
+                    <p class="description" style="margin: 5px 0 0 0;">
+                        <span class="aiseo-char-count"><span class="aiseo-current-count">0</span> / 160 characters</span>
+                        <span style="color: #666;"> • Recommended: 150-160 characters</span>
+                    </p>
                 </div>
             </div>
             
             <!-- Advanced Settings -->
-            <div class="aiseo-advanced-section">
-                <h3 class="aiseo-toggle-header">
-                    <span class="dashicons dashicons-arrow-down-alt2"></span>
-                    Advanced Settings
-                </h3>
-                <div class="aiseo-advanced-content" style="display: none;">
-                    <!-- Canonical URL -->
-                    <div class="aiseo-field">
-                        <label for="aiseo_canonical_url">
-                            <strong>Canonical URL</strong>
-                            <span class="description">Leave empty to use default permalink</span>
-                        </label>
-                        <input type="url" 
-                               id="aiseo_canonical_url" 
-                               name="aiseo_canonical_url" 
-                               value="<?php echo esc_attr($canonical_url); ?>" 
-                               class="widefat" 
-                               placeholder="<?php echo esc_attr(get_permalink($post->ID)); ?>" />
-                    </div>
-                    
-                    <!-- Robots Meta -->
-                    <div class="aiseo-field">
-                        <label><strong>Robots Meta</strong></label>
-                        <div class="aiseo-checkbox-group">
-                            <label>
-                                <input type="checkbox" 
-                                       name="aiseo_noindex" 
-                                       value="1" 
-                                       <?php checked($noindex, '1'); ?> />
-                                No Index (prevent search engines from indexing)
-                            </label>
-                            <br>
-                            <label>
-                                <input type="checkbox" 
-                                       name="aiseo_nofollow" 
-                                       value="1" 
-                                       <?php checked($nofollow, '1'); ?> />
-                                No Follow (prevent search engines from following links)
-                            </label>
-                        </div>
-                    </div>
+            <details class="aiseo-advanced-section" style="margin: 20px 0;">
+                <summary style="cursor: pointer; padding: 10px 0; font-weight: 600; color: #2271b1; user-select: none; list-style: none;">
+                    ▸ Advanced Settings
+                </summary>
+                <div style="margin-top: 15px;">
+                    <table class="form-table" role="presentation">
+                        <tbody>
+                            <!-- Canonical URL -->
+                            <tr>
+                                <th scope="row">
+                                    <label for="aiseo_canonical_url">Canonical URL</label>
+                                </th>
+                                <td>
+                                    <input type="url" 
+                                           id="aiseo_canonical_url" 
+                                           name="aiseo_canonical_url" 
+                                           value="<?php echo esc_attr($canonical_url); ?>" 
+                                           class="large-text" 
+                                           placeholder="<?php echo esc_attr(get_permalink($post->ID)); ?>" />
+                                    <p class="description">Leave empty to use default permalink</p>
+                                </td>
+                            </tr>
+                            
+                            <!-- Robots Meta -->
+                            <tr>
+                                <th scope="row">Robots Meta</th>
+                                <td>
+                                    <fieldset>
+                                        <label>
+                                            <input type="checkbox" 
+                                                   name="aiseo_noindex" 
+                                                   value="1" 
+                                                   <?php checked($noindex, '1'); ?> />
+                                            No Index
+                                        </label>
+                                        <p class="description">Prevent search engines from indexing this page</p>
+                                        <br>
+                                        <label>
+                                            <input type="checkbox" 
+                                                   name="aiseo_nofollow" 
+                                                   value="1" 
+                                                   <?php checked($nofollow, '1'); ?> />
+                                            No Follow
+                                        </label>
+                                        <p class="description">Prevent search engines from following links on this page</p>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </details>
             
             <!-- Quick Actions -->
-            <div class="aiseo-actions">
+            <div style="margin: 20px 0; padding: 15px 0; display: flex; gap: 10px;">
                 <button type="button" class="button button-secondary aiseo-analyze-btn">
                     <span class="dashicons dashicons-chart-bar"></span> Analyze Content
                 </button>
@@ -206,9 +225,15 @@ class AISEO_Metabox {
             </div>
             
             <!-- Analysis Results -->
-            <div class="aiseo-analysis-results" style="display: none;">
-                <h3>Content Analysis</h3>
+            <div class="aiseo-analysis-results" style="display: none; margin-top: 20px; padding: 15px; background: #f9f9f9; border-left: 4px solid #2271b1; border-radius: 3px;">
+                <h3 style="margin-top: 0;">Content Analysis</h3>
                 <div class="aiseo-analysis-content"></div>
+            </div>
+            
+            <!-- Preview SEO Results -->
+            <div class="aiseo-preview-results" style="display: none; margin-top: 20px; padding: 15px; background: #f9f9f9; border-left: 4px solid #2271b1; border-radius: 3px;">
+                <h3 style="margin-top: 0;">SEO Preview - Google Search Result</h3>
+                <div class="aiseo-preview-content" style="background: white; padding: 20px; border-radius: 4px; border: 1px solid #ddd;"></div>
             </div>
         </div>
         

@@ -31,21 +31,14 @@
         
         // Initialize character counters
         $('.aiseo-title-input').on('input', function() {
-            updateCharCount($(this), $(this).closest('.aiseo-field').find('.aiseo-char-count'));
+            updateCharCount($(this), $(this).closest('div').find('.aiseo-char-count'));
         }).trigger('input');
         
         $('.aiseo-description-input').on('input', function() {
-            updateCharCount($(this), $(this).closest('.aiseo-field').find('.aiseo-char-count'));
+            updateCharCount($(this), $(this).closest('div').find('.aiseo-char-count'));
         }).trigger('input');
         
-        // Toggle advanced settings
-        $('.aiseo-toggle-header').on('click', function() {
-            var content = $(this).next('.aiseo-advanced-content');
-            var icon = $(this).find('.dashicons');
-            
-            content.slideToggle();
-            $(this).toggleClass('open');
-        });
+        // Advanced settings - native details/summary element handles toggle automatically
         
         // Generate with AI button
         $('.aiseo-generate-btn').on('click', function(e) {
@@ -159,6 +152,9 @@
         $('.aiseo-preview-btn').on('click', function(e) {
             e.preventDefault();
             
+            var resultsDiv = $('.aiseo-preview-results');
+            
+            // Get values
             var title = $('#aiseo_meta_title').val() || $('.editor-post-title__input').val() || $('input[name="post_title"]').val() || 'Your Page Title';
             var description = $('#aiseo_meta_description').val() || 'Your meta description will appear here. Add a compelling description to improve click-through rates.';
             var url = $('#aiseo_canonical_url').val() || window.location.href;
@@ -166,30 +162,20 @@
             // Extract domain from URL
             var domain = url.replace(/^https?:\/\//, '').split('/')[0];
             
-            // Create preview modal
-            var modalHtml = '<div class="aiseo-preview-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center;">';
-            modalHtml += '<div style="background: white; padding: 30px; border-radius: 8px; max-width: 600px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
-            modalHtml += '<h2 style="margin-top: 0; margin-bottom: 20px; font-size: 18px;">SEO Preview - Google Search Result</h2>';
-            modalHtml += '<div style="border: 1px solid #ddd; padding: 20px; border-radius: 4px; background: #fff;">';
-            modalHtml += '<div style="color: #1a0dab; font-size: 20px; font-family: arial, sans-serif; line-height: 1.3; margin-bottom: 5px; cursor: pointer;">' + title + '</div>';
-            modalHtml += '<div style="color: #006621; font-size: 14px; font-family: arial, sans-serif; margin-bottom: 5px;">' + domain + '</div>';
-            modalHtml += '<div style="color: #545454; font-size: 14px; font-family: arial, sans-serif; line-height: 1.5;">' + description + '</div>';
-            modalHtml += '</div>';
-            modalHtml += '<div style="margin-top: 20px; text-align: right;">';
-            modalHtml += '<button class="button button-primary aiseo-close-preview" style="margin-left: 10px;">Close</button>';
-            modalHtml += '</div>';
-            modalHtml += '</div>';
-            modalHtml += '</div>';
+            // Build preview HTML
+            var previewHtml = '';
+            previewHtml += '<div style="color: #1a0dab; font-size: 20px; font-family: arial, sans-serif; line-height: 1.3; margin-bottom: 5px; cursor: pointer;">' + title + '</div>';
+            previewHtml += '<div style="color: #006621; font-size: 14px; font-family: arial, sans-serif; margin-bottom: 5px;">' + domain + '</div>';
+            previewHtml += '<div style="color: #545454; font-size: 14px; font-family: arial, sans-serif; line-height: 1.5;">' + description + '</div>';
             
-            // Add modal to page
-            $('body').append(modalHtml);
+            // Show preview
+            resultsDiv.find('.aiseo-preview-content').html(previewHtml);
+            resultsDiv.slideDown();
             
-            // Close modal handler
-            $('.aiseo-close-preview, .aiseo-preview-modal').on('click', function(e) {
-                if (e.target === this) {
-                    $('.aiseo-preview-modal').remove();
-                }
-            });
+            // Scroll to preview
+            $('html, body').animate({
+                scrollTop: resultsDiv.offset().top - 100
+            }, 500);
         });
         
         console.log('AISEO Metabox: All event handlers initialized');
