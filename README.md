@@ -24,6 +24,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Custom Post Type Support** - Extend SEO to any custom post type; bulk operations (NEW in v1.3.0)
 - ✅ **Internal Linking Suggestions** - AI-powered related content suggestions; orphan page detection; link distribution analysis (NEW in v1.7.0)
 - ✅ **Content Suggestions** - AI-powered topic ideas; optimization tips; trending topics; content briefs; gap analysis (NEW in v1.8.0)
+- ✅ **404 Monitor & Redirection Manager** - Monitor 404 errors; AI-powered redirect suggestions; bulk redirect management; import/export redirects; regex support (NEW in v1.9.0)
 
 > **📋 Note:** Additional advanced features (Backlink Monitoring, Rank Tracking, Competitor Analysis, etc.) are planned for future releases. See [UPCOMING.md](UPCOMING.md) for detailed specifications and requirements.
 
@@ -99,6 +100,14 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/content/trending` | GET | **Get trending topics** (NEW) |
 | `/wp-json/aiseo/v1/content/brief` | POST | **Generate content brief** (NEW) |
 | `/wp-json/aiseo/v1/content/gaps` | POST | **Analyze content gaps** (NEW) |
+| `/wp-json/aiseo/v1/404/errors` | GET | **Get 404 errors log** (NEW) |
+| `/wp-json/aiseo/v1/404/suggest` | POST | **AI-powered redirect suggestions** (NEW) |
+| `/wp-json/aiseo/v1/redirects/create` | POST | **Create redirect** (NEW) |
+| `/wp-json/aiseo/v1/redirects/list` | GET | **Get all redirects** (NEW) |
+| `/wp-json/aiseo/v1/redirects/delete/{id}` | DELETE | **Delete redirect** (NEW) |
+| `/wp-json/aiseo/v1/redirects/import` | POST | **Bulk import redirects from CSV** (NEW) |
+| `/wp-json/aiseo/v1/redirects/export` | GET | **Export redirects to CSV** (NEW) |
+| `/wp-json/aiseo/v1/redirects/stats` | GET | **Get redirect statistics** (NEW) |
 
 
 **Example Usage:**
@@ -232,6 +241,14 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo content brief <topic>` | **Generate content brief** (NEW) |
 | `wp aiseo content gaps <niche>` | **Analyze content gaps** (NEW) |
 | `wp aiseo content clear-cache` | **Clear content suggestions cache** (NEW) |
+| `wp aiseo 404 errors` | **Get 404 errors log** (NEW) |
+| `wp aiseo 404 suggest <url>` | **Get AI-powered redirect suggestions** (NEW) |
+| `wp aiseo redirects create <source> <target>` | **Create redirect** (NEW) |
+| `wp aiseo redirects list` | **List all redirects** (NEW) |
+| `wp aiseo redirects delete <id>` | **Delete redirect** (NEW) |
+| `wp aiseo redirects import <file>` | **Import redirects from CSV** (NEW) |
+| `wp aiseo redirects export` | **Export redirects to CSV** (NEW) |
+| `wp aiseo redirects stats` | **Get redirect statistics** (NEW) |
 
 
 **Example Usage:**

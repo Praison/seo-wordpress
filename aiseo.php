@@ -238,6 +238,36 @@ function aiseo_create_tables() {
         KEY location (location)
     ) $charset_collate;";
     dbDelta($sql);
+    
+    // 404 errors log table
+    $table_name = $wpdb->prefix . 'aiseo_404_log';
+    $sql = "CREATE TABLE $table_name (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        url VARCHAR(500) NOT NULL,
+        referrer VARCHAR(500),
+        user_agent VARCHAR(255),
+        ip_address VARCHAR(45),
+        timestamp DATETIME NOT NULL,
+        PRIMARY KEY (id),
+        KEY url (url(191)),
+        KEY timestamp (timestamp)
+    ) $charset_collate;";
+    dbDelta($sql);
+    
+    // Redirects table
+    $table_name = $wpdb->prefix . 'aiseo_redirects';
+    $sql = "CREATE TABLE $table_name (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        source_url VARCHAR(500) NOT NULL,
+        target_url VARCHAR(500) NOT NULL,
+        redirect_type VARCHAR(10) DEFAULT '301',
+        is_regex TINYINT(1) DEFAULT 0,
+        hits INT DEFAULT 0,
+        created_at DATETIME NOT NULL,
+        PRIMARY KEY (id),
+        KEY source_url (source_url(191))
+    ) $charset_collate;";
+    dbDelta($sql);
 }
 
 /**
@@ -274,4 +304,6 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-internal-linking-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-content-suggestions.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-content-suggestions-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-redirects.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-redirects-cli.php';
 }

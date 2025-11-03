@@ -1028,6 +1028,62 @@ class AISEO_REST {
             'callback' => array($this, 'analyze_content_gaps'),
             'permission_callback' => '__return_true',
         ));
+        
+        // 404 Monitor: Get 404 errors
+        register_rest_route(self::NAMESPACE, '/404/errors', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_404_errors'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // 404 Monitor: Suggest redirect
+        register_rest_route(self::NAMESPACE, '/404/suggest', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'suggest_redirect'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Create redirect
+        register_rest_route(self::NAMESPACE, '/redirects/create', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'create_redirect'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Get all redirects
+        register_rest_route(self::NAMESPACE, '/redirects/list', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_redirects'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Delete redirect
+        register_rest_route(self::NAMESPACE, '/redirects/delete/(?P<id>\\d+)', array(
+            'methods' => 'DELETE',
+            'callback' => array($this, 'delete_redirect'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Bulk import
+        register_rest_route(self::NAMESPACE, '/redirects/import', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'import_redirects'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Export
+        register_rest_route(self::NAMESPACE, '/redirects/export', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'export_redirects'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Redirects: Statistics
+        register_rest_route(self::NAMESPACE, '/redirects/stats', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_redirect_stats'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -2750,6 +2806,201 @@ class AISEO_REST {
         return new WP_REST_Response([
             'success' => true,
             'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get 404 errors
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_404_errors($request) {
+        $limit = $request->get_param('limit') ?: 100;
+        $offset = $request->get_param('offset') ?: 0;
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->get_404_errors([
+            'limit' => absint($limit),
+            'offset' => absint($offset)
+        ]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Suggest redirect for 404 URL
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function suggest_redirect($request) {
+        $url = $request->get_param('url');
+        
+        if (empty($url)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'URL parameter is required'
+            ], 400);
+        }
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->suggest_redirect($url);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Create redirect
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function create_redirect($request) {
+        $source = $request->get_param('source');
+        $target = $request->get_param('target');
+        $type = $request->get_param('type') ?: '301';
+        $is_regex = $request->get_param('is_regex') ?: false;
+        
+        if (empty($source) || empty($target)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'Source and target URLs are required'
+            ], 400);
+        }
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->create_redirect($source, $target, $type, [
+            'is_regex' => $is_regex
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'redirect_id' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get all redirects
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_redirects($request) {
+        $limit = $request->get_param('limit') ?: 100;
+        $offset = $request->get_param('offset') ?: 0;
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->get_redirects([
+            'limit' => absint($limit),
+            'offset' => absint($offset)
+        ]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Delete redirect
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function delete_redirect($request) {
+        $redirect_id = absint($request->get_param('id'));
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->delete_redirect($redirect_id);
+        
+        if (!$result) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'Failed to delete redirect'
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'message' => 'Redirect deleted successfully'
+        ], 200);
+    }
+    
+    /**
+     * Import redirects from CSV
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function import_redirects($request) {
+        $csv_data = $request->get_param('csv_data');
+        
+        if (empty($csv_data)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => 'CSV data is required'
+            ], 400);
+        }
+        
+        $redirects = new AISEO_Redirects();
+        $result = $redirects->bulk_import_redirects($csv_data);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Export redirects to CSV
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function export_redirects($request) {
+        $redirects = new AISEO_Redirects();
+        $csv_data = $redirects->export_redirects();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'csv_data' => $csv_data
+        ], 200);
+    }
+    
+    /**
+     * Get redirect statistics
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_redirect_stats($request) {
+        $redirects = new AISEO_Redirects();
+        $stats = $redirects->get_statistics();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $stats
         ], 200);
     }
     
