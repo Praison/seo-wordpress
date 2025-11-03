@@ -1,5 +1,5 @@
 {"_type": "tag", "name": "AISEO_API", "path": "includes/class-aiseo-api.php", "pattern": "/^class AISEO_API {$/", "kind": "class"}
-{"_type": "tag", "name": "AISEO_Admin", "path": "includes/class-aiseo-admin.php", "pattern": "/^class AISEO_Admin {$/", "kind": "class"}
+{"_type": "tag", "name": "AISEO_Admin", "path": "admin/class-aiseo-admin.php", "pattern": "/^class AISEO_Admin {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Advanced_Analysis", "path": "includes/class-aiseo-advanced-analysis.php", "pattern": "/^class AISEO_Advanced_Analysis {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Advanced_CLI", "path": "includes/class-aiseo-advanced-cli.php", "pattern": "/^class AISEO_Advanced_CLI {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Analysis", "path": "includes/class-aiseo-analysis.php", "pattern": "/^class AISEO_Analysis {$/", "kind": "class"}
@@ -34,12 +34,13 @@
 {"_type": "tag", "name": "AISEO_Multilingual_CLI", "path": "includes/class-aiseo-multilingual-cli.php", "pattern": "/^class AISEO_Multilingual_CLI {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Outline", "path": "includes/class-aiseo-outline.php", "pattern": "/^class AISEO_Outline {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Outline_CLI", "path": "includes/class-aiseo-outline-cli.php", "pattern": "/^class AISEO_Outline_CLI {$/", "kind": "class"}
-{"_type": "tag", "name": "AISEO_PLUGIN_DIR", "path": "aiseo.php", "pattern": "/^define('AISEO_PLUGIN_DIR', plugin_dir_path(__FILE__));$/", "kind": "define"}
+{"_type": "tag", "name": "AISEO_PLUGIN_DIR", "path": "aiseo.php", "pattern": "/^define('AISEO_PLUGIN_DIR', dirname(__FILE__) . '\\/');$/", "kind": "define"}
 {"_type": "tag", "name": "AISEO_PLUGIN_FILE", "path": "aiseo.php", "pattern": "/^define('AISEO_PLUGIN_FILE', __FILE__);$/", "kind": "define"}
-{"_type": "tag", "name": "AISEO_PLUGIN_URL", "path": "aiseo.php", "pattern": "/^define('AISEO_PLUGIN_URL', plugin_dir_url(__FILE__));$/", "kind": "define"}
+{"_type": "tag", "name": "AISEO_PLUGIN_URL", "path": "aiseo.php", "pattern": "/^define('AISEO_PLUGIN_URL', function_exists('plugin_dir_url') ? plugin_dir_url(__FILE__) : '');$/", "kind": "define"}
 {"_type": "tag", "name": "AISEO_Permalink", "path": "includes/class-aiseo-permalink.php", "pattern": "/^class AISEO_Permalink {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Permalink_CLI", "path": "includes/class-aiseo-permalink-cli.php", "pattern": "/^class AISEO_Permalink_CLI {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Post_Creator", "path": "includes/class-aiseo-post-creator.php", "pattern": "/^class AISEO_Post_Creator {$/", "kind": "class"}
+{"_type": "tag", "name": "AISEO_Post_Creator_CLI", "path": "includes/class-aiseo-post-creator-cli.php", "pattern": "/^class AISEO_Post_Creator_CLI {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_REST", "path": "includes/class-aiseo-rest.php", "pattern": "/^class AISEO_REST {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Rank_Tracker", "path": "includes/class-aiseo-rank-tracker.php", "pattern": "/^class AISEO_Rank_Tracker {$/", "kind": "class"}
 {"_type": "tag", "name": "AISEO_Rank_Tracker_CLI", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^class AISEO_Rank_Tracker_CLI {$/", "kind": "class"}
@@ -64,6 +65,7 @@
 {"_type": "tag", "name": "CACHE_TTL", "path": "includes/class-aiseo-unified-report.php", "pattern": "/^    const CACHE_TTL = 3600;$/", "kind": "define", "scope": "AISEO_Unified_Report", "scopeKind": "class"}
 {"_type": "tag", "name": "MAX_POSTS_TO_ANALYZE", "path": "includes/class-aiseo-internal-linking.php", "pattern": "/^    const MAX_POSTS_TO_ANALYZE = 20;$/", "kind": "define", "scope": "AISEO_Internal_Linking", "scopeKind": "class"}
 {"_type": "tag", "name": "NAMESPACE", "path": "includes/class-aiseo-rest.php", "pattern": "/^    const NAMESPACE = 'aiseo\\/v1';$/", "kind": "define", "scope": "AISEO_REST", "scopeKind": "class"}
+{"_type": "tag", "name": "__construct", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function __construct() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "__construct", "path": "includes/class-aiseo-api.php", "pattern": "/^    public function __construct() {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "__construct", "path": "includes/class-aiseo-core.php", "pattern": "/^    public function __construct() {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "__construct", "path": "includes/class-aiseo-faq.php", "pattern": "/^    public function __construct() {$/", "kind": "function", "scope": "AISEO_FAQ", "scopeKind": "class"}
@@ -75,31 +77,51 @@
 {"_type": "tag", "name": "__construct", "path": "includes/class-aiseo-rewriter.php", "pattern": "/^    public function __construct() {$/", "kind": "function", "scope": "AISEO_Rewriter", "scopeKind": "class"}
 {"_type": "tag", "name": "ab_test", "path": "includes/class-aiseo-meta-variations.php", "pattern": "/^    public function ab_test($post_id, $variations) {$/", "kind": "function", "scope": "AISEO_Meta_Variations", "scopeKind": "class"}
 {"_type": "tag", "name": "active_plugin", "path": "includes/class-aiseo-multilingual.php", "pattern": "/^    private $active_plugin = null;$/", "kind": "variable", "scope": "AISEO_Multilingual", "scopeKind": "class"}
+{"_type": "tag", "name": "active_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private $active_tab;$/", "kind": "variable", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "add", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function add($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "add", "path": "includes/class-aiseo-competitor-cli.php", "pattern": "/^    public function add($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Competitor_CLI", "scopeKind": "class"}
-{"_type": "tag", "name": "add_admin_menu", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function add_admin_menu() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "add_admin_menu", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function add_admin_menu() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "add_admin_menu", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    public function add_admin_menu() {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
 {"_type": "tag", "name": "add_backlink", "path": "includes/class-aiseo-backlink.php", "pattern": "/^    public function add_backlink($source_url, $target_url, $options = []) {$/", "kind": "function", "scope": "AISEO_Backlink", "scopeKind": "class"}
 {"_type": "tag", "name": "add_backlink", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function add_backlink($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "add_competitor", "path": "includes/class-aiseo-competitor.php", "pattern": "/^    public function add_competitor($url, $name = '') {$/", "kind": "function", "scope": "AISEO_Competitor", "scopeKind": "class"}
 {"_type": "tag", "name": "add_competitor", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function add_competitor($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "add_cron_intervals", "path": "includes/class-aiseo-core.php", "pattern": "/^    public function add_cron_intervals($schedules) {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
-{"_type": "tag", "name": "add_dashboard_widget", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function add_dashboard_widget() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "add_metabox", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function add_metabox() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
 {"_type": "tag", "name": "add_rewrite_rules", "path": "includes/class-aiseo-sitemap.php", "pattern": "/^    public function add_rewrite_rules() {$/", "kind": "function", "scope": "AISEO_Sitemap", "scopeKind": "class"}
 {"_type": "tag", "name": "add_sitemap_to_robots", "path": "includes/class-aiseo-sitemap.php", "pattern": "/^    public function add_sitemap_to_robots($output, $public) {$/", "kind": "function", "scope": "AISEO_Sitemap", "scopeKind": "class"}
 {"_type": "tag", "name": "admin", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $admin;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "ai_generated", "path": "admin/views/image-seo-page.php", "pattern": "/^                $ai_generated = $wpdb->get_var(\"SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE met/", "kind": "variable"}
+{"_type": "tag", "name": "ai_posts_created", "path": "admin/views/dashboard.php", "pattern": "/^    $ai_posts_created = isset($stats['total_ai_posts']) ? $stats['total_ai_posts'] : 0;$/", "kind": "variable"}
+{"_type": "tag", "name": "ai_posts_created", "path": "admin/views/dashboard.php", "pattern": "/^$ai_posts_created = 0;$/", "kind": "variable"}
 {"_type": "tag", "name": "aioseo", "path": "includes/class-aiseo-import-export-cli.php", "pattern": "/^    public function aioseo($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Import_Export_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "aiseo_activate", "path": "aiseo.php", "pattern": "/^function aiseo_activate() {$/", "kind": "function"}
 {"_type": "tag", "name": "aiseo_create_tables", "path": "aiseo.php", "pattern": "/^function aiseo_create_tables() {$/", "kind": "function"}
 {"_type": "tag", "name": "aiseo_deactivate", "path": "aiseo.php", "pattern": "/^function aiseo_deactivate() {$/", "kind": "function"}
 {"_type": "tag", "name": "aiseo_init", "path": "aiseo.php", "pattern": "/^function aiseo_init() {$/", "kind": "function"}
+{"_type": "tag", "name": "ajax_add_redirect", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_add_redirect() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_analyze_content", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function ajax_analyze_content() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "ajax_analyze_content", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function ajax_analyze_content() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_analyze_post", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_analyze_post() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_create_post", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_create_post() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_description", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_generate_description() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "ajax_generate_description", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function ajax_generate_description() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_image_alt", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_generate_image_alt() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_keyword", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_generate_keyword() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_keyword", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function ajax_generate_keyword() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_meta", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function ajax_generate_meta() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_post", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function ajax_generate_post() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_report", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_generate_report() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "ajax_generate_single_alt", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    public function ajax_generate_single_alt() {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_generate_title", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_generate_title() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "ajax_generate_title", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function ajax_generate_title() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
 {"_type": "tag", "name": "ajax_get_missing_alt", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    public function ajax_get_missing_alt() {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_get_stats", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function ajax_get_stats() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_keyword_research", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_keyword_research() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_optimize_permalinks", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_optimize_permalinks() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_regenerate_sitemap", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_regenerate_sitemap() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "ajax_save_cpt_settings", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function ajax_save_cpt_settings() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "all_posts", "path": "admin/views/bulk-operations.php", "pattern": "/^$all_posts = get_posts(array($/", "kind": "variable"}
 {"_type": "tag", "name": "analysis", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $analysis;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "analyze", "path": "includes/class-aiseo-advanced-cli.php", "pattern": "/^    public function analyze($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Advanced_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "analyze", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function analyze($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
@@ -144,7 +166,13 @@
 {"_type": "tag", "name": "api", "path": "includes/class-aiseo-outline.php", "pattern": "/^    private $api;$/", "kind": "variable", "scope": "AISEO_Outline", "scopeKind": "class"}
 {"_type": "tag", "name": "api", "path": "includes/class-aiseo-post-creator.php", "pattern": "/^    private $api;$/", "kind": "variable", "scope": "AISEO_Post_Creator", "scopeKind": "class"}
 {"_type": "tag", "name": "api", "path": "includes/class-aiseo-rewriter.php", "pattern": "/^    private $api;$/", "kind": "variable", "scope": "AISEO_Rewriter", "scopeKind": "class"}
+{"_type": "tag", "name": "api_key", "path": "admin/views/ai-content.php", "pattern": "/^$api_key = AISEO_Helpers::get_api_key();$/", "kind": "variable"}
+{"_type": "tag", "name": "api_key", "path": "admin/views/dashboard.php", "pattern": "/^$api_key = AISEO_Helpers::get_api_key();$/", "kind": "variable"}
+{"_type": "tag", "name": "api_key", "path": "admin/views/settings.php", "pattern": "/^$api_key = AISEO_Helpers::get_api_key();$/", "kind": "variable"}
 {"_type": "tag", "name": "api_key", "path": "includes/class-aiseo-api.php", "pattern": "/^    private $api_key;$/", "kind": "variable", "scope": "AISEO_API", "scopeKind": "class"}
+{"_type": "tag", "name": "api_key_input", "path": "admin/views/settings.php", "pattern": "/^        $api_key_input = sanitize_text_field($_POST['aiseo_api_key']);$/", "kind": "variable"}
+{"_type": "tag", "name": "auto_desc", "path": "admin/views/settings.php", "pattern": "/^$auto_desc = get_option('aiseo_auto_generate_description', '0');$/", "kind": "variable"}
+{"_type": "tag", "name": "auto_title", "path": "admin/views/settings.php", "pattern": "/^$auto_title = get_option('aiseo_auto_generate_title', '0');$/", "kind": "variable"}
 {"_type": "tag", "name": "batch_process", "path": "includes/class-aiseo-internal-linking-cli.php", "pattern": "/^    public function batch_process($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Internal_Linking_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "batch_process_suggestions", "path": "includes/class-aiseo-internal-linking.php", "pattern": "/^    public function batch_process_suggestions($options = []) {$/", "kind": "function", "scope": "AISEO_Internal_Linking", "scopeKind": "class"}
 {"_type": "tag", "name": "brief", "path": "includes/class-aiseo-content-suggestions-cli.php", "pattern": "/^    public function brief($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Content_Suggestions_CLI", "scopeKind": "class"}
@@ -158,6 +186,7 @@
 {"_type": "tag", "name": "bulk_check", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function bulk_check($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_check_backlinks", "path": "includes/class-aiseo-backlink.php", "pattern": "/^    public function bulk_check_backlinks($options = []) {$/", "kind": "function", "scope": "AISEO_Backlink", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_check_backlinks", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function bulk_check_backlinks($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
+{"_type": "tag", "name": "bulk_create", "path": "includes/class-aiseo-post-creator-cli.php", "pattern": "/^    public function bulk_create($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Post_Creator_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_create_ai_posts", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function bulk_create_ai_posts($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_create_posts", "path": "includes/class-aiseo-post-creator.php", "pattern": "/^    public function bulk_create_posts($posts_data) {$/", "kind": "function", "scope": "AISEO_Post_Creator", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_delete", "path": "includes/class-aiseo-bulk-edit.php", "pattern": "/^    public function bulk_delete($post_ids, $meta_keys = []) {$/", "kind": "function", "scope": "AISEO_Bulk_Edit", "scopeKind": "class"}
@@ -174,6 +203,7 @@
 {"_type": "tag", "name": "bulk_update", "path": "includes/class-aiseo-bulk-edit.php", "pattern": "/^    public function bulk_update($updates) {$/", "kind": "function", "scope": "AISEO_Bulk_Edit", "scopeKind": "class"}
 {"_type": "tag", "name": "bulk_update_posts", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function bulk_update_posts($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "cache", "path": "includes/class-aiseo-cli.php", "pattern": "/^    public function cache($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
+{"_type": "tag", "name": "cache_ttl", "path": "admin/views/settings.php", "pattern": "/^$cache_ttl = get_option('aiseo_cache_ttl', 86400);$/", "kind": "variable"}
 {"_type": "tag", "name": "calculate_ari", "path": "includes/class-aiseo-readability.php", "pattern": "/^    private function calculate_ari($content) {$/", "kind": "function", "scope": "AISEO_Readability", "scopeKind": "class"}
 {"_type": "tag", "name": "calculate_coleman_liau", "path": "includes/class-aiseo-readability.php", "pattern": "/^    private function calculate_coleman_liau($content) {$/", "kind": "function", "scope": "AISEO_Readability", "scopeKind": "class"}
 {"_type": "tag", "name": "calculate_competition", "path": "includes/class-aiseo-keyword-research.php", "pattern": "/^    private function calculate_competition($difficulty) {$/", "kind": "function", "scope": "AISEO_Keyword_Research", "scopeKind": "class"}
@@ -243,6 +273,7 @@
 {"_type": "tag", "name": "check_transition_words", "path": "includes/class-aiseo-advanced-analysis.php", "pattern": "/^    public function check_transition_words($content) {$/", "kind": "function", "scope": "AISEO_Advanced_Analysis", "scopeKind": "class"}
 {"_type": "tag", "name": "check_url_length", "path": "includes/class-aiseo-advanced-analysis.php", "pattern": "/^    private function check_url_length($post_id) { return ['score' => 5, 'max_score' => 10, 'stat/", "kind": "function", "scope": "AISEO_Advanced_Analysis", "scopeKind": "class"}
 {"_type": "tag", "name": "class_file", "path": "aiseo.php", "pattern": "/^    $class_file = 'class-' . strtolower(str_replace('_', '-', $class)) . '.php';$/", "kind": "variable"}
+{"_type": "tag", "name": "cleanup_generated_content", "path": "includes/class-aiseo-post-creator.php", "pattern": "/^    private function cleanup_generated_content($content) {$/", "kind": "function", "scope": "AISEO_Post_Creator", "scopeKind": "class"}
 {"_type": "tag", "name": "clear_all_cache", "path": "includes/class-aiseo-cli.php", "pattern": "/^    private function clear_all_cache() {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
 {"_type": "tag", "name": "clear_all_caches", "path": "includes/class-aiseo-internal-linking.php", "pattern": "/^    public function clear_all_caches() {$/", "kind": "function", "scope": "AISEO_Internal_Linking", "scopeKind": "class"}
 {"_type": "tag", "name": "clear_cache", "path": "includes/class-aiseo-content-suggestions-cli.php", "pattern": "/^    public function clear_cache($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Content_Suggestions_CLI", "scopeKind": "class"}
@@ -272,16 +303,19 @@
 {"_type": "tag", "name": "count_syllables", "path": "includes/class-aiseo-readability.php", "pattern": "/^    private function count_syllables($content) {$/", "kind": "function", "scope": "AISEO_Readability", "scopeKind": "class"}
 {"_type": "tag", "name": "count_syllables_in_text", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function count_syllables_in_text($text) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
 {"_type": "tag", "name": "count_word_syllables", "path": "includes/class-aiseo-readability.php", "pattern": "/^    private function count_word_syllables($word) {$/", "kind": "function", "scope": "AISEO_Readability", "scopeKind": "class"}
+{"_type": "tag", "name": "create", "path": "includes/class-aiseo-post-creator-cli.php", "pattern": "/^    public function create($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Post_Creator_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "create", "path": "includes/class-aiseo-redirects-cli.php", "pattern": "/^    public function create($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Redirects_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "create_ai_post", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function create_ai_post($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "create_backup", "path": "includes/class-aiseo-import-export.php", "pattern": "/^    public function create_backup() {$/", "kind": "function", "scope": "AISEO_Import_Export", "scopeKind": "class"}
 {"_type": "tag", "name": "create_post", "path": "includes/class-aiseo-post-creator.php", "pattern": "/^    public function create_post($args) {$/", "kind": "function", "scope": "AISEO_Post_Creator", "scopeKind": "class"}
 {"_type": "tag", "name": "create_redirect", "path": "includes/class-aiseo-redirects.php", "pattern": "/^    public function create_redirect($source, $target, $type = '301', $options = []) {$/", "kind": "function", "scope": "AISEO_Redirects", "scopeKind": "class"}
 {"_type": "tag", "name": "create_redirect", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function create_redirect($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
+{"_type": "tag", "name": "creator", "path": "admin/views/dashboard.php", "pattern": "/^    $creator = new AISEO_Post_Creator();$/", "kind": "variable"}
 {"_type": "tag", "name": "csv", "path": "includes/class-aiseo-import-export-cli.php", "pattern": "/^    public function csv($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Import_Export_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "decrypt_api_key", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function decrypt_api_key($encrypted_key) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
 {"_type": "tag", "name": "define_admin_hooks", "path": "includes/class-aiseo-core.php", "pattern": "/^    private function define_admin_hooks() {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "define_public_hooks", "path": "includes/class-aiseo-core.php", "pattern": "/^    private function define_public_hooks() {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
+{"_type": "tag", "name": "define_tabs", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function define_tabs() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "delete", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^    public function delete($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "delete", "path": "includes/class-aiseo-redirects-cli.php", "pattern": "/^    public function delete($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Redirects_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "delete_keyword", "path": "includes/class-aiseo-rank-tracker.php", "pattern": "/^    public function delete_keyword($keyword, $post_id = 0) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker", "scopeKind": "class"}
@@ -307,9 +341,12 @@
 {"_type": "tag", "name": "distribution", "path": "includes/class-aiseo-internal-linking-cli.php", "pattern": "/^    public function distribution($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Internal_Linking_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "enable", "path": "includes/class-aiseo-cpt-cli.php", "pattern": "/^    public function enable($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CPT_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "enable_cpt", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function enable_cpt($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
+{"_type": "tag", "name": "enable_logging", "path": "admin/views/settings.php", "pattern": "/^$enable_logging = get_option('aiseo_enable_logging', '0');$/", "kind": "variable"}
 {"_type": "tag", "name": "enable_post_type", "path": "includes/class-aiseo-cpt.php", "pattern": "/^    public function enable_post_type($post_type) {$/", "kind": "function", "scope": "AISEO_CPT", "scopeKind": "class"}
+{"_type": "tag", "name": "enable_schema", "path": "admin/views/settings.php", "pattern": "/^$enable_schema = get_option('aiseo_enable_schema', '1');$/", "kind": "variable"}
+{"_type": "tag", "name": "enable_sitemap", "path": "admin/views/settings.php", "pattern": "/^$enable_sitemap = get_option('aiseo_enable_sitemap', '1');$/", "kind": "variable"}
 {"_type": "tag", "name": "encrypt_api_key", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function encrypt_api_key($key) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
-{"_type": "tag", "name": "enqueue_admin_scripts", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function enqueue_admin_scripts($hook) {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "enqueue_admin_assets", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function enqueue_admin_assets($hook) {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "enqueue_metabox_scripts", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function enqueue_metabox_scripts($hook) {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
 {"_type": "tag", "name": "enqueue_scripts", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    public function enqueue_scripts($hook) {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
 {"_type": "tag", "name": "ensure_keyword_in_slug", "path": "includes/class-aiseo-permalink.php", "pattern": "/^    private function ensure_keyword_in_slug($slug, $keyword) {$/", "kind": "function", "scope": "AISEO_Permalink", "scopeKind": "class"}
@@ -403,6 +440,7 @@
 {"_type": "tag", "name": "get_404_errors", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function get_404_errors($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "get_action_for_section", "path": "includes/class-aiseo-unified-report.php", "pattern": "/^    private static function get_action_for_section($section_key) {$/", "kind": "function", "scope": "AISEO_Unified_Report", "scopeKind": "class"}
 {"_type": "tag", "name": "get_active_plugin", "path": "includes/class-aiseo-multilingual.php", "pattern": "/^    public function get_active_plugin() {$/", "kind": "function", "scope": "AISEO_Multilingual", "scopeKind": "class"}
+{"_type": "tag", "name": "get_active_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function get_active_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "get_all_keywords", "path": "includes/class-aiseo-rank-tracker.php", "pattern": "/^    public function get_all_keywords($filters = []) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker", "scopeKind": "class"}
 {"_type": "tag", "name": "get_all_tracked_keywords", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function get_all_tracked_keywords($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "get_analysis", "path": "includes/class-aiseo-competitor.php", "pattern": "/^    public function get_analysis($id) {$/", "kind": "function", "scope": "AISEO_Competitor", "scopeKind": "class"}
@@ -531,6 +569,7 @@
 {"_type": "tag", "name": "get_unified_report", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function get_unified_report($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "get_wpml_languages", "path": "includes/class-aiseo-multilingual.php", "pattern": "/^    private function get_wpml_languages() {$/", "kind": "function", "scope": "AISEO_Multilingual", "scopeKind": "class"}
 {"_type": "tag", "name": "get_wpml_translations", "path": "includes/class-aiseo-multilingual.php", "pattern": "/^    private function get_wpml_translations($post_id) {$/", "kind": "function", "scope": "AISEO_Multilingual", "scopeKind": "class"}
+{"_type": "tag", "name": "handle_ajax_request", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function handle_ajax_request() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "handle_sitemap_request", "path": "includes/class-aiseo-sitemap.php", "pattern": "/^    public function handle_sitemap_request() {$/", "kind": "function", "scope": "AISEO_Sitemap", "scopeKind": "class"}
 {"_type": "tag", "name": "has_metadata", "path": "includes/class-aiseo-cli.php", "pattern": "/^    private function has_metadata($post_id) {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
 {"_type": "tag", "name": "history", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^    public function history($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker_CLI", "scopeKind": "class"}
@@ -548,7 +587,6 @@
 {"_type": "tag", "name": "import_rankmath", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function import_rankmath($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "import_redirects", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function import_redirects($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "import_yoast", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function import_yoast($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
-{"_type": "tag", "name": "init", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function init() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "init", "path": "includes/class-aiseo-core.php", "pattern": "/^    public function init() {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "init", "path": "includes/class-aiseo-meta.php", "pattern": "/^    public function init() {$/", "kind": "function", "scope": "AISEO_Meta", "scopeKind": "class"}
 {"_type": "tag", "name": "init", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function init() {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
@@ -569,20 +607,25 @@
 {"_type": "tag", "name": "list", "path": "includes/class-aiseo-bulk-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Bulk_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "list", "path": "includes/class-aiseo-competitor-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Competitor_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "list", "path": "includes/class-aiseo-cpt-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CPT_CLI", "scopeKind": "class"}
+{"_type": "tag", "name": "list", "path": "includes/class-aiseo-post-creator-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Post_Creator_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "list", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "list", "path": "includes/class-aiseo-redirects-cli.php", "pattern": "/^    public function list($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Redirects_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "list_backlinks", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function list_backlinks($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "load_dependencies", "path": "includes/class-aiseo-core.php", "pattern": "/^    private function load_dependencies() {$/", "kind": "function", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "log", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function log($level, $category, $message, $context = array(), $user_id = null,/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
 {"_type": "tag", "name": "log_404_error", "path": "includes/class-aiseo-redirects.php", "pattern": "/^    public function log_404_error($url, $options = []) {$/", "kind": "function", "scope": "AISEO_Redirects", "scopeKind": "class"}
+{"_type": "tag", "name": "log_level", "path": "admin/views/settings.php", "pattern": "/^$log_level = get_option('aiseo_log_level', 'error');$/", "kind": "variable"}
 {"_type": "tag", "name": "log_usage", "path": "includes/class-aiseo-api.php", "pattern": "/^    private function log_usage($success, $tokens_used, $duration) {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "lost", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function lost($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "make_request", "path": "includes/class-aiseo-api.php", "pattern": "/^    public function make_request($prompt, $options = array()) {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "make_request_with_retry", "path": "includes/class-aiseo-api.php", "pattern": "/^    private function make_request_with_retry($args) {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "make_vision_request", "path": "includes/class-aiseo-api.php", "pattern": "/^    public function make_vision_request($image_url, $prompt) {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
+{"_type": "tag", "name": "max_tokens", "path": "admin/views/settings.php", "pattern": "/^$max_tokens = get_option('aiseo_max_tokens', 1000);$/", "kind": "variable"}
 {"_type": "tag", "name": "meta", "path": "includes/class-aiseo-cli.php", "pattern": "/^    public function meta($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
 {"_type": "tag", "name": "meta", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $meta;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "metabox", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $metabox;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
+{"_type": "tag", "name": "metadata_generated", "path": "admin/views/dashboard.php", "pattern": "/^$metadata_generated = get_option('aiseo_metadata_generated_count', 0);$/", "kind": "variable"}
+{"_type": "tag", "name": "model", "path": "admin/views/settings.php", "pattern": "/^$model = get_option('aiseo_model', 'gpt-4o-mini');$/", "kind": "variable"}
 {"_type": "tag", "name": "model", "path": "includes/class-aiseo-api.php", "pattern": "/^    private $model;$/", "kind": "variable", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "new", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function new($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "opportunities", "path": "includes/class-aiseo-internal-linking-cli.php", "pattern": "/^    public function opportunities($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Internal_Linking_CLI", "scopeKind": "class"}
@@ -619,7 +662,9 @@
 {"_type": "tag", "name": "perform_analysis", "path": "includes/class-aiseo-cli.php", "pattern": "/^    private function perform_analysis($post_id) {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
 {"_type": "tag", "name": "ping_search_engines", "path": "includes/class-aiseo-sitemap.php", "pattern": "/^    public function ping_search_engines() {$/", "kind": "function", "scope": "AISEO_Sitemap", "scopeKind": "class"}
 {"_type": "tag", "name": "plugin", "path": "includes/class-aiseo-multilingual-cli.php", "pattern": "/^    public function plugin($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Multilingual_CLI", "scopeKind": "class"}
+{"_type": "tag", "name": "post_types", "path": "admin/views/advanced.php", "pattern": "/^$post_types = get_post_types(array('public' => true), 'objects');$/", "kind": "variable"}
 {"_type": "tag", "name": "posts", "path": "includes/class-aiseo-cpt-cli.php", "pattern": "/^    public function posts($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CPT_CLI", "scopeKind": "class"}
+{"_type": "tag", "name": "posts_analyzed", "path": "admin/views/dashboard.php", "pattern": "/^$posts_analyzed = get_option('aiseo_posts_analyzed_count', 0);$/", "kind": "variable"}
 {"_type": "tag", "name": "prepare_export_data", "path": "includes/class-aiseo-cli.php", "pattern": "/^    private function prepare_export_data($post_ids) {$/", "kind": "function", "scope": "AISEO_CLI_Command", "scopeKind": "class"}
 {"_type": "tag", "name": "prepare_image_for_vision", "path": "includes/class-aiseo-api.php", "pattern": "/^    private function prepare_image_for_vision($image_url) {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "prevent_sitemap_redirect", "path": "includes/class-aiseo-sitemap.php", "pattern": "/^    public function prevent_sitemap_redirect($redirect_url, $requested_url) {$/", "kind": "function", "scope": "AISEO_Sitemap", "scopeKind": "class"}
@@ -629,9 +674,11 @@
 {"_type": "tag", "name": "process_redirect", "path": "includes/class-aiseo-redirects.php", "pattern": "/^    public function process_redirect($requested_url) {$/", "kind": "function", "scope": "AISEO_Redirects", "scopeKind": "class"}
 {"_type": "tag", "name": "questions", "path": "includes/class-aiseo-keyword-cli.php", "pattern": "/^    public function questions($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Keyword_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "rankmath", "path": "includes/class-aiseo-import-export-cli.php", "pattern": "/^    public function rankmath($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Import_Export_CLI", "scopeKind": "class"}
+{"_type": "tag", "name": "rate_limit", "path": "admin/views/settings.php", "pattern": "/^$rate_limit = get_option('aiseo_rate_limit', 10);$/", "kind": "variable"}
+{"_type": "tag", "name": "recent_posts", "path": "admin/views/dashboard.php", "pattern": "/^$recent_posts = wp_get_recent_posts(array($/", "kind": "variable"}
+{"_type": "tag", "name": "recent_posts", "path": "admin/views/seo-tools.php", "pattern": "/^$recent_posts = wp_get_recent_posts(array($/", "kind": "variable"}
 {"_type": "tag", "name": "record_failure", "path": "includes/class-aiseo-api.php", "pattern": "/^    private function record_failure() {$/", "kind": "function", "scope": "AISEO_API", "scopeKind": "class"}
 {"_type": "tag", "name": "register_routes", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function register_routes() {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
-{"_type": "tag", "name": "register_settings", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function register_settings() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "related", "path": "includes/class-aiseo-keyword-cli.php", "pattern": "/^    public function related($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Keyword_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "remove", "path": "includes/class-aiseo-backlink-cli.php", "pattern": "/^    public function remove($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Backlink_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "remove", "path": "includes/class-aiseo-competitor-cli.php", "pattern": "/^    public function remove($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Competitor_CLI", "scopeKind": "class"}
@@ -640,18 +687,20 @@
 {"_type": "tag", "name": "remove_competitor", "path": "includes/class-aiseo-competitor.php", "pattern": "/^    public function remove_competitor($id) {$/", "kind": "function", "scope": "AISEO_Competitor", "scopeKind": "class"}
 {"_type": "tag", "name": "remove_competitor", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function remove_competitor($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
 {"_type": "tag", "name": "remove_stop_words", "path": "includes/class-aiseo-permalink.php", "pattern": "/^    private function remove_stop_words($slug) {$/", "kind": "function", "scope": "AISEO_Permalink", "scopeKind": "class"}
+{"_type": "tag", "name": "render_active_tab_content", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function render_active_tab_content() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_admin_page", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_admin_page() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "render_admin_page", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    public function render_admin_page() {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
-{"_type": "tag", "name": "render_api_key_field", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_api_key_field() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_api_section", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_api_section() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_dashboard_widget", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_dashboard_widget() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_advanced_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_advanced_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_ai_content_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_ai_content_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_api_status_banner", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function render_api_status_banner() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_bulk_operations_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_bulk_operations_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_dashboard_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_dashboard_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "render_metabox", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function render_metabox($post) {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
-{"_type": "tag", "name": "render_model_field", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_model_field() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_settings_page", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_settings_page() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_sitemap_post_types_field", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_sitemap_post_types_field() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_sitemap_section", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_sitemap_section() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_social_section", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_social_section() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_stats_page", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_stats_page() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
-{"_type": "tag", "name": "render_twitter_site_field", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function render_twitter_site_field() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_monitoring_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_monitoring_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_seo_tools_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_seo_tools_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_settings_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_settings_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_tabs", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private function render_tabs() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "render_technical_seo_tab", "path": "admin/class-aiseo-admin.php", "pattern": "/^    public function render_technical_seo_tab() {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "rest", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $rest;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "restore_backup", "path": "includes/class-aiseo-import-export.php", "pattern": "/^    public function restore_backup($backup_data) {$/", "kind": "function", "scope": "AISEO_Import_Export", "scopeKind": "class"}
 {"_type": "tag", "name": "rewrite", "path": "includes/class-aiseo-rewriter.php", "pattern": "/^    public function rewrite($content, $options = []) {$/", "kind": "function", "scope": "AISEO_Rewriter", "scopeKind": "class"}
@@ -660,7 +709,6 @@
 {"_type": "tag", "name": "rewrite_sentence", "path": "includes/class-aiseo-rewriter.php", "pattern": "/^    public function rewrite_sentence($sentence, $options = []) {$/", "kind": "function", "scope": "AISEO_Rewriter", "scopeKind": "class"}
 {"_type": "tag", "name": "sanitize_alt_text", "path": "includes/class-aiseo-image-seo.php", "pattern": "/^    private function sanitize_alt_text($alt_text) {$/", "kind": "function", "scope": "AISEO_Image_SEO", "scopeKind": "class"}
 {"_type": "tag", "name": "sanitize_api_key", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function sanitize_api_key($key) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
-{"_type": "tag", "name": "sanitize_post_types", "path": "includes/class-aiseo-admin.php", "pattern": "/^    public function sanitize_post_types($value) {$/", "kind": "function", "scope": "AISEO_Admin", "scopeKind": "class"}
 {"_type": "tag", "name": "save_api_key", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function save_api_key($key) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
 {"_type": "tag", "name": "save_metabox", "path": "includes/class-aiseo-metabox.php", "pattern": "/^    public function save_metabox($post_id, $post) {$/", "kind": "function", "scope": "AISEO_Metabox", "scopeKind": "class"}
 {"_type": "tag", "name": "save_to_post", "path": "includes/class-aiseo-faq.php", "pattern": "/^    public function save_to_post($post_id, $faqs) {$/", "kind": "function", "scope": "AISEO_FAQ", "scopeKind": "class"}
@@ -674,7 +722,9 @@
 {"_type": "tag", "name": "serp_features", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^    public function serp_features($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "sitemap", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $sitemap;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
 {"_type": "tag", "name": "social", "path": "includes/class-aiseo-core.php", "pattern": "/^    private $social;$/", "kind": "variable", "scope": "AISEO_Core", "scopeKind": "class"}
+{"_type": "tag", "name": "stats", "path": "admin/views/dashboard.php", "pattern": "/^    $stats = $creator->get_statistics();$/", "kind": "variable"}
 {"_type": "tag", "name": "stats", "path": "includes/class-aiseo-cpt-cli.php", "pattern": "/^    public function stats($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_CPT_CLI", "scopeKind": "class"}
+{"_type": "tag", "name": "stats", "path": "includes/class-aiseo-post-creator-cli.php", "pattern": "/^    public function stats($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Post_Creator_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "stats", "path": "includes/class-aiseo-redirects-cli.php", "pattern": "/^    public function stats($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Redirects_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "stop_words", "path": "includes/class-aiseo-permalink.php", "pattern": "/^    private $stop_words = [$/", "kind": "variable", "scope": "AISEO_Permalink", "scopeKind": "class"}
 {"_type": "tag", "name": "strip_shortcodes_and_tags", "path": "includes/class-aiseo-helpers.php", "pattern": "/^    public static function strip_shortcodes_and_tags($content) {$/", "kind": "function", "scope": "AISEO_Helpers", "scopeKind": "class"}
@@ -692,6 +742,8 @@
 {"_type": "tag", "name": "sync", "path": "includes/class-aiseo-multilingual-cli.php", "pattern": "/^    public function sync($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Multilingual_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "sync_metadata_across_translations", "path": "includes/class-aiseo-multilingual.php", "pattern": "/^    public function sync_metadata_across_translations($post_id, $overwrite = false) {$/", "kind": "function", "scope": "AISEO_Multilingual", "scopeKind": "class"}
 {"_type": "tag", "name": "sync_multilingual_metadata", "path": "includes/class-aiseo-rest.php", "pattern": "/^    public function sync_multilingual_metadata($request) {$/", "kind": "function", "scope": "AISEO_REST", "scopeKind": "class"}
+{"_type": "tag", "name": "tabs", "path": "admin/class-aiseo-admin.php", "pattern": "/^    private $tabs;$/", "kind": "variable", "scope": "AISEO_Admin", "scopeKind": "class"}
+{"_type": "tag", "name": "temperature", "path": "admin/views/settings.php", "pattern": "/^$temperature = get_option('aiseo_temperature', 0.7);$/", "kind": "variable"}
 {"_type": "tag", "name": "topics", "path": "includes/class-aiseo-content-suggestions-cli.php", "pattern": "/^    public function topics($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Content_Suggestions_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "track", "path": "includes/class-aiseo-rank-tracker-cli.php", "pattern": "/^    public function track($args, $assoc_args) {$/", "kind": "function", "scope": "AISEO_Rank_Tracker_CLI", "scopeKind": "class"}
 {"_type": "tag", "name": "track_keyword", "path": "includes/class-aiseo-rank-tracker.php", "pattern": "/^    public function track_keyword($keyword, $post_id = 0, $location = 'US') {$/", "kind": "function", "scope": "AISEO_Rank_Tracker", "scopeKind": "class"}

@@ -14,8 +14,12 @@ if (!defined('ABSPATH')) {
 // Handle form submission
 if (isset($_POST['aiseo_settings_submit']) && check_admin_referer('aiseo_settings_nonce', 'aiseo_settings_nonce')) {
     // API Settings
-    if (isset($_POST['aiseo_api_key'])) {
-        AISEO_Helpers::save_api_key(sanitize_text_field($_POST['aiseo_api_key']));
+    if (isset($_POST['aiseo_api_key']) && !empty($_POST['aiseo_api_key'])) {
+        $api_key_input = sanitize_text_field($_POST['aiseo_api_key']);
+        // Only save if it's not the masked value
+        if (strpos($api_key_input, '*') === false && !empty($api_key_input)) {
+            AISEO_Helpers::save_api_key($api_key_input);
+        }
     }
     if (isset($_POST['aiseo_model'])) {
         update_option('aiseo_model', sanitize_text_field($_POST['aiseo_model']));

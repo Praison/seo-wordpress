@@ -70,8 +70,7 @@
                 url: aiseoAdmin.ajaxUrl,
                 type: 'POST',
                 data: {
-                    action: 'aiseo_admin_action',
-                    action_type: 'generate_post',
+                    action: 'aiseo_create_post',
                     nonce: aiseoAdmin.nonce,
                     topic: topic,
                     keyword: keyword,

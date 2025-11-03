@@ -198,7 +198,7 @@ class AISEO_Post_Creator {
         
         $target_words = isset($word_counts[$length]) ? $word_counts[$length] : $word_counts['medium'];
         
-        $prompt = "Write a comprehensive, SEO-optimized blog post with the title: \"{$title}\"\n\n";
+        $prompt = "Write a comprehensive, SEO-optimized blog post about: \"{$title}\"\n\n";
         
         if (!empty($topic)) {
             $prompt .= "Topic: {$topic}\n\n";
@@ -218,7 +218,14 @@ class AISEO_Post_Creator {
         $prompt .= "- Write in a clear, engaging style\n";
         $prompt .= "- Include a conclusion with a call-to-action\n";
         $prompt .= "- Make it SEO-friendly and valuable to readers\n\n";
-        $prompt .= "Provide ONLY the HTML content, no additional commentary.";
+        $prompt .= "IMPORTANT: \n";
+        $prompt .= "- Do NOT include the title as an <h1> or heading in the content (WordPress will add it automatically)\n";
+        $prompt .= "- Start directly with the introduction paragraph\n";
+        $prompt .= "- Use <h2> for main sections, <h3> for subsections\n";
+        $prompt .= "- Provide ONLY the HTML content body\n";
+        $prompt .= "- Do NOT wrap it in markdown code blocks (```html)\n";
+        $prompt .= "- Do NOT add any commentary or explanations\n";
+        $prompt .= "- Just the raw HTML content starting with the first paragraph";
         
         // Adjust max_tokens based on length
         $max_tokens = array(
@@ -236,7 +243,8 @@ class AISEO_Post_Creator {
             return $result;
         }
         
-        $content = trim($result);
+        // Clean up the content
+        $content = $this->cleanup_generated_content($result);
         
         // Extract keyword if not provided
         $extracted_keyword = $keyword;
@@ -457,5 +465,37 @@ class AISEO_Post_Creator {
         }
         
         return $stats;
+    }
+    
+    /**
+     * Clean up AI-generated content
+     * Removes markdown code blocks, extra whitespace, and formatting artifacts
+     *
+     * @param string $content Raw content from AI
+     * @return string Cleaned content
+     */
+    private function cleanup_generated_content($content) {
+        // Remove markdown code blocks (```html, ```php, etc.)
+        $content = preg_replace('/^```[a-z]*\s*/m', '', $content);
+        $content = preg_replace('/\s*```$/m', '', $content);
+        
+        // Remove any remaining ``` markers
+        $content = str_replace('```', '', $content);
+        
+        // Trim whitespace from start and end
+        $content = trim($content);
+        
+        // Remove excessive blank lines (more than 2 consecutive newlines)
+        $content = preg_replace('/\n{3,}/', "\n\n", $content);
+        
+        // Remove leading/trailing whitespace from each line while preserving HTML structure
+        $lines = explode("\n", $content);
+        $lines = array_map('trim', $lines);
+        $content = implode("\n", $lines);
+        
+        // Remove empty lines at the beginning
+        $content = ltrim($content, "\n");
+        
+        return $content;
     }
 }
