@@ -242,4 +242,5 @@ add_action('plugins_loaded', 'aiseo_init');
  */
 if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-image-cli.php';
 }

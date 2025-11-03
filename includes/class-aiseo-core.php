@@ -73,6 +73,8 @@ class AISEO_Core {
             
             $this->metabox = new AISEO_Metabox();
             $this->metabox->init();
+            
+            $this->image_seo = new AISEO_Image_SEO();
         }
         
         // Other components will be initialized as needed

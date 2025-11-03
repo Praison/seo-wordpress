@@ -168,6 +168,54 @@ class AISEO_REST {
             'callback' => array($this, 'get_sitemap_stats'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Image SEO: Generate alt text for image
+        register_rest_route(self::NAMESPACE, '/image/generate-alt/(?P<id>\d+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_image_alt'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Image SEO: Get images missing alt text
+        register_rest_route(self::NAMESPACE, '/image/missing-alt', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_missing_alt'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'per_page' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 100,
+                    'sanitize_callback' => 'absint',
+                ),
+            ),
+        ));
+        
+        // Image SEO: Get image SEO score
+        register_rest_route(self::NAMESPACE, '/image/seo-score/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_image_seo_score'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+            ),
+        ));
     }
     
     /**
@@ -468,6 +516,62 @@ class AISEO_REST {
             'schema_type' => $schema_type,
             'schema' => $schema,
         ), 200);
+    }
+    
+    /**
+     * Generate alt text for image (Image SEO)
+     */
+    public function generate_image_alt($request) {
+        $image_id = $request->get_param('id');
+        $overwrite = $request->get_param('overwrite');
+        
+        $image_seo = new AISEO_Image_SEO();
+        $alt_text = $image_seo->generate_alt_text($image_id, ['overwrite' => $overwrite]);
+        
+        if (is_wp_error($alt_text)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $alt_text->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'image_id' => $image_id,
+            'alt_text' => $alt_text
+        ], 200);
+    }
+    
+    /**
+     * Get images missing alt text (Image SEO)
+     */
+    public function get_missing_alt($request) {
+        $per_page = $request->get_param('per_page') ?: 100;
+        
+        $image_seo = new AISEO_Image_SEO();
+        $images = $image_seo->detect_missing_alt_text(['posts_per_page' => $per_page]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'count' => count($images),
+            'images' => $images
+        ], 200);
+    }
+    
+    /**
+     * Get image SEO score (Image SEO)
+     */
+    public function get_image_seo_score($request) {
+        $image_id = $request->get_param('id');
+        
+        $image_seo = new AISEO_Image_SEO();
+        $score_data = $image_seo->analyze_image_seo($image_id);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'image_id' => $image_id,
+            'score_data' => $score_data
+        ], 200);
     }
     
     /**

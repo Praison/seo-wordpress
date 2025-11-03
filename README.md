@@ -9,14 +9,14 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 
 ## 🚀 Features
 
-### ✅ Implemented Features
+### ✅ Implemented Features (v1.0.0 - v1.1.0)
 
 #### 1. **AI-Powered Content Generation**
 - ✅ **Meta Title Generation** - AI-generated SEO-optimized titles (50-60 characters)
 - ✅ **Meta Description Generation** - Compelling descriptions (155-160 characters)
 - ✅ **Multiple Suggestions** - Get 3 AI-generated options to choose from
-- ✅ **Content Analysis** - AI-powered content quality assessment
-- ✅ **Alt Text Generation** - Automatic image alt text generation
+- ✅ **Content Analysis** - AI-powered content quality assessment (11 metrics)
+- ✅ **Image SEO & Alt Text** - Automatic AI-powered alt text generation (NEW in v1.1.0)
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -35,10 +35,11 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 
 #### 4. **REST API Endpoints**
 All endpoints tested and working! Perfect for:
-- Browser testing
+- Browser testing (curl, Postman)
 - Mobile apps
 - JavaScript integrations
-- External tools (Postman, curl)
+- External tools and automation
+- CI/CD pipelines
 
 **Available Endpoints:**
 
@@ -54,6 +55,9 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/social-tags/{id}` | GET | **Get social media tags** (OG & Twitter) |
 | `/wp-json/aiseo/v1/sitemap/stats` | GET | **Get sitemap statistics** |
 | `/wp-json/aiseo/v1/generate/post/{id}` | POST | Generate metadata for post |
+| `/wp-json/aiseo/v1/image/generate-alt/{id}` | POST | **Generate alt text for image** (NEW) |
+| `/wp-json/aiseo/v1/image/missing-alt` | GET | **Get images missing alt text** (NEW) |
+| `/wp-json/aiseo/v1/image/seo-score/{id}` | GET | **Get image SEO score** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -64,6 +68,23 @@ curl https://yoursite.test/wp-json/aiseo/v1/status
 curl -X POST https://yoursite.test/wp-json/aiseo/v1/generate/title \
   -H "Content-Type: application/json" \
   -d '{"content": "Your post content", "keyword": "wordpress seo"}'
+
+# Analyze post SEO (11 metrics)
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"post_id": 123}'
+
+# Get schema markup for post
+curl https://yoursite.test/wp-json/aiseo/v1/schema/123
+
+# Get images missing alt text (NEW)
+curl https://yoursite.test/wp-json/aiseo/v1/image/missing-alt
+
+# Generate alt text for image (NEW)
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/image/generate-alt/456
+
+# Get image SEO score (NEW)
+curl https://yoursite.test/wp-json/aiseo/v1/image/seo-score/456
 ```
 
 #### 5. **WP-CLI Commands**
@@ -78,6 +99,10 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo meta` | Get/update/delete specific metadata fields |
 | `wp aiseo cache` | Clear AISEO caches |
 | `wp aiseo export` | Export metadata to JSON |
+| `wp aiseo image generate-alt` | **Generate alt text for image** (NEW) |
+| `wp aiseo image bulk-generate` | **Bulk generate alt text** (NEW) |
+| `wp aiseo image detect-missing` | **Find images without alt text** (NEW) |
+| `wp aiseo image analyze` | **Analyze image SEO for post** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -95,6 +120,22 @@ wp aiseo meta update 123 focus_keyword "wordpress seo"
 
 # Export all metadata
 wp aiseo export --all --file=backup.json
+
+# Image SEO Commands (NEW in v1.1.0)
+# Generate alt text for single image
+wp aiseo image generate-alt 456
+
+# Bulk generate alt text for images missing it
+wp aiseo image bulk-generate --missing-only --limit=50
+
+# Detect all images without alt text
+wp aiseo image detect-missing --format=table
+
+# Analyze image SEO for a post
+wp aiseo image analyze 123 --format=json
+
+# Dry run (preview without changes)
+wp aiseo image bulk-generate --all --dry-run
 ```
 
 #### 6. **Performance Optimization**
@@ -753,9 +794,199 @@ wp aiseo cache clear --all
 wp db query "SHOW INDEX FROM wp_aiseo_logs"
 ```
 
+## 🧪 Testing Guide
+
+### Quick Testing Methods
+
+AISEO provides **three ways to test** every feature:
+
+#### 1. **REST API Testing** (Easiest - Use curl or browser)
+
+```bash
+# Test 1: Check plugin status
+curl https://yoursite.test/wp-json/aiseo/v1/status
+
+# Test 2: Analyze post SEO (11 metrics)
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"post_id": 123}'
+
+# Test 3: Get schema markup
+curl https://yoursite.test/wp-json/aiseo/v1/schema/123
+
+# Test 4: Get meta tags
+curl https://yoursite.test/wp-json/aiseo/v1/meta-tags/123
+
+# Test 5: Get social media tags
+curl https://yoursite.test/wp-json/aiseo/v1/social-tags/123
+
+# Test 6: Get sitemap stats
+curl https://yoursite.test/wp-json/aiseo/v1/sitemap/stats
+
+# Image SEO Tests (NEW)
+# Test 7: Get images missing alt text
+curl https://yoursite.test/wp-json/aiseo/v1/image/missing-alt
+
+# Test 8: Generate alt text for image
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/image/generate-alt/456
+
+# Test 9: Get image SEO score
+curl https://yoursite.test/wp-json/aiseo/v1/image/seo-score/456
+```
+
+#### 2. **WP-CLI Testing** (Best for automation)
+
+```bash
+# Test 1: Generate metadata for post
+wp aiseo generate --id=123 --meta=all
+
+# Test 2: Analyze post SEO
+wp aiseo analyze --id=123 --format=json
+
+# Test 3: Get meta title
+wp aiseo meta get 123 meta_title
+
+# Test 4: Update focus keyword
+wp aiseo meta update 123 focus_keyword "wordpress seo"
+
+# Test 5: Export all metadata
+wp aiseo export --all --file=backup.json
+
+# Image SEO Tests (NEW)
+# Test 6: Generate alt text for image
+wp aiseo image generate-alt 456
+
+# Test 7: Detect images missing alt text
+wp aiseo image detect-missing --format=table
+
+# Test 8: Bulk generate alt text
+wp aiseo image bulk-generate --missing-only --limit=10
+
+# Test 9: Analyze image SEO for post
+wp aiseo image analyze 123 --format=json
+
+# Test 10: Dry run (preview without changes)
+wp aiseo image bulk-generate --all --dry-run
+```
+
+#### 3. **Admin Interface Testing** (Visual)
+
+1. **Content Analysis**
+   - Navigate to any post/page editor
+   - Scroll to "AISEO - SEO Optimization" metabox
+   - Click "Analyze Content" button
+   - View 11 SEO metrics with traffic light indicators
+
+2. **Meta Generation**
+   - In the AISEO metabox, click "Generate Title"
+   - Review 3 AI-generated suggestions
+   - Click "Use This" to apply
+   - Repeat for meta description
+
+3. **Image SEO** (NEW)
+   - Navigate to `wp-admin/admin.php?page=aiseo-image-seo`
+   - View statistics dashboard
+   - See missing alt text table
+   - Click "Generate Alt Text" for individual images
+   - Select multiple images and bulk generate
+   - Watch progress bar
+
+4. **Settings Page**
+   - Navigate to `wp-admin/admin.php?page=aiseo-settings`
+   - Configure OpenAI API key
+   - Test API connection
+   - View usage statistics
+
+5. **Dashboard Widget**
+   - View WordPress dashboard
+   - Check "AISEO Overview" widget
+   - See total posts analyzed, average score, API usage
+
+### Complete Testing Workflow
+
+```bash
+# Step 1: Create test post
+POST_ID=$(wp post create --post_title="Test SEO Post" --post_content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is a test post for WordPress SEO optimization. We will analyze the content and generate metadata using AI." --post_status=publish --porcelain)
+
+echo "Created post ID: $POST_ID"
+
+# Step 2: Set focus keyword
+wp aiseo meta update $POST_ID focus_keyword "wordpress seo"
+
+# Step 3: Generate all metadata
+wp aiseo generate --id=$POST_ID --meta=all
+
+# Step 4: Analyze content (11 metrics)
+wp aiseo analyze --id=$POST_ID --format=json
+
+# Step 5: Verify metadata via REST API
+curl https://yoursite.test/wp-json/aiseo/v1/meta-tags/$POST_ID
+
+# Step 6: Check schema markup
+curl https://yoursite.test/wp-json/aiseo/v1/schema/$POST_ID
+
+# Step 7: Verify social media tags
+curl https://yoursite.test/wp-json/aiseo/v1/social-tags/$POST_ID
+
+# Step 8: Test image SEO (if post has images)
+wp aiseo image analyze $POST_ID
+
+# Step 9: View in browser
+wp post url $POST_ID
+
+# Step 10: Check frontend output
+curl -s $(wp post url $POST_ID) | grep -A 5 "<meta name=\"description\""
+```
+
+### Integration Testing
+
+```bash
+# Test 1: Complete SEO workflow
+wp aiseo generate --id=123 --meta=all
+wp aiseo analyze --id=123
+wp aiseo image bulk-generate --post-id=123
+
+# Test 2: Bulk optimization
+wp aiseo analyze --all --score-below=50 --format=ids > low-score-posts.txt
+cat low-score-posts.txt | xargs -I {} wp aiseo generate --id={} --meta=all
+
+# Test 3: Export and import
+wp aiseo export --all --file=backup.json
+wp aiseo import --file=backup.json
+
+# Test 4: Performance testing
+time wp aiseo analyze --all --format=count
+```
+
+### Expected Results
+
+✅ **Content Analysis** should return:
+- 11 SEO metrics (keyword density, readability, etc.)
+- Overall score (0-100)
+- Status indicators (good/ok/poor)
+- Actionable recommendations
+
+✅ **Meta Generation** should produce:
+- Title: 50-60 characters with keyword
+- Description: 155-160 characters, compelling
+- 3 variations to choose from
+
+✅ **Schema Markup** should include:
+- Valid JSON-LD format
+- Article/BlogPosting type
+- Author, publisher, dates
+- Images and word count
+
+✅ **Image SEO** should provide:
+- Alt text: 50-125 characters
+- Focus keyword included naturally
+- SEO score: 0-100 with breakdown
+- Bulk processing with progress tracking
+
 ## 📚 Documentation
 
 - [Architecture Documentation](ARCHITECTURE.md) - Detailed technical architecture
+- [Feature Specifications](FEATURE-SPECIFICATIONS.md) - Detailed specs for all features
 - [Testing & Uninstall Guide](UNINSTALL-AND-TESTING.md) - Comprehensive testing workflows
 - [WP-CLI Commands](UNINSTALL-AND-TESTING.md#wp-cli-testing--commands) - Complete CLI reference
 - [REST API Reference](UNINSTALL-AND-TESTING.md#rest-api-testing-easiest-method) - API endpoints documentation
