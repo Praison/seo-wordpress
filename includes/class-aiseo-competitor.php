@@ -28,7 +28,7 @@ class AISEO_Competitor {
         }
         
         // Parse URL to get domain
-        $parsed = parse_url($url);
+        $parsed = wp_parse_url($url);
         $domain = $parsed['host'] ?? '';
         
         if (empty($name)) {

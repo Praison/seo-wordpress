@@ -275,7 +275,9 @@ function aiseo_create_tables() {
  */
 function aiseo_init() {
     // Load text domain for translations
-    load_plugin_textdomain('aiseo', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    // Note: load_plugin_textdomain() is no longer needed for WordPress.org hosted plugins.
+    // WordPress automatically loads translations since version 4.6.
+    // load_plugin_textdomain('aiseo', false, dirname(plugin_basename(__FILE__)) . '/languages');
     
     // Initialize core plugin class
     if (class_exists('AISEO_Core')) {

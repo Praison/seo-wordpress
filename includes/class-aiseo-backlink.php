@@ -261,7 +261,7 @@ class AISEO_Backlink {
      */
     public function get_new_backlinks($days = 7) {
         $backlinks = get_option('aiseo_backlinks', []);
-        $cutoff_date = date('Y-m-d H:i:s', strtotime("-{$days} days"));
+        $cutoff_date = gmdate('Y-m-d H:i:s', strtotime("-{$days} days"));
         
         $new_backlinks = array_filter($backlinks, function($bl) use ($cutoff_date) {
             return $bl['discovered_at'] >= $cutoff_date;
@@ -306,7 +306,7 @@ class AISEO_Backlink {
         foreach ($backlink_ids as $id) {
             if (isset($backlinks[$id])) {
                 $source_url = $backlinks[$id]['source_url'];
-                $domain = parse_url($source_url, PHP_URL_HOST);
+                $domain = wp_parse_url($source_url, PHP_URL_HOST);
                 
                 // Add domain to disavow file
                 $disavow_content .= "domain:{$domain}\n";
@@ -387,7 +387,7 @@ class AISEO_Backlink {
             return $summary;
         }
         
-        $cutoff_date = date('Y-m-d H:i:s', strtotime('-7 days'));
+        $cutoff_date = gmdate('Y-m-d H:i:s', strtotime('-7 days'));
         $total_quality = 0;
         $quality_count = 0;
         

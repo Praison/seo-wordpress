@@ -21,6 +21,7 @@ class AISEO_Helpers {
     public static function generate_encryption_keys() {
         $config_file = ABSPATH . 'wp-config.php';
         
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- Simple permission check, full WP_Filesystem not needed
         if (!is_writable($config_file)) {
             return false;
         }
@@ -329,14 +330,14 @@ class AISEO_Helpers {
     public static function generate_trace_id() {
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
+            wp_rand(0, 0xffff),
+            wp_rand(0, 0xffff),
+            wp_rand(0, 0xffff),
+            wp_rand(0, 0x0fff) | 0x4000,
+            wp_rand(0, 0x3fff) | 0x8000,
+            wp_rand(0, 0xffff),
+            wp_rand(0, 0xffff),
+            wp_rand(0, 0xffff)
         );
     }
     

@@ -441,7 +441,7 @@ class AISEO_Admin {
                 <li>Tokens Used: <strong><?php echo number_format($total_tokens); ?></strong></li>
             </ul>
             <p>
-                <a href="<?php echo admin_url('admin.php?page=aiseo-stats'); ?>">View Full Statistics →</a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=aiseo-stats')); ?>">View Full Statistics →</a>
             </p>
         </div>
         <style>

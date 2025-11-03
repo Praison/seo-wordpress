@@ -160,7 +160,7 @@ class AISEO_Unified_Report {
         if (class_exists('AISEO_Internal_Linking')) {
             // Count internal and external links in content
             $internal_links = preg_match_all('/<a[^>]+href=["\'](' . preg_quote(home_url(), '/') . '[^"\']*)["\']/i', $post->post_content, $internal_matches);
-            $external_links = preg_match_all('/<a[^>]+href=["\']https?:\/\/(?!' . preg_quote(parse_url(home_url(), PHP_URL_HOST), '/') . ')[^"\']*/i', $post->post_content, $external_matches);
+            $external_links = preg_match_all('/<a[^>]+href=["\']https?:\/\/(?!' . preg_quote(wp_parse_url(home_url(), PHP_URL_HOST), '/') . ')[^"\']*/i', $post->post_content, $external_matches);
             
             $internal_count = $internal_links ? count($internal_matches[0]) : 0;
             $external_count = $external_links ? count($external_matches[0]) : 0;

@@ -160,7 +160,7 @@ class AISEO_Rank_Tracker {
         global $wpdb;
         $table_name = $wpdb->prefix . 'aiseo_rank_tracking';
         
-        $date_from = date('Y-m-d', strtotime("-{$days} days"));
+        $date_from = gmdate('Y-m-d', strtotime("-{$days} days"));
         
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT position, url, date, location, serp_features 

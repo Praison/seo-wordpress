@@ -117,6 +117,7 @@ class AISEO_Sitemap {
         if ($cached !== false) {
             header('Content-Type: application/xml; charset=utf-8');
             header('X-Robots-Tag: noindex, follow');
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML sitemap output with proper content-type header
             echo $cached;
             return;
         }
@@ -130,6 +131,7 @@ class AISEO_Sitemap {
         // Output
         header('Content-Type: application/xml; charset=utf-8');
         header('X-Robots-Tag: noindex, follow');
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML sitemap output with proper content-type header
         echo $sitemap;
     }
     

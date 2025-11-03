@@ -139,7 +139,7 @@ class AISEO_Redirects {
         }
         
         // Extract slug from URL
-        $url_slug = basename(parse_url($url, PHP_URL_PATH));
+        $url_slug = basename(wp_parse_url($url, PHP_URL_PATH));
         
         // Find similar URLs based on slug matching
         $matches = [];

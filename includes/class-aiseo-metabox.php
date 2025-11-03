@@ -84,7 +84,7 @@ class AISEO_Metabox {
                         <svg width="70" height="70" style="transform: rotate(-90deg);">
                             <circle cx="35" cy="35" r="30" fill="none" stroke="#ddd" stroke-width="6"/>
                             <circle cx="35" cy="35" r="30" fill="none" stroke="<?php echo $seo_status === 'good' ? '#46b450' : ($seo_status === 'ok' ? '#ffb900' : '#dc3232'); ?>" stroke-width="6" 
-                                    stroke-dasharray="<?php echo ($seo_score / 100) * 188; ?> 188" stroke-linecap="round"/>
+                                    stroke-dasharray="<?php echo esc_attr(($seo_score / 100) * 188); ?> 188" stroke-linecap="round"/>
                         </svg>
                         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
                             <div style="font-size: 20px; font-weight: 600; line-height: 1;"><?php echo esc_html($seo_score); ?></div>

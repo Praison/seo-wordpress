@@ -122,7 +122,7 @@ class AISEO_Schema {
         }
         
         // Add word count
-        $word_count = str_word_count(strip_tags($post->post_content));
+        $word_count = str_word_count(wp_strip_all_tags($post->post_content));
         $schema['wordCount'] = $word_count;
         
         // Add article section (category)
@@ -162,7 +162,7 @@ class AISEO_Schema {
         }
         
         // Add word count
-        $word_count = str_word_count(strip_tags($post->post_content));
+        $word_count = str_word_count(wp_strip_all_tags($post->post_content));
         $schema['wordCount'] = $word_count;
         
         return $schema;
