@@ -22,6 +22,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Import/Export Functionality** - Import from Yoast, Rank Math, AIOSEO; Export to JSON/CSV (NEW in v1.2.0)
 - ✅ **Multilingual SEO Support** - WPML, Polylang, TranslatePress; hreflang tags (NEW in v1.3.0)
 - ✅ **Custom Post Type Support** - Extend SEO to any custom post type; bulk operations (NEW in v1.3.0)
+- ✅ **Internal Linking Suggestions** - AI-powered related content suggestions; orphan page detection; link distribution analysis (NEW in v1.7.0)
 
 > **📋 Note:** Additional advanced features (Backlink Monitoring, Rank Tracking, Competitor Analysis, Content Suggestions, etc.) are planned for future releases. See [UPCOMING.md](UPCOMING.md) for detailed specifications and requirements.
 
@@ -88,6 +89,10 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/cpt/posts/{post_type}` | GET | **Get posts by type** (NEW) |
 | `/wp-json/aiseo/v1/cpt/stats/{post_type}` | GET | **Get post type statistics** (NEW) |
 | `/wp-json/aiseo/v1/cpt/bulk-generate` | POST | **Bulk generate metadata** (NEW) |
+| `/wp-json/aiseo/v1/internal-linking/suggestions/{post_id}` | GET | **Get internal linking suggestions** (NEW) |
+| `/wp-json/aiseo/v1/internal-linking/orphans` | GET | **Detect orphan pages** (NEW) |
+| `/wp-json/aiseo/v1/internal-linking/distribution/{post_id}` | GET | **Analyze link distribution** (NEW) |
+| `/wp-json/aiseo/v1/internal-linking/opportunities/{post_id}` | GET | **Get link opportunities** (NEW) |
 
 
 **Example Usage:**
@@ -210,6 +215,11 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo cpt stats` | **Get post type statistics** (NEW) |
 | `wp aiseo cpt bulk-generate` | **Bulk generate metadata** (NEW) |
 | `wp aiseo cpt export` | **Export post type data** (NEW) |
+| `wp aiseo internal-linking suggestions <post-id>` | **Get internal linking suggestions** (NEW) |
+| `wp aiseo internal-linking orphans` | **Detect orphan pages** (NEW) |
+| `wp aiseo internal-linking distribution <post-id>` | **Analyze link distribution** (NEW) |
+| `wp aiseo internal-linking opportunities <post-id>` | **Get link opportunities** (NEW) |
+| `wp aiseo internal-linking bulk-analyze` | **Bulk analyze internal linking** (NEW) |
 
 
 **Example Usage:**

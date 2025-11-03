@@ -965,6 +965,34 @@ class AISEO_REST {
             'callback' => array($this, 'get_rank_summary'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Internal Linking: Get suggestions
+        register_rest_route(self::NAMESPACE, '/internal-linking/suggestions/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_internal_linking_suggestions'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Internal Linking: Detect orphans
+        register_rest_route(self::NAMESPACE, '/internal-linking/orphans', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'detect_orphan_pages'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Internal Linking: Analyze distribution
+        register_rest_route(self::NAMESPACE, '/internal-linking/distribution/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'analyze_link_distribution'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Internal Linking: Get opportunities
+        register_rest_route(self::NAMESPACE, '/internal-linking/opportunities/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_link_opportunities'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -2426,6 +2454,96 @@ class AISEO_REST {
         return new WP_REST_Response([
             'success' => true,
             'summary' => $summary
+        ], 200);
+    }
+    
+    /**
+     * Get internal linking suggestions
+     */
+    public function get_internal_linking_suggestions($request) {
+        $post_id = $request->get_param('post_id');
+        $limit = $request->get_param('limit') ?: 5;
+        $exclude_ids = $request->get_param('exclude_ids') ?: [];
+        
+        $linking = new AISEO_Internal_Linking();
+        $result = $linking->get_suggestions($post_id, [
+            'limit' => $limit,
+            'exclude_ids' => $exclude_ids
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Detect orphan pages
+     */
+    public function detect_orphan_pages($request) {
+        $post_type = $request->get_param('post_type') ?: 'post';
+        $limit = $request->get_param('limit') ?: 50;
+        
+        $linking = new AISEO_Internal_Linking();
+        $result = $linking->detect_orphans([
+            'post_type' => $post_type,
+            'limit' => $limit
+        ]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Analyze link distribution
+     */
+    public function analyze_link_distribution($request) {
+        $post_id = $request->get_param('post_id');
+        
+        $linking = new AISEO_Internal_Linking();
+        $result = $linking->analyze_distribution($post_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get link opportunities
+     */
+    public function get_link_opportunities($request) {
+        $post_id = $request->get_param('post_id');
+        
+        $linking = new AISEO_Internal_Linking();
+        $result = $linking->get_opportunities($post_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
         ], 200);
     }
     

@@ -208,7 +208,7 @@ class AISEO_API {
      * @param array $options Additional options
      * @return string|WP_Error Response text or error
      */
-    private function make_request($prompt, $options = array()) {
+    public function make_request($prompt, $options = array()) {
         // Check API key
         if (empty($this->api_key)) {
             AISEO_Helpers::log('ERROR', 'api_request', 'API key not configured');
