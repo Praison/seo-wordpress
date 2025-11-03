@@ -70,15 +70,27 @@ class AISEO_Admin {
      */
     public function register_settings() {
         // API Settings
-        register_setting('aiseo_settings', 'aiseo_api_key');
-        register_setting('aiseo_settings', 'aiseo_model', array('default' => 'gpt-4o-mini'));
+        register_setting('aiseo_settings', 'aiseo_api_key', array(
+            'sanitize_callback' => 'sanitize_text_field'
+        ));
+        register_setting('aiseo_settings', 'aiseo_model', array(
+            'default' => 'gpt-4o-mini',
+            'sanitize_callback' => 'sanitize_text_field'
+        ));
         
         // Social Media Settings
-        register_setting('aiseo_settings', 'aiseo_twitter_site');
-        register_setting('aiseo_settings', 'aiseo_default_og_image');
+        register_setting('aiseo_settings', 'aiseo_twitter_site', array(
+            'sanitize_callback' => 'sanitize_text_field'
+        ));
+        register_setting('aiseo_settings', 'aiseo_default_og_image', array(
+            'sanitize_callback' => 'esc_url_raw'
+        ));
         
         // Sitemap Settings
-        register_setting('aiseo_settings', 'aiseo_sitemap_post_types', array('default' => array('post', 'page')));
+        register_setting('aiseo_settings', 'aiseo_sitemap_post_types', array(
+            'default' => array('post', 'page'),
+            'sanitize_callback' => array($this, 'sanitize_post_types')
+        ));
         
         // Add settings sections
         add_settings_section(
@@ -206,10 +218,20 @@ class AISEO_Admin {
         
         foreach ($post_types as $post_type) {
             $checked = in_array($post_type->name, $enabled_types) ? 'checked' : '';
-            echo '<label><input type="checkbox" name="aiseo_sitemap_post_types[]" value="' . esc_attr($post_type->name) . '" ' . $checked . ' /> ' . esc_html($post_type->label) . '</label><br>';
+            echo '<label><input type="checkbox" name="aiseo_sitemap_post_types[]" value="' . esc_attr($post_type->name) . '" ' . esc_attr($checked) . ' /> ' . esc_html($post_type->label) . '</label><br>';
         }
         
         echo '<p class="description">Select which post types to include in the sitemap.</p>';
+    }
+    
+    /**
+     * Sanitize post types array
+     */
+    public function sanitize_post_types($value) {
+        if (!is_array($value)) {
+            return array();
+        }
+        return array_map('sanitize_text_field', $value);
     }
     
     /**
@@ -245,18 +267,18 @@ class AISEO_Admin {
             <div class="aiseo-quick-actions">
                 <h2>Quick Actions</h2>
                 <p>
-                    <a href="<?php echo admin_url('admin.php?page=aiseo-stats'); ?>" class="button">View Statistics</a>
-                    <a href="<?php echo home_url('/sitemap.xml'); ?>" class="button" target="_blank">View Sitemap</a>
-                    <a href="<?php echo rest_url('aiseo/v1/status'); ?>" class="button" target="_blank">API Status</a>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=aiseo-stats')); ?>" class="button">View Statistics</a>
+                    <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>" class="button" target="_blank">View Sitemap</a>
+                    <a href="<?php echo esc_url(rest_url('aiseo/v1/status')); ?>" class="button" target="_blank">API Status</a>
                 </p>
             </div>
             
             <div class="aiseo-documentation">
                 <h2>Documentation</h2>
                 <ul>
-                    <li><strong>REST API:</strong> <?php echo rest_url('aiseo/v1/'); ?></li>
+                    <li><strong>REST API:</strong> <?php echo esc_url(rest_url('aiseo/v1/')); ?></li>
                     <li><strong>WP-CLI:</strong> <code>wp aiseo --help</code></li>
-                    <li><strong>Sitemap:</strong> <?php echo home_url('/sitemap.xml'); ?></li>
+                    <li><strong>Sitemap:</strong> <?php echo esc_url(home_url('/sitemap.xml')); ?></li>
                 </ul>
             </div>
         </div>

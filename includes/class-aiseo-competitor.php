@@ -258,7 +258,7 @@ class AISEO_Competitor {
         // Word count (approximate from body text)
         $body = $dom->getElementsByTagName('body');
         if ($body->length > 0) {
-            $text = strip_tags($body->item(0)->textContent);
+            $text = wp_strip_all_tags($body->item(0)->textContent);
             $data['word_count'] = str_word_count($text);
         }
         
@@ -390,7 +390,7 @@ class AISEO_Competitor {
             'meta_description' => get_post_meta($post_id, '_aiseo_meta_description', true) ?: '',
             'h1_tags' => $this->extract_h1_from_content($post->post_content),
             'h2_tags' => $this->extract_h2_from_content($post->post_content),
-            'word_count' => str_word_count(strip_tags($post->post_content)),
+            'word_count' => str_word_count(wp_strip_all_tags($post->post_content)),
             'image_count' => substr_count($post->post_content, '<img'),
             'link_count' => substr_count($post->post_content, '<a ')
         ];

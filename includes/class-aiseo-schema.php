@@ -82,7 +82,7 @@ class AISEO_Schema {
         // Check if it's a blog post
         if ($post->post_type === 'post') {
             // Check word count - longer posts are articles
-            $word_count = str_word_count(strip_tags($post->post_content));
+            $word_count = str_word_count(wp_strip_all_tags($post->post_content));
             
             if ($word_count > 1000) {
                 return 'article';

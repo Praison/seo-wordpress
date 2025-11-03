@@ -415,7 +415,7 @@ class AISEO_Analysis {
         $found = false;
         
         foreach ($headings as $heading) {
-            $heading_text = strip_tags($heading);
+            $heading_text = wp_strip_all_tags($heading);
             if (strpos(strtolower($heading_text), $keyword_lower) !== false) {
                 $found = true;
                 break;

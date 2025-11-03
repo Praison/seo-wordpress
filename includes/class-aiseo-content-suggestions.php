@@ -153,7 +153,7 @@ Format as JSON array with keys: title, keyword, intent, difficulty, description"
 
 Title: {$title}
 Focus Keyword: {$focus_keyword}
-Content Length: " . str_word_count(strip_tags($content)) . " words
+Content Length: " . str_word_count(wp_strip_all_tags($content)) . " words
 
 Current SEO Issues:
 " . $this->format_analysis_for_prompt($current_analysis) . "

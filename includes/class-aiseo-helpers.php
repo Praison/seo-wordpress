@@ -133,7 +133,7 @@ class AISEO_Helpers {
      * @return int Reading time in minutes
      */
     public static function calculate_reading_time($content) {
-        $word_count = str_word_count(strip_tags($content));
+        $word_count = str_word_count(wp_strip_all_tags($content));
         $reading_time = ceil($word_count / 200); // Average reading speed: 200 words/minute
         
         return max(1, $reading_time);
@@ -148,7 +148,7 @@ class AISEO_Helpers {
      * @return string Truncated text
      */
     public static function truncate_text($text, $length = 160, $suffix = '...') {
-        $text = strip_tags($text);
+        $text = wp_strip_all_tags($text);
         
         if (strlen($text) <= $length) {
             return $text;
