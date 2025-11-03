@@ -1302,3 +1302,652 @@ The AISEO WP-CLI integration provides complete parity with page load metadata ge
 ✅ **Includes comprehensive testing workflows**
 
 For detailed implementation, see `/includes/class-aiseo-cli.php`.
+
+---
+
+## Testing Workflows for New Features (v1.1.0 - v2.2.0)
+
+### Feature Testing Overview
+
+This section provides comprehensive testing workflows for all roadmap features based on FEATURE-SPECIFICATIONS.md. Each feature includes:
+- REST API testing (curl/browser)
+- WP-CLI testing (terminal)
+- Admin interface testing (manual)
+- Integration testing (automated)
+
+---
+
+## 1. Image SEO & Alt Text Optimization Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Get images missing alt text
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/image/missing-alt
+
+# 2. Generate alt text for a single image
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/image/generate-alt/123 \
+  -H "Content-Type: application/json"
+
+# 3. Get image SEO score
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/image/seo-score/123
+
+# 4. Bulk generate alt text
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/image/bulk-generate \
+  -H "Content-Type: application/json" \
+  -d '{"image_ids": [123, 124, 125], "overwrite": false}'
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Generate alt text for single image
+wp aiseo image generate-alt 123
+
+# Test 2: Detect images missing alt text
+wp aiseo image detect-missing --format=table
+
+# Test 3: Bulk generate for all missing alt text
+wp aiseo image bulk-generate --missing-only --limit=10
+
+# Test 4: Analyze image SEO for a post
+wp aiseo image analyze 456
+
+# Test 5: Dry run (preview without changes)
+wp aiseo image bulk-generate --all --dry-run
+```
+
+### Admin Interface Testing
+
+1. Navigate to `wp-admin/admin.php?page=aiseo-image-seo`
+2. Verify statistics dashboard displays correctly
+3. Check missing alt text table loads
+4. Select multiple images and click "Generate Alt Text"
+5. Verify progress bar updates
+6. Check generated alt text appears in table
+7. Verify estimated cost calculation
+
+### Integration Testing
+
+```bash
+# Test workflow: Upload image → Generate alt → Verify
+wp media import test-image.jpg --post_id=123
+IMAGE_ID=$(wp db query "SELECT ID FROM wp_posts WHERE post_type='attachment' ORDER BY ID DESC LIMIT 1" --skip-column-names)
+wp aiseo image generate-alt $IMAGE_ID
+wp post meta get $IMAGE_ID _wp_attachment_image_alt
+```
+
+### Expected Results
+
+- ✅ Alt text generated within 5 seconds
+- ✅ Alt text length between 50-125 characters
+- ✅ Focus keyword included naturally
+- ✅ Image SEO score calculated correctly
+- ✅ Bulk operations complete without errors
+- ✅ Progress tracking accurate
+
+---
+
+## 2. Advanced SEO Analysis (40+ Factors) Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Comprehensive analysis (all 40+ factors)
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/analyze/comprehensive/123
+
+# 2. Readability analysis only
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/analyze/readability/123
+
+# 3. Technical SEO analysis
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/analyze/technical/123
+
+# 4. Get available analysis factors
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/analyze/factors
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Comprehensive analysis
+wp aiseo analyze comprehensive 123 --format=json
+
+# Test 2: Readability check
+wp aiseo analyze readability 123
+
+# Test 3: Technical SEO check
+wp aiseo analyze technical 123
+
+# Test 4: Bulk analysis for low-scoring posts
+wp aiseo analyze bulk --post-type=post --score-below=50
+
+# Test 5: Export analysis results
+wp aiseo analyze comprehensive 123 --format=json > analysis-report.json
+```
+
+### Testing Individual Factors
+
+```bash
+# Test passive voice detection
+wp aiseo analyze readability 123 | grep "Passive voice"
+
+# Test transition words
+wp aiseo analyze readability 123 | grep "Transition words"
+
+# Test keyword in URL
+wp aiseo analyze technical 123 | grep "Keyword in URL"
+
+# Test image alt text check
+wp aiseo analyze technical 123 | grep "Image alt text"
+```
+
+### Expected Results
+
+- ✅ All 40+ factors analyzed
+- ✅ Score calculated correctly (0-100)
+- ✅ Status indicators accurate (good/ok/poor)
+- ✅ Recommendations actionable
+- ✅ Analysis completes in <10 seconds
+
+---
+
+## 3. Bulk Editing Interface Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Get posts for bulk editing
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/bulk/posts?post_type=post&score_below=50"
+
+# 2. Bulk generate titles
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate-titles \
+  -H "Content-Type: application/json" \
+  -d '{"post_ids": [1, 2, 3]}'
+
+# 3. Bulk generate descriptions
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate-descriptions \
+  -H "Content-Type: application/json" \
+  -d '{"post_ids": [1, 2, 3]}'
+
+# 4. Check progress
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/bulk/progress/abc123
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Bulk generate titles
+wp aiseo bulk generate-titles --post-type=post --limit=10
+
+# Test 2: Bulk generate descriptions for low-scoring posts
+wp aiseo bulk generate-descriptions --score-below=50
+
+# Test 3: Bulk update schema type
+wp aiseo bulk update-schema --schema-type=Article --post-type=post
+
+# Test 4: Export bulk data to CSV
+wp aiseo bulk export --format=csv > bulk-export.csv
+
+# Test 5: Dry run (preview changes)
+wp aiseo bulk generate-titles --post-type=post --dry-run
+```
+
+### Admin Interface Testing
+
+1. Navigate to `wp-admin/admin.php?page=aiseo-bulk-editor`
+2. Apply filters (post type, SEO score, date range)
+3. Select multiple posts via checkboxes
+4. Choose bulk action: "Generate Titles (AI)"
+5. Click "Apply" and verify progress bar
+6. Check that titles are generated correctly
+7. Test inline editing of meta fields
+8. Verify save functionality
+
+### Performance Testing
+
+```bash
+# Test bulk operation performance
+time wp aiseo bulk generate-titles --post-type=post --limit=100
+
+# Expected: <10 minutes for 100 posts (with 2-second rate limiting)
+```
+
+### Expected Results
+
+- ✅ Bulk operations complete without timeout
+- ✅ Progress tracking accurate
+- ✅ Rate limiting prevents API throttling
+- ✅ Error handling graceful
+- ✅ UI responsive during operations
+
+---
+
+## 4. Import/Export Functionality Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Import from Yoast SEO
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/import/yoast \
+  -H "Content-Type: application/json" \
+  -d '{"post_types": ["post", "page"], "overwrite": false}'
+
+# 2. Import from Rank Math
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/import/rankmath
+
+# 3. Export to JSON
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/export/json > aiseo-export.json
+
+# 4. Export to CSV
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/export/csv > aiseo-export.csv
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Import from Yoast SEO
+wp aiseo import yoast --post-type=post,page
+
+# Test 2: Import from Rank Math (dry run)
+wp aiseo import rankmath --dry-run
+
+# Test 3: Import from All in One SEO
+wp aiseo import aioseo --overwrite
+
+# Test 4: Export all data to JSON
+wp aiseo export --file=aiseo-backup-$(date +%Y%m%d).json
+
+# Test 5: Import from JSON backup
+wp aiseo import --file=aiseo-backup-20250103.json
+
+# Test 6: Verify imported data
+wp aiseo meta get 123 meta_title
+wp aiseo meta get 123 meta_description
+```
+
+### Migration Testing Workflow
+
+```bash
+# Complete migration from Yoast to AISEO
+
+# Step 1: Backup current data
+wp aiseo export --file=aiseo-pre-migration.json
+
+# Step 2: Import from Yoast (dry run first)
+wp aiseo import yoast --dry-run
+
+# Step 3: Review dry run results, then import
+wp aiseo import yoast --post-type=post,page
+
+# Step 4: Verify import
+wp db query "SELECT COUNT(*) FROM wp_postmeta WHERE meta_key LIKE '_aiseo_%'"
+
+# Step 5: Compare with Yoast data
+wp db query "SELECT COUNT(*) FROM wp_postmeta WHERE meta_key LIKE '_yoast_wpseo_%'"
+```
+
+### Expected Results
+
+- ✅ All meta fields mapped correctly
+- ✅ No data loss during import
+- ✅ Export file format valid JSON/CSV
+- ✅ Import handles duplicates gracefully
+- ✅ Rollback option available
+
+---
+
+## 5. Google Search Console Integration Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Check authentication status
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/gsc/status
+
+# 2. Get search analytics
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/gsc/analytics?date_range=last-30-days"
+
+# 3. Get top keywords
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/gsc/top-keywords?limit=100"
+
+# 4. Get crawl errors
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/gsc/crawl-errors
+
+# 5. Trigger sync
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/gsc/sync
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Authenticate with Google
+wp aiseo gsc authenticate
+# Follow OAuth flow in browser
+
+# Test 2: Sync data from GSC
+wp aiseo gsc sync --date-range=last-30-days
+
+# Test 3: Get top keywords
+wp aiseo gsc top-keywords --limit=100 --format=table
+
+# Test 4: Check crawl errors
+wp aiseo gsc crawl-errors --format=json
+
+# Test 5: Get index status for URL
+wp aiseo gsc index-status https://yoursite.com/sample-post/
+```
+
+### Expected Results
+
+- ✅ OAuth authentication successful
+- ✅ Data synced from GSC
+- ✅ Top keywords displayed correctly
+- ✅ Crawl errors detected
+- ✅ Index status accurate
+
+---
+
+## 6. Google Analytics 4 Integration Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Check authentication status
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/ga4/status
+
+# 2. Get analytics for post
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/ga4/analytics/123
+
+# 3. Get top pages
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/ga4/top-pages?limit=50"
+
+# 4. Get traffic sources
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/ga4/traffic-sources/123
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Authenticate with GA4
+wp aiseo ga4 authenticate
+
+# Test 2: Sync analytics data
+wp aiseo ga4 sync --date-range=last-7-days
+
+# Test 3: Get top pages
+wp aiseo ga4 top-pages --limit=50 --format=table
+
+# Test 4: Get stats for specific post
+wp aiseo ga4 stats 123
+```
+
+### Expected Results
+
+- ✅ OAuth authentication successful
+- ✅ Page views data accurate
+- ✅ Traffic sources breakdown correct
+- ✅ Real-time data available
+
+---
+
+## 7. Rank Tracking Testing
+
+### Quick Test (REST API)
+
+```bash
+# 1. Track keyword ranking
+curl --insecure -X POST https://yoursite.test/wp-json/aiseo/v1/rank/track \
+  -H "Content-Type: application/json" \
+  -d '{"keyword": "wordpress seo", "post_id": 123, "location": "US"}'
+
+# 2. Get position history
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/rank/history/wordpress-seo?days=30"
+
+# 3. Get ranking keywords for post
+curl --insecure https://yoursite.test/wp-json/aiseo/v1/rank/keywords/123
+
+# 4. Compare with competitor
+curl --insecure "https://yoursite.test/wp-json/aiseo/v1/rank/compare?keyword=wordpress-seo&competitor=example.com"
+```
+
+### WP-CLI Testing
+
+```bash
+# Test 1: Track keyword
+wp aiseo rank track "wordpress seo" --post-id=123 --location=US
+
+# Test 2: Get position history
+wp aiseo rank history "wordpress seo" --days=30 --format=table
+
+# Test 3: Get all ranking keywords for post
+wp aiseo rank keywords 123
+
+# Test 4: Bulk track keywords
+wp aiseo rank bulk-track --file=keywords.csv
+```
+
+### Expected Results
+
+- ✅ Keyword positions tracked accurately
+- ✅ Historical data stored correctly
+- ✅ Graphs display position changes
+- ✅ SERP features detected
+
+---
+
+## Integration Testing Scenarios
+
+### Scenario 1: Complete SEO Workflow
+
+```bash
+# 1. Create new post
+POST_ID=$(wp post create --post_title="Test SEO Post" --post_content="Lorem ipsum..." --post_status=publish --porcelain)
+
+# 2. Set focus keyword
+wp aiseo meta update $POST_ID focus_keyword "wordpress seo"
+
+# 3. Generate SEO metadata
+wp aiseo generate --id=$POST_ID --meta=all
+
+# 4. Analyze content
+wp aiseo analyze comprehensive $POST_ID
+
+# 5. Generate alt text for images
+wp aiseo image bulk-generate --post-id=$POST_ID
+
+# 6. Track keyword ranking
+wp aiseo rank track "wordpress seo" --post-id=$POST_ID
+
+# 7. Verify all metadata
+wp aiseo meta get $POST_ID meta_title
+wp aiseo meta get $POST_ID meta_description
+wp aiseo meta get $POST_ID seo_score
+```
+
+### Scenario 2: Bulk Optimization
+
+```bash
+# 1. Find low-scoring posts
+wp aiseo analyze bulk --score-below=50 --format=ids > low-score-posts.txt
+
+# 2. Bulk generate titles and descriptions
+wp aiseo bulk generate-titles --post-ids=$(cat low-score-posts.txt)
+wp aiseo bulk generate-descriptions --post-ids=$(cat low-score-posts.txt)
+
+# 3. Re-analyze
+wp aiseo analyze bulk --post-ids=$(cat low-score-posts.txt)
+
+# 4. Generate report
+wp aiseo analyze bulk --post-ids=$(cat low-score-posts.txt) --format=csv > improvement-report.csv
+```
+
+### Scenario 3: Migration & Import
+
+```bash
+# 1. Export current AISEO data (backup)
+wp aiseo export --file=aiseo-backup.json
+
+# 2. Import from Yoast
+wp aiseo import yoast --post-type=post,page
+
+# 3. Verify import
+wp db query "SELECT COUNT(*) as aiseo_posts FROM wp_postmeta WHERE meta_key='_aiseo_meta_title'"
+
+# 4. Generate missing metadata
+wp aiseo generate --all --missing-only
+
+# 5. Bulk analyze all posts
+wp aiseo analyze bulk --all
+```
+
+---
+
+## Performance Benchmarks
+
+### Expected Performance Targets
+
+| Operation | Target Time | Notes |
+|-----------|-------------|-------|
+| Single alt text generation | <5 seconds | With API call |
+| Bulk alt text (100 images) | <10 minutes | With 2s rate limiting |
+| Comprehensive analysis | <10 seconds | All 40+ factors |
+| Bulk title generation (50 posts) | <5 minutes | With rate limiting |
+| Import from Yoast (1000 posts) | <2 minutes | Database operations |
+| GSC data sync | <30 seconds | API dependent |
+| Rank tracking check | <5 seconds | Per keyword |
+
+### Performance Testing Commands
+
+```bash
+# Test 1: Single operation timing
+time wp aiseo image generate-alt 123
+
+# Test 2: Bulk operation timing
+time wp aiseo bulk generate-titles --limit=50
+
+# Test 3: Analysis performance
+time wp aiseo analyze comprehensive 123
+
+# Test 4: Import performance
+time wp aiseo import yoast --post-type=post
+```
+
+---
+
+## Automated Testing Suite
+
+### PHPUnit Tests
+
+```bash
+# Run all tests
+vendor/bin/phpunit
+
+# Run specific test suite
+vendor/bin/phpunit --testsuite=image-seo
+vendor/bin/phpunit --testsuite=advanced-analysis
+vendor/bin/phpunit --testsuite=bulk-editor
+
+# Run with coverage
+vendor/bin/phpunit --coverage-html coverage/
+```
+
+### Integration Tests
+
+```bash
+# Run integration tests
+vendor/bin/phpunit --group=integration
+
+# Run API tests
+vendor/bin/phpunit --group=api
+
+# Run CLI tests
+vendor/bin/phpunit --group=cli
+```
+
+---
+
+## Troubleshooting Common Issues
+
+### Issue: Alt text generation fails
+
+```bash
+# Check API key
+wp option get aiseo_openai_api_key
+
+# Test API connection
+wp aiseo generate --id=123 --meta=title --dry-run
+
+# Check logs
+wp aiseo logs --category=image_seo --level=ERROR
+```
+
+### Issue: Bulk operations timeout
+
+```bash
+# Increase PHP timeout
+wp config set WP_MAX_EXECUTION_TIME 300
+
+# Process in smaller batches
+wp aiseo bulk generate-titles --limit=10
+
+# Use WP-Cron for background processing
+wp aiseo bulk generate-titles --async
+```
+
+### Issue: Import fails
+
+```bash
+# Check source plugin data
+wp db query "SELECT COUNT(*) FROM wp_postmeta WHERE meta_key LIKE '_yoast_%'"
+
+# Dry run first
+wp aiseo import yoast --dry-run
+
+# Import with verbose output
+wp aiseo import yoast --verbose
+```
+
+---
+
+## Final Testing Checklist
+
+### Phase 1 Features (v1.1.0)
+- [ ] Image SEO: Generate alt text
+- [ ] Image SEO: Bulk operations
+- [ ] Image SEO: SEO scoring
+- [ ] Advanced Analysis: All 40+ factors
+- [ ] Advanced Analysis: Readability checks
+- [ ] Advanced Analysis: Technical SEO
+- [ ] Bulk Editor: Filter and select
+- [ ] Bulk Editor: Bulk generate
+- [ ] Bulk Editor: Progress tracking
+- [ ] Import/Export: Yoast import
+- [ ] Import/Export: Rank Math import
+- [ ] Import/Export: JSON export/import
+
+### Phase 2 Features (v1.2.0)
+- [ ] GSC: OAuth authentication
+- [ ] GSC: Data sync
+- [ ] GSC: Top keywords
+- [ ] GSC: Crawl errors
+- [ ] GA4: OAuth authentication
+- [ ] GA4: Analytics dashboard
+- [ ] GA4: Traffic sources
+- [ ] Rank Tracking: Track keywords
+- [ ] Rank Tracking: Position history
+- [ ] Rank Tracking: Competitor comparison
+
+### Phase 3 Features (v2.0.0)
+- [ ] 404 Monitor: Log errors
+- [ ] 404 Monitor: Suggest redirects
+- [ ] Redirects: Create/manage
+- [ ] Internal Links: AI suggestions
+- [ ] Internal Links: Orphan detection
+- [ ] Permalink: Stop word removal
+- [ ] Permalink: Optimization suggestions
+
+---
+
+**End of Testing Workflows**
+
+For detailed feature specifications, see `FEATURE-SPECIFICATIONS.md`.
