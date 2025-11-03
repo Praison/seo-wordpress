@@ -12,20 +12,20 @@ if (!defined('ABSPATH')) {
 ?>
 
 <div class="wrap aiseo-image-seo-page">
-    <h1><?php _e('Image SEO & Alt Text Optimization', 'aiseo'); ?></h1>
+    <h1><?php esc_html_e('Image SEO & Alt Text Optimization', 'aiseo'); ?></h1>
     
     <!-- Statistics Dashboard -->
     <div class="aiseo-image-stats">
         <div class="stat-box">
-            <h3><?php _e('Total Images', 'aiseo'); ?></h3>
+            <h3><?php esc_html_e('Total Images', 'aiseo'); ?></h3>
             <p class="stat-number"><?php echo number_format($total_images); ?></p>
         </div>
         <div class="stat-box">
-            <h3><?php _e('Missing Alt Text', 'aiseo'); ?></h3>
+            <h3><?php esc_html_e('Missing Alt Text', 'aiseo'); ?></h3>
             <p class="stat-number warning"><?php echo number_format(count($images)); ?></p>
         </div>
         <div class="stat-box">
-            <h3><?php _e('AI Generated', 'aiseo'); ?></h3>
+            <h3><?php esc_html_e('AI Generated', 'aiseo'); ?></h3>
             <p class="stat-number success">
                 <?php
                 global $wpdb;
@@ -38,22 +38,22 @@ if (!defined('ABSPATH')) {
     
     <!-- Missing Alt Text Table -->
     <div class="aiseo-missing-alt-section">
-        <h2><?php _e('Images Missing Alt Text', 'aiseo'); ?></h2>
+        <h2><?php esc_html_e('Images Missing Alt Text', 'aiseo'); ?></h2>
         
         <?php if (empty($images)): ?>
             <div class="notice notice-success">
-                <p><?php _e('Great! All images have alt text.', 'aiseo'); ?></p>
+                <p><?php esc_html_e('Great! All images have alt text.', 'aiseo'); ?></p>
             </div>
         <?php else: ?>
             <table class="wp-list-table widefat fixed striped">
                 <thead>
                     <tr>
                         <th style="width: 40px;"><input type="checkbox" id="select-all-images"></th>
-                        <th style="width: 80px;"><?php _e('Image', 'aiseo'); ?></th>
-                        <th><?php _e('Filename', 'aiseo'); ?></th>
-                        <th><?php _e('Used In', 'aiseo'); ?></th>
-                        <th><?php _e('Size', 'aiseo'); ?></th>
-                        <th><?php _e('Actions', 'aiseo'); ?></th>
+                        <th style="width: 80px;"><?php esc_html_e('Image', 'aiseo'); ?></th>
+                        <th><?php esc_html_e('Filename', 'aiseo'); ?></th>
+                        <th><?php esc_html_e('Used In', 'aiseo'); ?></th>
+                        <th><?php esc_html_e('Size', 'aiseo'); ?></th>
+                        <th><?php esc_html_e('Actions', 'aiseo'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,13 +76,13 @@ if (!defined('ABSPATH')) {
                                     <?php echo esc_html($image->parent_title); ?>
                                 </a>
                             <?php else: ?>
-                                <em><?php _e('Not attached', 'aiseo'); ?></em>
+                                <em><?php esc_html_e('Not attached', 'aiseo'); ?></em>
                             <?php endif; ?>
                         </td>
                         <td><?php echo esc_html($image->filesize); ?></td>
                         <td>
                             <button class="button aiseo-generate-single-alt" data-image-id="<?php echo esc_attr($image->ID); ?>">
-                                <?php _e('Generate Alt Text', 'aiseo'); ?>
+                                <?php esc_html_e('Generate Alt Text', 'aiseo'); ?>
                             </button>
                             <span class="spinner"></span>
                             <span class="alt-text-result"></span>
@@ -94,22 +94,22 @@ if (!defined('ABSPATH')) {
             
             <div class="bulk-actions-bar">
                 <button class="button button-primary" id="bulk-generate-alt" disabled>
-                    <?php _e('Generate Alt Text for Selected', 'aiseo'); ?>
+                    <?php esc_html_e('Generate Alt Text for Selected', 'aiseo'); ?>
                 </button>
-                <span class="selected-count">0 <?php _e('selected', 'aiseo'); ?></span>
+                <span class="selected-count">0 <?php esc_html_e('selected', 'aiseo'); ?></span>
             </div>
         <?php endif; ?>
     </div>
     
     <!-- Progress Bar -->
     <div class="aiseo-progress" style="display:none;">
-        <h3><?php _e('Generating Alt Text...', 'aiseo'); ?></h3>
+        <h3><?php esc_html_e('Generating Alt Text...', 'aiseo'); ?></h3>
         <div class="progress-bar">
             <div class="progress-fill" style="width:0%"></div>
         </div>
         <p class="progress-text">
-            <span class="current">0</span> / <span class="total">0</span> <?php _e('completed', 'aiseo'); ?>
+            <span class="current">0</span> / <span class="total">0</span> <?php esc_html_e('completed', 'aiseo'); ?>
         </p>
-        <button class="button" id="cancel-bulk"><?php _e('Cancel', 'aiseo'); ?></button>
+        <button class="button" id="cancel-bulk"><?php esc_html_e('Cancel', 'aiseo'); ?></button>
     </div>
 </div>

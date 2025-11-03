@@ -1,0 +1,33 @@
+# Development files
+.git
+.gitignore
+.env
+.env.example
+
+# Documentation
+TESTING.md
+ARCHITECTURE.md
+WORDPRESS-ORG-CHECKLIST.md
+
+# Tests
+tests/
+test-results-*.log
+
+# Build files
+node_modules/
+vendor/
+composer.json
+composer.lock
+package.json
+package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
