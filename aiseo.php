@@ -306,4 +306,10 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-content-suggestions-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-redirects.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-redirects-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-permalink-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-readability-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-faq-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-outline-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-rewriter-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-meta-variations-cli.php';
 }

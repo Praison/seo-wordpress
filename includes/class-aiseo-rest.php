@@ -1084,6 +1084,128 @@ class AISEO_REST {
             'callback' => array($this, 'get_redirect_stats'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Permalink Optimization: Optimize permalink
+        register_rest_route(self::NAMESPACE, '/permalink/optimize', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'optimize_permalink'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'post_id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+                'apply' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Enhanced Readability: Analyze readability
+        register_rest_route(self::NAMESPACE, '/readability/analyze/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'analyze_readability'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // FAQ Generator: Generate FAQs
+        register_rest_route(self::NAMESPACE, '/faq/generate/(?P<post_id>\\d+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_faqs'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'count' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 5,
+                ),
+                'save' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // FAQ Generator: Get FAQs
+        register_rest_route(self::NAMESPACE, '/faq/get/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'generate_faqs'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Content Outline: Generate outline
+        register_rest_route(self::NAMESPACE, '/outline/generate', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_outline'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'topic' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'keyword' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+                'word_count' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 1500,
+                ),
+                'save' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+                'post_id' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+        
+        // Content Rewriter: Rewrite content
+        register_rest_route(self::NAMESPACE, '/rewrite/content', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'rewrite_content'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'content' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'mode' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'improve',
+                ),
+                'keyword' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Meta Variations: Generate variations
+        register_rest_route(self::NAMESPACE, '/meta/variations/(?P<post_id>\\d+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_meta_variations'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'count' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 5,
+                ),
+                'save' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
     }
     
     /**
@@ -3002,6 +3124,152 @@ class AISEO_REST {
             'success' => true,
             'data' => $stats
         ], 200);
+    }
+    
+    /**
+     * Optimize permalink
+     */
+    public function optimize_permalink($request) {
+        $post_id = $request->get_param('post_id');
+        $apply = $request->get_param('apply');
+        
+        $post = get_post($post_id);
+        if (!$post) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Post not found'], 404);
+        }
+        
+        $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        $permalink = new AISEO_Permalink();
+        $result = $permalink->optimize_permalink($post->post_name, $keyword);
+        
+        if ($apply && $result['optimized'] !== $result['original']) {
+            wp_update_post(['ID' => $post_id, 'post_name' => $result['optimized']]);
+            $result['applied'] = true;
+        }
+        
+        return new WP_REST_Response(['success' => true, 'data' => $result], 200);
+    }
+    
+    /**
+     * Analyze readability
+     */
+    public function analyze_readability($request) {
+        $post_id = $request->get_param('post_id');
+        
+        $post = get_post($post_id);
+        if (!$post) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Post not found'], 404);
+        }
+        
+        $readability = new AISEO_Readability();
+        $analysis = $readability->analyze($post->post_content);
+        
+        return new WP_REST_Response(['success' => true, 'data' => $analysis], 200);
+    }
+    
+    /**
+     * Generate FAQs
+     */
+    public function generate_faqs($request) {
+        $post_id = $request->get_param('post_id');
+        $count = $request->get_param('count') ?: 5;
+        $save = $request->get_param('save');
+        
+        $post = get_post($post_id);
+        if (!$post) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Post not found'], 404);
+        }
+        
+        $faq = new AISEO_FAQ();
+        $result = $faq->generate($post->post_content, $count);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['success' => false, 'error' => $result->get_error_message()], 500);
+        }
+        
+        if ($save) {
+            $faq->save_to_post($post_id, $result['faqs']);
+        }
+        
+        return new WP_REST_Response(['success' => true, 'data' => $result], 200);
+    }
+    
+    /**
+     * Generate content outline
+     */
+    public function generate_outline($request) {
+        $topic = $request->get_param('topic');
+        $keyword = $request->get_param('keyword') ?: '';
+        $word_count = $request->get_param('word_count') ?: 1500;
+        $save = $request->get_param('save');
+        $post_id = $request->get_param('post_id');
+        
+        if (empty($topic)) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Topic is required'], 400);
+        }
+        
+        $outline = new AISEO_Outline();
+        $result = $outline->generate($topic, $keyword, ['word_count' => $word_count]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['success' => false, 'error' => $result->get_error_message()], 500);
+        }
+        
+        if ($save && $post_id) {
+            $outline->save_to_post($post_id, $result['outline']);
+        }
+        
+        return new WP_REST_Response(['success' => true, 'data' => $result], 200);
+    }
+    
+    /**
+     * Rewrite content
+     */
+    public function rewrite_content($request) {
+        $content = $request->get_param('content');
+        $mode = $request->get_param('mode') ?: 'improve';
+        $keyword = $request->get_param('keyword') ?: '';
+        
+        if (empty($content)) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Content is required'], 400);
+        }
+        
+        $rewriter = new AISEO_Rewriter();
+        $result = $rewriter->rewrite($content, ['mode' => $mode, 'keyword' => $keyword]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['success' => false, 'error' => $result->get_error_message()], 500);
+        }
+        
+        return new WP_REST_Response(['success' => true, 'data' => $result], 200);
+    }
+    
+    /**
+     * Generate meta description variations
+     */
+    public function generate_meta_variations($request) {
+        $post_id = $request->get_param('post_id');
+        $count = $request->get_param('count') ?: 5;
+        $save = $request->get_param('save');
+        
+        $post = get_post($post_id);
+        if (!$post) {
+            return new WP_REST_Response(['success' => false, 'error' => 'Post not found'], 404);
+        }
+        
+        $keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        $meta_variations = new AISEO_Meta_Variations();
+        $result = $meta_variations->generate($post->post_content, $keyword, $count);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['success' => false, 'error' => $result->get_error_message()], 500);
+        }
+        
+        if ($save) {
+            $meta_variations->save_to_post($post_id, $result['variations']);
+        }
+        
+        return new WP_REST_Response(['success' => true, 'data' => $result], 200);
     }
     
     /**

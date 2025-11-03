@@ -25,6 +25,12 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Internal Linking Suggestions** - AI-powered related content suggestions; orphan page detection; link distribution analysis (NEW in v1.7.0)
 - ✅ **Content Suggestions** - AI-powered topic ideas; optimization tips; trending topics; content briefs; gap analysis (NEW in v1.8.0)
 - ✅ **404 Monitor & Redirection Manager** - Monitor 404 errors; AI-powered redirect suggestions; bulk redirect management; import/export redirects; regex support (NEW in v1.9.0)
+- ✅ **Permalink Optimization** - Remove stop words from URLs; SEO-friendly slug suggestions; keyword inclusion; bulk optimization (NEW in v1.10.0)
+- ✅ **Enhanced Readability Analysis** - 6 readability metrics (Flesch, Gunning Fog, SMOG, etc.); passive voice detection; transition words; sentence/paragraph variety (NEW in v1.11.0)
+- ✅ **AI-Powered FAQ Generator** - Auto-generate FAQs from content; FAQ schema markup; semantic HTML output (NEW in v1.12.0)
+- ✅ **Content Outline Generator** - AI-powered content outlines; structured H2/H3 headings; key points per section; word count estimates (NEW in v1.13.0)
+- ✅ **Smart Content Rewriter** - 6 rewrite modes (improve, simplify, expand, shorten, professional, casual); keyword optimization; improvement tracking (NEW in v1.14.0)
+- ✅ **Meta Description Variations** - Generate 5+ variations; score each option; CTA detection; A/B testing support (NEW in v1.15.0)
 
 > **📋 Note:** Additional advanced features (Backlink Monitoring, Rank Tracking, Competitor Analysis, etc.) are planned for future releases. See [UPCOMING.md](UPCOMING.md) for detailed specifications and requirements.
 
@@ -108,6 +114,13 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/redirects/import` | POST | **Bulk import redirects from CSV** (NEW) |
 | `/wp-json/aiseo/v1/redirects/export` | GET | **Export redirects to CSV** (NEW) |
 | `/wp-json/aiseo/v1/redirects/stats` | GET | **Get redirect statistics** (NEW) |
+| `/wp-json/aiseo/v1/permalink/optimize` | POST | **Optimize permalink** (NEW in v1.10.0) |
+| `/wp-json/aiseo/v1/readability/analyze/{post_id}` | GET | **Enhanced readability analysis** (NEW in v1.11.0) |
+| `/wp-json/aiseo/v1/faq/generate/{post_id}` | POST | **Generate FAQs from content** (NEW in v1.12.0) |
+| `/wp-json/aiseo/v1/faq/get/{post_id}` | GET | **Get saved FAQs** (NEW in v1.12.0) |
+| `/wp-json/aiseo/v1/outline/generate` | POST | **Generate content outline** (NEW in v1.13.0) |
+| `/wp-json/aiseo/v1/rewrite/content` | POST | **Rewrite content with AI** (NEW in v1.14.0) |
+| `/wp-json/aiseo/v1/meta/variations/{post_id}` | POST | **Generate meta variations** (NEW in v1.15.0) |
 
 
 **Example Usage:**
@@ -249,6 +262,21 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo redirects import <file>` | **Import redirects from CSV** (NEW) |
 | `wp aiseo redirects export` | **Export redirects to CSV** (NEW) |
 | `wp aiseo redirects stats` | **Get redirect statistics** (NEW) |
+| `wp aiseo permalink optimize <post-id>` | **Optimize permalink** (NEW in v1.10.0) |
+| `wp aiseo permalink bulk` | **Bulk optimize permalinks** (NEW in v1.10.0) |
+| `wp aiseo permalink analyze` | **Analyze site permalink structure** (NEW in v1.10.0) |
+| `wp aiseo readability analyze <post-id>` | **Enhanced readability analysis** (NEW in v1.11.0) |
+| `wp aiseo readability bulk` | **Bulk readability analysis** (NEW in v1.11.0) |
+| `wp aiseo faq generate <post-id>` | **Generate FAQs from content** (NEW in v1.12.0) |
+| `wp aiseo faq get <post-id>` | **Get saved FAQs** (NEW in v1.12.0) |
+| `wp aiseo outline generate <topic>` | **Generate content outline** (NEW in v1.13.0) |
+| `wp aiseo outline get <post-id>` | **Get saved outline** (NEW in v1.13.0) |
+| `wp aiseo rewrite content <post-id>` | **Rewrite post content** (NEW in v1.14.0) |
+| `wp aiseo rewrite paragraph "<text>"` | **Rewrite paragraph** (NEW in v1.14.0) |
+| `wp aiseo rewrite sentence "<text>"` | **Rewrite sentence** (NEW in v1.14.0) |
+| `wp aiseo meta variations <post-id>` | **Generate meta variations** (NEW in v1.15.0) |
+| `wp aiseo meta variations-get <post-id>` | **Get saved variations** (NEW in v1.15.0) |
+| `wp aiseo meta variations-test <post-id>` | **Start A/B test** (NEW in v1.15.0) |
 
 
 **Example Usage:**
