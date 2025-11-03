@@ -249,4 +249,6 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-multilingual-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-cpt-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-competitor-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-keyword-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-backlink-cli.php';
 }

@@ -646,6 +646,211 @@ class AISEO_REST {
             'callback' => array($this, 'get_competitor_summary'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Keyword Research: Get suggestions
+        register_rest_route(self::NAMESPACE, '/keyword/suggestions', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'get_keyword_suggestions'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'seed_keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 20,
+                ),
+            ),
+        ));
+        
+        // Keyword Research: Get related keywords
+        register_rest_route(self::NAMESPACE, '/keyword/related', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'get_related_keywords'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 10,
+                ),
+            ),
+        ));
+        
+        // Keyword Research: Analyze difficulty
+        register_rest_route(self::NAMESPACE, '/keyword/difficulty', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'analyze_keyword_difficulty'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Keyword Research: Get question keywords
+        register_rest_route(self::NAMESPACE, '/keyword/questions', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'get_question_keywords'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'topic' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 15,
+                ),
+            ),
+        ));
+        
+        // Keyword Research: Analyze trends
+        register_rest_route(self::NAMESPACE, '/keyword/trends', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'analyze_keyword_trends'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Keyword Research: Get summary
+        register_rest_route(self::NAMESPACE, '/keyword/summary', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_keyword_summary'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Keyword Research: Clear cache
+        register_rest_route(self::NAMESPACE, '/keyword/clear-cache', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'clear_keyword_cache'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
+        // Backlink Monitoring: List all backlinks
+        register_rest_route(self::NAMESPACE, '/backlink/list', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'list_backlinks'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'status' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+                'target_url' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Backlink Monitoring: Add backlink
+        register_rest_route(self::NAMESPACE, '/backlink/add', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'add_backlink'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'source_url' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'target_url' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'anchor_text' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+                'follow' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+            ),
+        ));
+        
+        // Backlink Monitoring: Remove backlink
+        register_rest_route(self::NAMESPACE, '/backlink/remove/(?P<id>[a-zA-Z0-9_]+)', array(
+            'methods' => 'DELETE',
+            'callback' => array($this, 'remove_backlink'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
+        // Backlink Monitoring: Check backlink status
+        register_rest_route(self::NAMESPACE, '/backlink/check/(?P<id>[a-zA-Z0-9_]+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'check_backlink_status'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
+        // Backlink Monitoring: Analyze backlink quality
+        register_rest_route(self::NAMESPACE, '/backlink/analyze/(?P<id>[a-zA-Z0-9_]+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'analyze_backlink_quality'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
+        // Backlink Monitoring: Get new backlinks
+        register_rest_route(self::NAMESPACE, '/backlink/new', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_new_backlinks'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'days' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 7,
+                ),
+            ),
+        ));
+        
+        // Backlink Monitoring: Get lost backlinks
+        register_rest_route(self::NAMESPACE, '/backlink/lost', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_lost_backlinks'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Backlink Monitoring: Generate disavow file
+        register_rest_route(self::NAMESPACE, '/backlink/disavow', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_disavow_file'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'backlink_ids' => array(
+                    'required' => true,
+                    'type' => 'array',
+                ),
+            ),
+        ));
+        
+        // Backlink Monitoring: Bulk check
+        register_rest_route(self::NAMESPACE, '/backlink/bulk-check', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_check_backlinks'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
+        // Backlink Monitoring: Get summary
+        register_rest_route(self::NAMESPACE, '/backlink/summary', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_backlink_summary'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -1603,6 +1808,339 @@ class AISEO_REST {
     public function get_competitor_summary($request) {
         $competitor = new AISEO_Competitor();
         $summary = $competitor->get_summary();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'summary' => $summary
+        ], 200);
+    }
+    
+    /**
+     * Get keyword suggestions
+     */
+    public function get_keyword_suggestions($request) {
+        $seed_keyword = $request->get_param('seed_keyword');
+        $limit = $request->get_param('limit') ?: 20;
+        
+        $keyword_research = new AISEO_Keyword_Research();
+        $result = $keyword_research->get_keyword_suggestions($seed_keyword, $limit);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'keywords' => $result,
+            'count' => count($result)
+        ], 200);
+    }
+    
+    /**
+     * Get related keywords
+     */
+    public function get_related_keywords($request) {
+        $keyword = $request->get_param('keyword');
+        $limit = $request->get_param('limit') ?: 10;
+        
+        $keyword_research = new AISEO_Keyword_Research();
+        $result = $keyword_research->get_related_keywords($keyword, $limit);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'related_keywords' => $result,
+            'count' => count($result)
+        ], 200);
+    }
+    
+    /**
+     * Analyze keyword difficulty
+     */
+    public function analyze_keyword_difficulty($request) {
+        $keyword = $request->get_param('keyword');
+        
+        $keyword_research = new AISEO_Keyword_Research();
+        $result = $keyword_research->analyze_keyword_difficulty($keyword);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'analysis' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get question keywords
+     */
+    public function get_question_keywords($request) {
+        $topic = $request->get_param('topic');
+        $limit = $request->get_param('limit') ?: 15;
+        
+        $keyword_research = new AISEO_Keyword_Research();
+        $result = $keyword_research->get_question_keywords($topic, $limit);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'questions' => $result,
+            'count' => count($result)
+        ], 200);
+    }
+    
+    /**
+     * Analyze keyword trends
+     */
+    public function analyze_keyword_trends($request) {
+        $keyword = $request->get_param('keyword');
+        
+        $keyword_research = new AISEO_Keyword_Research();
+        $result = $keyword_research->analyze_keyword_trends($keyword);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'trends' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get keyword summary
+     */
+    public function get_keyword_summary($request) {
+        $keyword_research = new AISEO_Keyword_Research();
+        $summary = $keyword_research->get_summary();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'summary' => $summary
+        ], 200);
+    }
+    
+    /**
+     * Clear keyword cache
+     */
+    public function clear_keyword_cache($request) {
+        $keyword_research = new AISEO_Keyword_Research();
+        $deleted = $keyword_research->clear_cache();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'deleted' => $deleted,
+            'message' => sprintf('%d cache entries cleared', $deleted)
+        ], 200);
+    }
+    
+    /**
+     * List backlinks
+     */
+    public function list_backlinks($request) {
+        $status = $request->get_param('status');
+        $target_url = $request->get_param('target_url');
+        
+        $filters = [];
+        if ($status) {
+            $filters['status'] = $status;
+        }
+        if ($target_url) {
+            $filters['target_url'] = $target_url;
+        }
+        
+        $backlink = new AISEO_Backlink();
+        $backlinks = $backlink->get_backlinks($filters);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'backlinks' => $backlinks,
+            'count' => count($backlinks)
+        ], 200);
+    }
+    
+    /**
+     * Add backlink
+     */
+    public function add_backlink($request) {
+        $source_url = $request->get_param('source_url');
+        $target_url = $request->get_param('target_url');
+        $anchor_text = $request->get_param('anchor_text');
+        $follow = $request->get_param('follow');
+        
+        $options = [];
+        if ($anchor_text) {
+            $options['anchor_text'] = $anchor_text;
+        }
+        if ($follow !== null) {
+            $options['follow'] = $follow;
+        }
+        
+        $backlink = new AISEO_Backlink();
+        $result = $backlink->add_backlink($source_url, $target_url, $options);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'backlink' => $result
+        ], 201);
+    }
+    
+    /**
+     * Remove backlink
+     */
+    public function remove_backlink($request) {
+        $backlink_id = $request->get_param('id');
+        
+        $backlink = new AISEO_Backlink();
+        $result = $backlink->remove_backlink($backlink_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 404);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'message' => 'Backlink removed successfully'
+        ], 200);
+    }
+    
+    /**
+     * Check backlink status
+     */
+    public function check_backlink_status($request) {
+        $backlink_id = $request->get_param('id');
+        
+        $backlink = new AISEO_Backlink();
+        $result = $backlink->check_backlink_status($backlink_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'status' => $result
+        ], 200);
+    }
+    
+    /**
+     * Analyze backlink quality
+     */
+    public function analyze_backlink_quality($request) {
+        $backlink_id = $request->get_param('id');
+        
+        $backlink = new AISEO_Backlink();
+        $result = $backlink->analyze_backlink_quality($backlink_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'analysis' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get new backlinks
+     */
+    public function get_new_backlinks($request) {
+        $days = $request->get_param('days') ?: 7;
+        
+        $backlink = new AISEO_Backlink();
+        $backlinks = $backlink->get_new_backlinks($days);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'backlinks' => $backlinks,
+            'count' => count($backlinks),
+            'days' => $days
+        ], 200);
+    }
+    
+    /**
+     * Get lost backlinks
+     */
+    public function get_lost_backlinks($request) {
+        $backlink = new AISEO_Backlink();
+        $backlinks = $backlink->get_lost_backlinks();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'backlinks' => $backlinks,
+            'count' => count($backlinks)
+        ], 200);
+    }
+    
+    /**
+     * Generate disavow file
+     */
+    public function generate_disavow_file($request) {
+        $backlink_ids = $request->get_param('backlink_ids');
+        
+        $backlink = new AISEO_Backlink();
+        $result = $backlink->generate_disavow_file($backlink_ids);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'disavow_file' => $result,
+            'count' => count($backlink_ids)
+        ], 200);
+    }
+    
+    /**
+     * Bulk check backlinks
+     */
+    public function bulk_check_backlinks($request) {
+        $backlink = new AISEO_Backlink();
+        $results = $backlink->bulk_check_backlinks();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'results' => $results
+        ], 200);
+    }
+    
+    /**
+     * Get backlink summary
+     */
+    public function get_backlink_summary($request) {
+        $backlink = new AISEO_Backlink();
+        $summary = $backlink->get_summary();
         
         return new WP_REST_Response([
             'success' => true,

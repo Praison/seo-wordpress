@@ -23,6 +23,8 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Multilingual SEO Support** - WPML, Polylang, TranslatePress; hreflang tags (NEW in v1.3.0)
 - ✅ **Custom Post Type Support** - Extend SEO to any custom post type; bulk operations (NEW in v1.3.0)
 - ✅ **Competitor Analysis** - Analyze competitor websites; compare SEO metrics; get recommendations (NEW in v1.4.0)
+- ✅ **Keyword Research Tools** - AI-powered keyword suggestions; difficulty analysis; question keywords; trend analysis (NEW in v1.4.0)
+- ✅ **Backlink Monitoring** - Track backlinks; quality analysis; new/lost alerts; disavow file generation (NEW in v1.5.0)
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -94,6 +96,23 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/competitor/analysis/{id}` | GET | **Get competitor analysis** (NEW) |
 | `/wp-json/aiseo/v1/competitor/compare/{id}` | GET | **Compare with site** (NEW) |
 | `/wp-json/aiseo/v1/competitor/summary` | GET | **Get summary** (NEW) |
+| `/wp-json/aiseo/v1/keyword/suggestions` | POST | **Get keyword suggestions** (NEW) |
+| `/wp-json/aiseo/v1/keyword/related` | POST | **Get related keywords** (NEW) |
+| `/wp-json/aiseo/v1/keyword/difficulty` | POST | **Analyze keyword difficulty** (NEW) |
+| `/wp-json/aiseo/v1/keyword/questions` | POST | **Get question keywords** (NEW) |
+| `/wp-json/aiseo/v1/keyword/trends` | POST | **Analyze keyword trends** (NEW) |
+| `/wp-json/aiseo/v1/keyword/summary` | GET | **Get keyword summary** (NEW) |
+| `/wp-json/aiseo/v1/keyword/clear-cache` | POST | **Clear keyword cache** (NEW) |
+| `/wp-json/aiseo/v1/backlink/list` | GET | **List all backlinks** (NEW) |
+| `/wp-json/aiseo/v1/backlink/add` | POST | **Add backlink** (NEW) |
+| `/wp-json/aiseo/v1/backlink/remove/{id}` | DELETE | **Remove backlink** (NEW) |
+| `/wp-json/aiseo/v1/backlink/check/{id}` | POST | **Check backlink status** (NEW) |
+| `/wp-json/aiseo/v1/backlink/analyze/{id}` | POST | **Analyze backlink quality** (NEW) |
+| `/wp-json/aiseo/v1/backlink/new` | GET | **Get new backlinks** (NEW) |
+| `/wp-json/aiseo/v1/backlink/lost` | GET | **Get lost backlinks** (NEW) |
+| `/wp-json/aiseo/v1/backlink/disavow` | POST | **Generate disavow file** (NEW) |
+| `/wp-json/aiseo/v1/backlink/bulk-check` | POST | **Bulk check backlinks** (NEW) |
+| `/wp-json/aiseo/v1/backlink/summary` | GET | **Get backlink summary** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -223,6 +242,23 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo competitor compare` | **Compare with site** (NEW) |
 | `wp aiseo competitor summary` | **Get summary** (NEW) |
 | `wp aiseo competitor bulk-analyze` | **Bulk analyze all** (NEW) |
+| `wp aiseo keyword suggestions <keyword>` | **Get keyword suggestions** (NEW) |
+| `wp aiseo keyword related <keyword>` | **Get related keywords** (NEW) |
+| `wp aiseo keyword difficulty <keyword>` | **Analyze keyword difficulty** (NEW) |
+| `wp aiseo keyword questions <topic>` | **Get question keywords** (NEW) |
+| `wp aiseo keyword trends <keyword>` | **Analyze keyword trends** (NEW) |
+| `wp aiseo keyword summary` | **Get keyword summary** (NEW) |
+| `wp aiseo keyword clear-cache` | **Clear keyword cache** (NEW) |
+| `wp aiseo backlink list` | **List all backlinks** (NEW) |
+| `wp aiseo backlink add <source> <target>` | **Add backlink** (NEW) |
+| `wp aiseo backlink remove <id>` | **Remove backlink** (NEW) |
+| `wp aiseo backlink check <id>` | **Check backlink status** (NEW) |
+| `wp aiseo backlink analyze <id>` | **Analyze backlink quality** (NEW) |
+| `wp aiseo backlink new` | **Get new backlinks** (NEW) |
+| `wp aiseo backlink lost` | **Get lost backlinks** (NEW) |
+| `wp aiseo backlink disavow <ids>...` | **Generate disavow file** (NEW) |
+| `wp aiseo backlink bulk-check` | **Bulk check all backlinks** (NEW) |
+| `wp aiseo backlink summary` | **Get backlink summary** (NEW) |
 
 **Example Usage:**
 ```bash
