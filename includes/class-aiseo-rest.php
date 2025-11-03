@@ -1206,6 +1206,44 @@ class AISEO_REST {
                 ),
             ),
         ));
+        
+        // Unified Report: Generate comprehensive SEO report
+        register_rest_route(self::NAMESPACE, '/report/unified/(?P<id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_unified_report'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+                'force_refresh' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Unified Report: Get historical reports
+        register_rest_route(self::NAMESPACE, '/report/history/(?P<id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_report_history'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 10,
+                ),
+            ),
+        ));
     }
     
     /**
@@ -3270,6 +3308,70 @@ class AISEO_REST {
         }
         
         return new WP_REST_Response(['success' => true, 'data' => $result], 200);
+    }
+    
+    /**
+     * Get unified SEO report for a post
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_unified_report($request) {
+        $post_id = $request->get_param('id');
+        $force_refresh = $request->get_param('force_refresh') ?: false;
+        
+        if (!class_exists('AISEO_Unified_Report')) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Unified Report class not found'
+            ], 500);
+        }
+        
+        $options = [];
+        if ($force_refresh) {
+            $options['force_refresh'] = true;
+        }
+        
+        $report = AISEO_Unified_Report::generate_report($post_id, $options);
+        
+        if (isset($report['error'])) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => $report['error']
+            ], 404);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'report' => $report
+        ], 200);
+    }
+    
+    /**
+     * Get historical reports for a post
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_report_history($request) {
+        $post_id = $request->get_param('id');
+        $limit = $request->get_param('limit') ?: 10;
+        
+        if (!class_exists('AISEO_Unified_Report')) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Unified Report class not found'
+            ], 500);
+        }
+        
+        $history = AISEO_Unified_Report::get_history($post_id, $limit);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_id' => $post_id,
+            'history' => $history,
+            'count' => count($history)
+        ], 200);
     }
     
     /**
