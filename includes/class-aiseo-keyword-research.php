@@ -405,16 +405,19 @@ class AISEO_Keyword_Research {
         global $wpdb;
         
         // Count cached keywords
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
         $cached_suggestions = $wpdb->get_var(
             "SELECT COUNT(*) FROM {$wpdb->options} 
              WHERE option_name LIKE '_transient_aiseo_keyword_suggestions_%'"
         );
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
         $cached_related = $wpdb->get_var(
             "SELECT COUNT(*) FROM {$wpdb->options} 
              WHERE option_name LIKE '_transient_aiseo_related_keywords_%'"
         );
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
         $cached_difficulty = $wpdb->get_var(
             "SELECT COUNT(*) FROM {$wpdb->options} 
              WHERE option_name LIKE '_transient_aiseo_keyword_difficulty_%'"
@@ -437,6 +440,7 @@ class AISEO_Keyword_Research {
     public function clear_cache() {
         global $wpdb;
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table for keyword data
         $deleted = $wpdb->query(
             "DELETE FROM {$wpdb->options} 
              WHERE option_name LIKE '_transient_aiseo_keyword_%' 

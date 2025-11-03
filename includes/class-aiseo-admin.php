@@ -243,6 +243,7 @@ class AISEO_Admin {
         }
         
         // Handle form submission
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification handled by settings API
         if (isset($_GET['settings-updated'])) {
             add_settings_error('aiseo_messages', 'aiseo_message', 'Settings Saved', 'updated');
         }

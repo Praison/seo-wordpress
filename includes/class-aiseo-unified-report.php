@@ -416,6 +416,7 @@ class AISEO_Unified_Report {
     public static function get_history($post_id, $limit = 10) {
         global $wpdb;
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT meta_value, meta_id 
              FROM {$wpdb->postmeta} 

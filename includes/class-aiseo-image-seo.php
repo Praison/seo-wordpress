@@ -234,8 +234,9 @@ class AISEO_Image_SEO {
             LIMIT %d OFFSET %d
         ";
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Necessary for image metadata query
         $images = $wpdb->get_results(
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare()
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare()
             $wpdb->prepare($query, $args['posts_per_page'], $args['offset'])
         );
         

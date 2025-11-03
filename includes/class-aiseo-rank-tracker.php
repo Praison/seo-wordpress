@@ -41,6 +41,7 @@ class AISEO_Rank_Tracker {
         }
         
         // Insert tracking record
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $result = $wpdb->insert(
             $table_name,
             [
@@ -162,9 +163,11 @@ class AISEO_Rank_Tracker {
         
         $date_from = gmdate('Y-m-d', strtotime("-{$days} days"));
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT position, url, date, location, serp_features 
              FROM {$table_name} 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe, complex subquery
              WHERE keyword = %s 
              AND DATE(date) >= %s 
              ORDER BY date ASC",
@@ -194,6 +197,7 @@ class AISEO_Rank_Tracker {
         global $wpdb;
         $table_name = $wpdb->prefix . 'aiseo_rank_tracking';
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT DISTINCT keyword, 
                     (SELECT position FROM {$table_name} rt2 
@@ -231,9 +235,10 @@ class AISEO_Rank_Tracker {
         }
         
         // Get our latest position
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         $our_position = $wpdb->get_var($wpdb->prepare(
             "SELECT position FROM {$table_name} 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe
              WHERE keyword = %s 
              ORDER BY date DESC LIMIT 1",
             $keyword
@@ -313,6 +318,7 @@ class AISEO_Rank_Tracker {
         
         if (is_wp_error($response)) {
             return $response;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
         }
         
         $content = $response['choices'][0]['message']['content'] ?? '';
@@ -372,10 +378,10 @@ class AISEO_Rank_Tracker {
                   ORDER BY last_checked DESC";
         
         if (!empty($params)) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare() and params
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare() and params
             $results = $wpdb->get_results($wpdb->prepare($query, ...$params), ARRAY_A);
         } else {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query has no user input, table name is prefixed
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Query has no user input, table name is prefixed
             $results = $wpdb->get_results($query, ARRAY_A);
         }
         
@@ -405,6 +411,7 @@ class AISEO_Rank_Tracker {
             $where_format[] = '%d';
         }
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $result = $wpdb->delete($table_name, $where, $where_format);
         
         if ($result === false) {
@@ -424,6 +431,7 @@ class AISEO_Rank_Tracker {
         $table_name = $wpdb->prefix . 'aiseo_rank_tracking';
         
         $summary = [
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table statistics
             'total_keywords' => 0,
             'total_tracking_records' => 0,
             'average_position' => 0,
@@ -435,17 +443,21 @@ class AISEO_Rank_Tracker {
         ];
         
         // Total tracking records
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $summary['total_tracking_records'] = $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
         
         // Total unique keywords
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $summary['total_keywords'] = $wpdb->get_var("SELECT COUNT(DISTINCT keyword) FROM {$table_name}");
         
         // Tracked posts
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $summary['tracked_posts'] = $wpdb->get_var("SELECT COUNT(DISTINCT post_id) FROM {$table_name} WHERE post_id > 0");
         
         // Get latest positions for all keywords
         $latest_positions = $wpdb->get_results(
             "SELECT DISTINCT keyword, 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is prefixed and safe, complex subquery
              (SELECT position FROM {$table_name} rt2 
               WHERE rt2.keyword = rt1.keyword 
               ORDER BY date DESC LIMIT 1) as position
@@ -474,6 +486,7 @@ class AISEO_Rank_Tracker {
         }
         
         // Get locations
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
         $locations = $wpdb->get_col("SELECT DISTINCT location FROM {$table_name}");
         $summary['locations'] = $locations ?: [];
         

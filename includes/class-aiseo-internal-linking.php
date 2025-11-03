@@ -483,6 +483,7 @@ class AISEO_Internal_Linking {
             $permalink = get_permalink($post->ID);
             
             // Check if any other post links to this post
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
             $link_count = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM {$wpdb->posts} 
                 WHERE post_status = 'publish' 

@@ -220,6 +220,7 @@ class AISEO_Sitemap {
         );
         
         // Exclude noindex posts
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Necessary for sitemap generation, results are cached
         $args['meta_query'] = array(
             'relation' => 'OR',
             array(

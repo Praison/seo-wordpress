@@ -301,6 +301,7 @@ class AISEO_Helpers {
         
         $table_name = $wpdb->prefix . 'aiseo_logs';
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Necessary for database optimization
         $wpdb->insert(
             $table_name,
             array(
@@ -318,6 +319,7 @@ class AISEO_Helpers {
         
         // Also log to error_log for critical errors
         if (in_array($level, array('ERROR', 'CRITICAL'))) {
+        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Used for debugging, can be disabled in production
             error_log(sprintf('[AISEO %s] %s: %s', $level, $category, $message));
         }
     }

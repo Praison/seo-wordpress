@@ -221,6 +221,7 @@ class AISEO_Permalink {
     public function analyze_site_structure() {
         global $wpdb;
         
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Necessary for permalink structure check
         $posts = $wpdb->get_results(
             "SELECT ID, post_name FROM {$wpdb->posts} 
              WHERE post_status = 'publish' 

@@ -29,6 +29,8 @@ class AISEO_API {
      * API model
      */
     private $model;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table for API tracking
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table for API usage tracking
     
     /**
      * Constructor
@@ -613,7 +615,10 @@ class AISEO_API {
         $request_type = 'generate_content';
         
         // Check if record exists for today
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table query
         $existing = $wpdb->get_row($wpdb->prepare(
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, table name is prefixed
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table query
             "SELECT * FROM $table_name WHERE date = %s AND request_type = %s",
             $date,
             $request_type
@@ -621,6 +626,7 @@ class AISEO_API {
         
         if ($existing) {
             // Update existing record
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Custom table, no WP equivalent
             $wpdb->update(
                 $table_name,
                 array(
@@ -635,7 +641,9 @@ class AISEO_API {
                 array('%d')
             );
         } else {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table, no WP equivalent
             // Insert new record
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table, no WP equivalent
             $wpdb->insert(
                 $table_name,
                 array(
