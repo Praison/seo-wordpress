@@ -2,7 +2,14 @@
 
 ## Executive Summary
 
-**AISEO** is an AI-powered SEO WordPress plugin that automatically generates and optimizes SEO elements using OpenAI's API. Unlike chatbot plugins, AISEO focuses on content optimization, meta tag generation, schema markup, and comprehensive SEO analysis.
+**AISEO** is an AI-powered SEO WordPress plugin that automatically generates and optimizes SEO elements using OpenAI's API. Unlike chatbot plugins, AISEO focuses on content optimization, meta tag generation, schema markup, and comprehensive SEO analysis. Always AI by Design.
+Always create relevant wp cli commands and rest api for each feature you create. 
+
+Always test wpcli and rest api at the same time when you create any new feature 
+
+also add that to README.md file before confirming that the feature is working.
+
+wp cli test, rest api test and Add all features , all tests, all endpoints and all wp cli commands to README.md file 
 
 ---
 

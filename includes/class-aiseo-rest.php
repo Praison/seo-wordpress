@@ -216,6 +216,93 @@ class AISEO_REST {
                 ),
             ),
         ));
+        
+        // Advanced Analysis: Comprehensive SEO analysis (40+ factors)
+        register_rest_route(self::NAMESPACE, '/analyze/advanced/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'analyze_advanced'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+                'keyword' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+            ),
+        ));
+        
+        // Bulk Edit: Get posts for bulk editing
+        register_rest_route(self::NAMESPACE, '/bulk/posts', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_bulk_posts'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                ),
+                'limit' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 50,
+                ),
+            ),
+        ));
+        
+        // Bulk Edit: Update multiple posts
+        register_rest_route(self::NAMESPACE, '/bulk/update', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_update_posts'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'updates' => array(
+                    'required' => true,
+                    'type' => 'array',
+                ),
+            ),
+        ));
+        
+        // Bulk Edit: Generate metadata for multiple posts
+        register_rest_route(self::NAMESPACE, '/bulk/generate', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_generate_metadata'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'post_ids' => array(
+                    'required' => true,
+                    'type' => 'array',
+                ),
+                'meta_types' => array(
+                    'required' => false,
+                    'type' => 'array',
+                    'default' => array('title', 'description'),
+                ),
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Bulk Edit: Preview changes
+        register_rest_route(self::NAMESPACE, '/bulk/preview', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_preview_changes'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'updates' => array(
+                    'required' => true,
+                    'type' => 'array',
+                ),
+            ),
+        ));
     }
     
     /**
@@ -571,6 +658,120 @@ class AISEO_REST {
             'success' => true,
             'image_id' => $image_id,
             'score_data' => $score_data
+        ], 200);
+    }
+    
+    /**
+     * Advanced SEO analysis (40+ factors)
+     */
+    public function analyze_advanced($request) {
+        $post_id = $request->get_param('id');
+        $keyword = $request->get_param('keyword');
+        
+        $advanced_analysis = new AISEO_Advanced_Analysis();
+        $result = $advanced_analysis->analyze_comprehensive($post_id, $keyword);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get posts for bulk editing
+     */
+    public function get_bulk_posts($request) {
+        $post_type = $request->get_param('post_type');
+        $limit = $request->get_param('limit');
+        
+        $bulk_edit = new AISEO_Bulk_Edit();
+        $posts = $bulk_edit->get_posts_for_editing([
+            'post_type' => $post_type,
+            'posts_per_page' => $limit
+        ]);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'total' => count($posts),
+            'posts' => $posts
+        ], 200);
+    }
+    
+    /**
+     * Bulk update posts
+     */
+    public function bulk_update_posts($request) {
+        $updates = $request->get_param('updates');
+        
+        $bulk_edit = new AISEO_Bulk_Edit();
+        $result = $bulk_edit->bulk_update($updates);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Bulk generate metadata
+     */
+    public function bulk_generate_metadata($request) {
+        $post_ids = $request->get_param('post_ids');
+        $meta_types = $request->get_param('meta_types');
+        $overwrite = $request->get_param('overwrite');
+        
+        $bulk_edit = new AISEO_Bulk_Edit();
+        $result = $bulk_edit->bulk_generate($post_ids, [
+            'meta_types' => $meta_types,
+            'overwrite' => $overwrite
+        ]);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Preview bulk changes
+     */
+    public function bulk_preview_changes($request) {
+        $updates = $request->get_param('updates');
+        
+        $bulk_edit = new AISEO_Bulk_Edit();
+        $preview = $bulk_edit->preview_changes($updates);
+        
+        if (is_wp_error($preview)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $preview->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'preview' => $preview
         ], 200);
     }
     

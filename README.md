@@ -17,6 +17,8 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 - ✅ **Multiple Suggestions** - Get 3 AI-generated options to choose from
 - ✅ **Content Analysis** - AI-powered content quality assessment (11 metrics)
 - ✅ **Image SEO & Alt Text** - Automatic AI-powered alt text generation (NEW in v1.1.0)
+- ✅ **Advanced SEO Analysis** - Comprehensive 40+ factor analysis (NEW in v1.1.0)
+- ✅ **Bulk Editing Interface** - Edit metadata for multiple posts at once (NEW in v1.2.0)
 
 #### 2. **OpenAI API Integration**
 - ✅ **GPT-4o-mini Model** - Cost-efficient AI model ($0.15/1M input tokens)
@@ -58,6 +60,11 @@ All endpoints tested and working! Perfect for:
 | `/wp-json/aiseo/v1/image/generate-alt/{id}` | POST | **Generate alt text for image** (NEW) |
 | `/wp-json/aiseo/v1/image/missing-alt` | GET | **Get images missing alt text** (NEW) |
 | `/wp-json/aiseo/v1/image/seo-score/{id}` | GET | **Get image SEO score** (NEW) |
+| `/wp-json/aiseo/v1/analyze/advanced/{id}` | GET | **Advanced SEO analysis (40+ factors)** (NEW) |
+| `/wp-json/aiseo/v1/bulk/posts` | GET | **Get posts for bulk editing** (NEW) |
+| `/wp-json/aiseo/v1/bulk/update` | POST | **Bulk update multiple posts** (NEW) |
+| `/wp-json/aiseo/v1/bulk/generate` | POST | **Bulk generate metadata with AI** (NEW) |
+| `/wp-json/aiseo/v1/bulk/preview` | POST | **Preview bulk changes** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -85,6 +92,29 @@ curl -X POST https://yoursite.test/wp-json/aiseo/v1/image/generate-alt/456
 
 # Get image SEO score (NEW)
 curl https://yoursite.test/wp-json/aiseo/v1/image/seo-score/456
+
+# Advanced SEO analysis - 40+ factors (NEW)
+curl https://yoursite.test/wp-json/aiseo/v1/analyze/advanced/123
+curl https://yoursite.test/wp-json/aiseo/v1/analyze/advanced/123?keyword="wordpress seo"
+
+# Bulk Editing (NEW)
+# Get posts for bulk editing
+curl "https://yoursite.test/wp-json/aiseo/v1/bulk/posts?post_type=post&limit=10"
+
+# Bulk update multiple posts
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/update \
+  -H "Content-Type: application/json" \
+  -d '{"updates": [{"post_id": 123, "focus_keyword": "wordpress seo"}]}'
+
+# Bulk generate metadata with AI
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate \
+  -H "Content-Type: application/json" \
+  -d '{"post_ids": [123, 456], "meta_types": ["title", "description"]}'
+
+# Preview changes
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/preview \
+  -H "Content-Type: application/json" \
+  -d '{"updates": [{"post_id": 123, "meta_title": "New Title"}]}'
 ```
 
 #### 5. **WP-CLI Commands**
@@ -103,6 +133,12 @@ Comprehensive command-line interface for automation and batch processing.
 | `wp aiseo image bulk-generate` | **Bulk generate alt text** (NEW) |
 | `wp aiseo image detect-missing` | **Find images without alt text** (NEW) |
 | `wp aiseo image analyze` | **Analyze image SEO for post** (NEW) |
+| `wp aiseo advanced analyze` | **Advanced SEO analysis (40+ factors)** (NEW) |
+| `wp aiseo advanced bulk` | **Bulk advanced analysis** (NEW) |
+| `wp aiseo bulk list` | **List posts for bulk editing** (NEW) |
+| `wp aiseo bulk update` | **Bulk update metadata** (NEW) |
+| `wp aiseo bulk generate` | **Bulk generate metadata with AI** (NEW) |
+| `wp aiseo bulk preview` | **Preview bulk changes** (NEW) |
 
 **Example Usage:**
 ```bash
@@ -136,6 +172,50 @@ wp aiseo image analyze 123 --format=json
 
 # Dry run (preview without changes)
 wp aiseo image bulk-generate --all --dry-run
+
+# Advanced SEO Analysis Commands (NEW in v1.1.0)
+# Analyze post with 40+ SEO factors
+wp aiseo advanced analyze 123
+
+# Analyze with custom keyword
+wp aiseo advanced analyze 123 --keyword="wordpress seo"
+
+# Get JSON output
+wp aiseo advanced analyze 123 --format=json
+
+# Get summary view
+wp aiseo advanced analyze 123 --format=summary
+
+# Bulk analyze posts with scores below 70%
+wp aiseo advanced bulk --min-score=70 --limit=20
+
+# Export to CSV
+wp aiseo advanced bulk --min-score=80 --format=csv > seo-report.csv
+
+# Bulk Editing Commands (NEW in v1.2.0)
+# List posts for bulk editing
+wp aiseo bulk list --limit=20 --format=table
+
+# List only post IDs
+wp aiseo bulk list --format=ids
+
+# Bulk update focus keyword
+wp aiseo bulk update 123,456,789 --focus-keyword="wordpress seo"
+
+# Bulk update multiple fields
+wp aiseo bulk update 123,456 --meta-title="SEO Title" --robots-index=noindex
+
+# Bulk generate metadata for specific posts
+wp aiseo bulk generate 123,456,789 --meta-types=title,description
+
+# Bulk generate for all posts (with limit)
+wp aiseo bulk generate --all --limit=10 --overwrite
+
+# Preview changes before applying
+wp aiseo bulk preview 123,456 --focus-keyword="new keyword"
+
+# Advanced: Export IDs and pipe to bulk generate
+wp aiseo bulk list --format=ids | xargs wp aiseo bulk generate
 ```
 
 #### 6. **Performance Optimization**
@@ -832,6 +912,32 @@ curl -X POST https://yoursite.test/wp-json/aiseo/v1/image/generate-alt/456
 
 # Test 9: Get image SEO score
 curl https://yoursite.test/wp-json/aiseo/v1/image/seo-score/456
+
+# Advanced SEO Analysis Tests (NEW)
+# Test 10: Comprehensive analysis (40+ factors)
+curl https://yoursite.test/wp-json/aiseo/v1/analyze/advanced/123
+
+# Test 11: Analysis with custom keyword
+curl https://yoursite.test/wp-json/aiseo/v1/analyze/advanced/123?keyword="wordpress seo"
+
+# Bulk Editing Tests (NEW)
+# Test 12: Get posts for bulk editing
+curl "https://yoursite.test/wp-json/aiseo/v1/bulk/posts?post_type=post&limit=10"
+
+# Test 13: Bulk update posts
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/update \
+  -H "Content-Type: application/json" \
+  -d '{"updates": [{"post_id": 123, "focus_keyword": "wordpress seo"}]}'
+
+# Test 14: Bulk generate metadata
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/generate \
+  -H "Content-Type: application/json" \
+  -d '{"post_ids": [123, 456], "meta_types": ["title", "description"]}'
+
+# Test 15: Preview bulk changes
+curl -X POST https://yoursite.test/wp-json/aiseo/v1/bulk/preview \
+  -H "Content-Type: application/json" \
+  -d '{"updates": [{"post_id": 123, "meta_title": "New Title"}]}'
 ```
 
 #### 2. **WP-CLI Testing** (Best for automation)
@@ -867,6 +973,44 @@ wp aiseo image analyze 123 --format=json
 
 # Test 10: Dry run (preview without changes)
 wp aiseo image bulk-generate --all --dry-run
+
+# Advanced SEO Analysis Tests (NEW)
+# Test 11: Comprehensive analysis (40+ factors)
+wp aiseo advanced analyze 123
+
+# Test 12: Analysis with custom keyword
+wp aiseo advanced analyze 123 --keyword="wordpress seo"
+
+# Test 13: Get summary view
+wp aiseo advanced analyze 123 --format=summary
+
+# Test 14: Bulk analyze posts below 70% score
+wp aiseo advanced bulk --min-score=70 --limit=20
+
+# Test 15: Export analysis to CSV
+wp aiseo advanced bulk --min-score=80 --format=csv > seo-report.csv
+
+# Bulk Editing Tests (NEW)
+# Test 16: List posts for bulk editing
+wp aiseo bulk list --limit=20 --format=table
+
+# Test 17: List post IDs only
+wp aiseo bulk list --format=ids
+
+# Test 18: Bulk update focus keyword
+wp aiseo bulk update 123,456,789 --focus-keyword="wordpress seo"
+
+# Test 19: Bulk update multiple fields
+wp aiseo bulk update 123,456 --meta-title="SEO Title" --robots-index=noindex
+
+# Test 20: Bulk generate metadata
+wp aiseo bulk generate 123,456,789 --meta-types=title,description
+
+# Test 21: Bulk generate for all posts
+wp aiseo bulk generate --all --limit=10 --overwrite
+
+# Test 22: Preview bulk changes
+wp aiseo bulk preview 123,456 --focus-keyword="new keyword"
 ```
 
 #### 3. **Admin Interface Testing** (Visual)
@@ -891,13 +1035,27 @@ wp aiseo image bulk-generate --all --dry-run
    - Select multiple images and bulk generate
    - Watch progress bar
 
-4. **Settings Page**
+4. **Advanced SEO Analysis** (NEW)
+   - In post editor, click "Analyze Content" in AISEO metabox
+   - View 40+ SEO factors with traffic light indicators
+   - See overall score and status (Good/OK/Poor)
+   - Review prioritized recommendations
+   - Check detailed factor breakdown by category
+
+5. **Bulk Editing Interface** (NEW)
+   - Use WP-CLI or REST API for bulk operations
+   - List posts with current metadata status
+   - Update multiple posts simultaneously
+   - Generate AI metadata in bulk with progress tracking
+   - Preview changes before applying
+
+6. **Settings Page**
    - Navigate to `wp-admin/admin.php?page=aiseo-settings`
    - Configure OpenAI API key
    - Test API connection
    - View usage statistics
 
-5. **Dashboard Widget**
+7. **Dashboard Widget**
    - View WordPress dashboard
    - Check "AISEO Overview" widget
    - See total posts analyzed, average score, API usage
@@ -983,6 +1141,22 @@ time wp aiseo analyze --all --format=count
 - SEO score: 0-100 with breakdown
 - Bulk processing with progress tracking
 
+✅ **Advanced SEO Analysis** should return:
+- 40+ SEO factors analyzed
+- Overall score: 0-400 points (0-100%)
+- Status: Good (80%+), OK (50-79%), Poor (<50%)
+- Categorized results: Content Quality, Readability, Technical SEO, UX
+- Prioritized recommendations (high/medium/low)
+- Actionable insights for each factor
+
+✅ **Bulk Editing** should provide:
+- List posts with metadata status
+- Update multiple posts at once
+- Bulk generate with AI (titles, descriptions)
+- Preview changes before applying
+- Progress tracking for bulk operations
+- Success/failure reporting per post
+
 ## 📚 Documentation
 
 - [Architecture Documentation](ARCHITECTURE.md) - Detailed technical architecture
@@ -1049,4 +1223,4 @@ This project is licensed under the GPL-2.0-or-later License - see the [LICENSE](
 
 ---
 
-**Made with ❤️ by [PraisonAI](https://praisonai.com)**
+**Made with ❤️ by [PraisonAI](https://praison.ai)**
