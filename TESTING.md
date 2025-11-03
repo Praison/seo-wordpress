@@ -654,3 +654,52 @@ curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
 }
 ```
 
+
+---
+
+## Focus Keyword AI Generation Testing
+
+### Feature
+AI-powered focus keyword generation from post content in the post editor metabox.
+
+### Location
+WordPress Admin → Edit Post/Page → AISEO Metabox → Focus Keyword field
+
+### Test Steps
+
+1. **Create or Edit a Post**
+   - Go to WordPress Admin → Posts → Add New (or edit existing)
+   - Add some content to the post editor
+   - Save the post as draft
+
+2. **Generate Focus Keyword**
+   - Scroll down to the "AISEO - AI SEO Optimization" metabox
+   - Find the "Focus Keyword" field
+   - Click the "Generate with AI" button next to it
+
+3. **Expected Result**
+   - Button shows "Generating..." state
+   - AI analyzes the post content
+   - Focus keyword field is populated with a relevant 2-4 word keyword phrase
+   - Keyword is automatically lowercased
+
+### Manual Test with curl
+
+If you need to test the AJAX endpoint directly:
+
+```bash
+# Get post ID and nonce from the edit screen, then:
+curl -k -X POST https://wordpress.test/wp-admin/admin-ajax.php \
+  -H "Cookie: wordpress_logged_in_xxx=your-cookie" \
+  -d "action=aiseo_generate_keyword" \
+  -d "post_id=123" \
+  -d "nonce=your-nonce-value"
+```
+
+### Notes
+- Post must be saved before generating keywords
+- Post must have content for AI to analyze
+- Uses GPT-4o-mini with low temperature (0.3) for consistent results
+- Returns single most relevant keyword phrase
+- Works alongside existing title and description generators
+

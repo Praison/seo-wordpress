@@ -29,6 +29,7 @@ class AISEO_Metabox {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_metabox_scripts'));
         
         // AJAX handlers for AI generation
+        add_action('wp_ajax_aiseo_generate_keyword', array($this, 'ajax_generate_keyword'));
         add_action('wp_ajax_aiseo_generate_title', array($this, 'ajax_generate_title'));
         add_action('wp_ajax_aiseo_generate_description', array($this, 'ajax_generate_description'));
         add_action('wp_ajax_aiseo_analyze_content', array($this, 'ajax_analyze_content'));
@@ -104,13 +105,18 @@ class AISEO_Metabox {
                     <label for="aiseo_focus_keyword" style="display: block; font-weight: 600; margin-bottom: 8px;">
                         Focus Keyword
                     </label>
-                    <input type="text" 
-                           id="aiseo_focus_keyword" 
-                           name="aiseo_focus_keyword" 
-                           value="<?php echo esc_attr($focus_keyword); ?>" 
-                           class="regular-text" 
-                           placeholder="e.g., wordpress seo"
-                           style="width: 100%; max-width: 400px;" />
+                    <div style="display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap;">
+                        <input type="text" 
+                               id="aiseo_focus_keyword" 
+                               name="aiseo_focus_keyword" 
+                               value="<?php echo esc_attr($focus_keyword); ?>" 
+                               class="regular-text" 
+                               placeholder="e.g., wordpress seo"
+                               style="flex: 1; min-width: 300px; max-width: 400px;" />
+                        <button type="button" class="button button-secondary aiseo-generate-btn" data-field="keyword">
+                            <span class="dashicons dashicons-admin-generic"></span> Generate with AI
+                        </button>
+                    </div>
                     <p class="description" style="margin: 5px 0 0 0;">Main keyword to optimize for</p>
                 </div>
                 
@@ -526,6 +532,49 @@ class AISEO_Metabox {
             });
         });
         ";
+    }
+    
+    /**
+     * AJAX handler for generating keyword
+     */
+    public function ajax_generate_keyword() {
+        check_ajax_referer('aiseo_metabox_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+        }
+        
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        
+        if (!$post_id) {
+            wp_send_json_error('Invalid post ID');
+        }
+        
+        $post = get_post($post_id);
+        
+        if (!$post || empty($post->post_content)) {
+            wp_send_json_error('Post content is required to generate keywords');
+        }
+        
+        // Use AI to extract main keyword from content
+        $api = new AISEO_API();
+        
+        $prompt = "Analyze this content and suggest the single most important SEO keyword or key phrase (2-4 words maximum) that best represents the main topic. Return only the keyword phrase, nothing else.\n\nContent:\n" . wp_strip_all_tags($post->post_content);
+        
+        $keyword = $api->make_request($prompt, array(
+            'max_tokens' => 20,
+            'temperature' => 0.3,
+        ));
+        
+        if (is_wp_error($keyword)) {
+            wp_send_json_error($keyword->get_error_message());
+        }
+        
+        // Clean up the keyword
+        $keyword = trim($keyword);
+        $keyword = strtolower($keyword);
+        
+        wp_send_json_success($keyword);
     }
     
     /**

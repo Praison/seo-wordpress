@@ -1,0 +1,589 @@
+/**
+ * AISEO Admin Styles
+ *
+ * @package AISEO
+ * @since 1.0.0
+ */
+
+/* ==========================================================================
+   Main Admin Wrapper
+   ========================================================================== */
+
+.aiseo-admin-wrap {
+    margin: 20px 20px 0 0;
+}
+
+.aiseo-admin-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0 0 20px;
+    padding: 9px 0;
+    line-height: 1.3;
+}
+
+.aiseo-admin-title .dashicons {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #826eb4;
+}
+
+.aiseo-version {
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+    background: #f0f0f1;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   API Status Banner
+   ========================================================================== */
+
+.aiseo-api-warning {
+    margin: 0 0 20px;
+    border-left-color: #ffb900;
+}
+
+.aiseo-api-warning p {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Tab Navigation
+   ========================================================================== */
+
+.aiseo-tab-wrapper {
+    margin: 0 0 20px;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.aiseo-tab-wrapper .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.aiseo-tab-wrapper .nav-tab .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.aiseo-tab-wrapper .nav-tab-active {
+    background: #f0f0f1;
+    border-color: #c3c4c7 #c3c4c7 #f0f0f1;
+}
+
+.aiseo-tab-wrapper .nav-tab:hover:not(.nav-tab-active) {
+    background: #f6f7f7;
+}
+
+/* ==========================================================================
+   Tab Content
+   ========================================================================== */
+
+.aiseo-tab-content {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+/* ==========================================================================
+   Dashboard Widgets
+   ========================================================================== */
+
+.aiseo-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.aiseo-widget {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.aiseo-widget-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.aiseo-widget-title .dashicons {
+    color: #826eb4;
+}
+
+.aiseo-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.aiseo-stat-item {
+    text-align: center;
+    padding: 15px;
+    background: #f6f7f7;
+    border-radius: 4px;
+}
+
+.aiseo-stat-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2271b1;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.aiseo-stat-label {
+    font-size: 13px;
+    color: #666;
+}
+
+/* ==========================================================================
+   Forms and Inputs
+   ========================================================================== */
+
+.aiseo-form-section {
+    margin-bottom: 30px;
+}
+
+.aiseo-form-section:last-child {
+    margin-bottom: 0;
+}
+
+.aiseo-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #826eb4;
+}
+
+.aiseo-form-group {
+    margin-bottom: 20px;
+}
+
+.aiseo-form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1d2327;
+}
+
+.aiseo-form-label .required {
+    color: #d63638;
+}
+
+.aiseo-form-description {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #646970;
+    font-style: italic;
+}
+
+.aiseo-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.aiseo-input-group input[type="text"],
+.aiseo-input-group textarea,
+.aiseo-input-group select {
+    flex: 1;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.aiseo-button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.aiseo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 3px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid;
+}
+
+.aiseo-btn-primary {
+    background: #826eb4;
+    color: #fff;
+    border-color: #826eb4;
+}
+
+.aiseo-btn-primary:hover {
+    background: #6f5ba1;
+    border-color: #6f5ba1;
+    color: #fff;
+}
+
+.aiseo-btn-secondary {
+    background: #2271b1;
+    color: #fff;
+    border-color: #2271b1;
+}
+
+.aiseo-btn-secondary:hover {
+    background: #135e96;
+    border-color: #135e96;
+    color: #fff;
+}
+
+.aiseo-btn-success {
+    background: #46b450;
+    color: #fff;
+    border-color: #46b450;
+}
+
+.aiseo-btn-success:hover {
+    background: #399e42;
+    border-color: #399e42;
+    color: #fff;
+}
+
+.aiseo-btn-danger {
+    background: #d63638;
+    color: #fff;
+    border-color: #d63638;
+}
+
+.aiseo-btn-danger:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+    color: #fff;
+}
+
+.aiseo-btn-large {
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.aiseo-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.aiseo-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.aiseo-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.aiseo-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.aiseo-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.aiseo-card-body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+.aiseo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.aiseo-table th {
+    background: #f6f7f7;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #c3c4c7;
+}
+
+.aiseo-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.aiseo-table tr:hover {
+    background: #f6f7f7;
+}
+
+.aiseo-table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.aiseo-table-actions a {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Loading States
+   ========================================================================== */
+
+.aiseo-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #646970;
+}
+
+.aiseo-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f0f0f1;
+    border-top-color: #826eb4;
+    border-radius: 50%;
+    animation: aiseo-spin 0.6s linear infinite;
+}
+
+@keyframes aiseo-spin {
+    to { transform: rotate(360deg); }
+}
+
+.aiseo-progress-bar {
+    width: 100%;
+    height: 24px;
+    background: #f0f0f1;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.aiseo-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #826eb4, #6f5ba1);
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Alerts and Notices
+   ========================================================================== */
+
+.aiseo-alert {
+    padding: 12px 16px;
+    border-left: 4px solid;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.aiseo-alert-success {
+    background: #edfaed;
+    border-color: #46b450;
+    color: #1e4620;
+}
+
+.aiseo-alert-warning {
+    background: #fff8e5;
+    border-color: #ffb900;
+    color: #614200;
+}
+
+.aiseo-alert-error {
+    background: #fcf0f1;
+    border-color: #d63638;
+    color: #3c1f1f;
+}
+
+.aiseo-alert-info {
+    background: #e5f5fa;
+    border-color: #2271b1;
+    color: #0a3050;
+}
+
+/* ==========================================================================
+   Empty States
+   ========================================================================== */
+
+.aiseo-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #646970;
+}
+
+.aiseo-empty-state .dashicons {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #c3c4c7;
+    margin-bottom: 20px;
+}
+
+.aiseo-empty-state h3 {
+    font-size: 18px;
+    margin: 0 0 10px;
+    color: #1d2327;
+}
+
+.aiseo-empty-state p {
+    margin: 0 0 20px;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   Badges
+   ========================================================================== */
+
+.aiseo-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.aiseo-badge-success {
+    background: #edfaed;
+    color: #1e4620;
+}
+
+.aiseo-badge-warning {
+    background: #fff8e5;
+    color: #614200;
+}
+
+.aiseo-badge-error {
+    background: #fcf0f1;
+    color: #3c1f1f;
+}
+
+.aiseo-badge-info {
+    background: #e5f5fa;
+    color: #0a3050;
+}
+
+.aiseo-badge-ai {
+    background: #f3f0f7;
+    color: #826eb4;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+    .aiseo-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .aiseo-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .aiseo-tab-wrapper .nav-tab {
+        display: block;
+        border-bottom: 1px solid #c3c4c7;
+    }
+    
+    .aiseo-button-group {
+        flex-direction: column;
+    }
+    
+    .aiseo-button-group .aiseo-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.aiseo-text-center {
+    text-align: center;
+}
+
+.aiseo-text-right {
+    text-align: right;
+}
+
+.aiseo-mt-0 { margin-top: 0 !important; }
+.aiseo-mt-10 { margin-top: 10px !important; }
+.aiseo-mt-20 { margin-top: 20px !important; }
+.aiseo-mb-0 { margin-bottom: 0 !important; }
+.aiseo-mb-10 { margin-bottom: 10px !important; }
+.aiseo-mb-20 { margin-bottom: 20px !important; }
+
+.aiseo-hidden {
+    display: none !important;
+}
+
+.aiseo-flex {
+    display: flex;
+}
+
+.aiseo-flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.aiseo-gap-10 {
+    gap: 10px;
+}
+
+.aiseo-gap-20 {
+    gap: 20px;
+}

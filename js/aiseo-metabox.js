@@ -46,7 +46,17 @@
             
             var btn = $(this);
             var field = btn.data('field');
-            var input = field === 'title' ? $('#aiseo_meta_title') : $('#aiseo_meta_description');
+            var input;
+            
+            // Determine which input field to update
+            if (field === 'keyword') {
+                input = $('#aiseo_focus_keyword');
+            } else if (field === 'title') {
+                input = $('#aiseo_meta_title');
+            } else {
+                input = $('#aiseo_meta_description');
+            }
+            
             var postId = $('#post_ID').val();
             
             if (!postId) {

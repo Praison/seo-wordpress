@@ -55,6 +55,7 @@ class AISEO_Core {
         $this->api = new AISEO_API();
         $this->rest = new AISEO_REST();
         $this->meta = new AISEO_Meta();
+        $this->analysis = new AISEO_Analysis();
         $this->social = new AISEO_Social();
         $this->sitemap = new AISEO_Sitemap();
         
@@ -67,11 +68,8 @@ class AISEO_Core {
         // Initialize sitemap generator
         $this->sitemap->init();
         
-        // Initialize admin interface (only in admin)
+        // Initialize metabox and image SEO (only in admin)
         if (is_admin()) {
-            $this->admin = new AISEO_Admin();
-            $this->admin->init();
-            
             $this->metabox = new AISEO_Metabox();
             $this->metabox->init();
             

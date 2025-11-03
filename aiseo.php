@@ -21,9 +21,9 @@ if (!defined('ABSPATH')) {
 
 // Define plugin constants
 define('AISEO_VERSION', '1.0.0');
-define('AISEO_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('AISEO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AISEO_PLUGIN_FILE', __FILE__);
+define('AISEO_PLUGIN_DIR', dirname(__FILE__) . '/');
+define('AISEO_PLUGIN_URL', function_exists('plugin_dir_url') ? plugin_dir_url(__FILE__) : '');
 
 // Load .env file if it exists
 if (file_exists(AISEO_PLUGIN_DIR . '.env')) {
@@ -274,15 +274,18 @@ function aiseo_create_tables() {
  * Initialize the plugin
  */
 function aiseo_init() {
-    // Load text domain for translations
-    // Note: load_plugin_textdomain() is no longer needed for WordPress.org hosted plugins.
-    // WordPress automatically loads translations since version 4.6.
-    // load_plugin_textdomain('aiseo', false, dirname(plugin_basename(__FILE__)) . '/languages');
-    
     // Initialize core plugin class
     if (class_exists('AISEO_Core')) {
         $aiseo = new AISEO_Core();
         $aiseo->init();
+    }
+    
+    // Initialize admin interface
+    if (is_admin() && file_exists(AISEO_PLUGIN_DIR . 'admin/class-aiseo-admin.php')) {
+        require_once AISEO_PLUGIN_DIR . 'admin/class-aiseo-admin.php';
+        if (class_exists('AISEO_Admin')) {
+            new AISEO_Admin();
+        }
     }
 }
 add_action('plugins_loaded', 'aiseo_init');
