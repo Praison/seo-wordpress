@@ -356,7 +356,7 @@ class AISEO_Metabox {
      */
     public function save_metabox($post_id, $post) {
         // Verify nonce
-        if (!isset($_POST['aiseo_metabox_nonce']) || !wp_verify_nonce($_POST['aiseo_metabox_nonce'], 'aiseo_metabox_nonce')) {
+        if (!isset($_POST['aiseo_metabox_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['aiseo_metabox_nonce'])), 'aiseo_metabox_nonce')) {
             return;
         }
         
@@ -372,22 +372,22 @@ class AISEO_Metabox {
         
         // Save focus keyword
         if (isset($_POST['aiseo_focus_keyword'])) {
-            update_post_meta($post_id, '_aiseo_focus_keyword', sanitize_text_field($_POST['aiseo_focus_keyword']));
+            update_post_meta($post_id, '_aiseo_focus_keyword', sanitize_text_field(wp_unslash($_POST['aiseo_focus_keyword'])));
         }
         
         // Save meta title
         if (isset($_POST['aiseo_meta_title'])) {
-            update_post_meta($post_id, '_aiseo_meta_title', sanitize_text_field($_POST['aiseo_meta_title']));
+            update_post_meta($post_id, '_aiseo_meta_title', sanitize_text_field(wp_unslash($_POST['aiseo_meta_title'])));
         }
         
         // Save meta description
         if (isset($_POST['aiseo_meta_description'])) {
-            update_post_meta($post_id, '_aiseo_meta_description', sanitize_textarea_field($_POST['aiseo_meta_description']));
+            update_post_meta($post_id, '_aiseo_meta_description', sanitize_textarea_field(wp_unslash($_POST['aiseo_meta_description'])));
         }
         
         // Save canonical URL
         if (isset($_POST['aiseo_canonical_url'])) {
-            update_post_meta($post_id, '_aiseo_canonical_url', esc_url_raw($_POST['aiseo_canonical_url']));
+            update_post_meta($post_id, '_aiseo_canonical_url', esc_url_raw(wp_unslash($_POST['aiseo_canonical_url'])));
         }
         
         // Save robots meta
