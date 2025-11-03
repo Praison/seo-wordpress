@@ -455,3 +455,202 @@ jobs:
 ---
 
 **Made with ❤️ by [PraisonAI](https://praison.ai)**
+
+## Post Creator Testing
+
+### REST API Testing
+```bash
+# Create a single AI-generated post
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
+  -H "Content-Type: application/json" \
+  -d '{"topic": "10 Best SEO Practices for 2024", "keyword": "SEO", "content_length": "medium", "post_status": "draft"}' | jq
+
+# Create with title instead of topic
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Ultimate WordPress SEO Guide", "keyword": "WordPress SEO", "content_length": "long"}' | jq
+
+# Bulk create posts
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/bulk-create \
+  -H "Content-Type: application/json" \
+  -d '{"posts": [{"topic": "AI Content Writing", "keyword": "AI content"}, {"topic": "SEO Automation", "keyword": "SEO tools"}]}' | jq
+
+# Get post creator statistics
+curl -k https://wordpress.test/wp-json/aiseo/v1/post/stats | jq
+```
+
+### WP-CLI Testing
+```bash
+# Create a post with a topic
+wp aiseo post create --topic="10 Best SEO Practices for 2024"
+
+# Create a post with title and keyword
+wp aiseo post create --title="Ultimate SEO Guide" --keyword="SEO tips"
+
+# Create a long-form published post
+wp aiseo post create --topic="WordPress Performance Optimization" --content-length=long --post-status=publish
+
+# Create with categories and tags
+wp aiseo post create --topic="AI Content Writing" --category="Technology,AI" --tags="ai,content,automation"
+
+# Create short post without SEO generation
+wp aiseo post create --topic="Quick SEO Tip" --content-length=short --no-seo
+
+# List AI-generated posts
+wp aiseo post list
+
+# List published posts only
+wp aiseo post list --post-status=publish
+
+# Get post IDs
+wp aiseo post list --format=ids
+
+# Get statistics
+wp aiseo post stats
+
+# Get statistics as JSON
+wp aiseo post stats --format=json
+
+# Bulk create from CSV (create posts.csv first)
+# CSV format: topic,keyword,post_status,content_length
+wp aiseo post bulk-create posts.csv
+
+# Bulk create from JSON
+wp aiseo post bulk-create posts.json --format=json
+```
+
+### Sample CSV for Bulk Creation
+Create `posts.csv`:
+```csv
+topic,keyword,post_status,content_length
+"10 SEO Tips for Beginners","SEO tips",draft,medium
+"WordPress Security Best Practices","WordPress security",draft,long
+"Content Marketing Strategy 2024","content marketing",draft,medium
+```
+
+### Sample JSON for Bulk Creation
+Create `posts.json`:
+```json
+[
+  {
+    "topic": "AI-Powered SEO Tools",
+    "keyword": "AI SEO",
+    "post_status": "draft",
+    "content_length": "medium",
+    "category": "SEO,AI",
+    "tags": ["ai", "seo", "tools"]
+  },
+  {
+    "title": "Complete Guide to Technical SEO",
+    "keyword": "technical SEO",
+    "post_status": "draft",
+    "content_length": "long"
+  }
+]
+```
+
+WordPress Path: /Users/praison/Sites/localhost/wordpress
+---
+
+## Temporarily Disable Authentication for Testing
+
+**⚠️ SECURITY WARNING: Only do this in development environments!**
+
+### Why Disable Authentication?
+
+REST API endpoints require authentication by default. To test endpoints without setting up authentication tokens, you can temporarily disable the permission check.
+
+### How to Disable (Testing Only)
+
+**File:** `includes/class-aiseo-rest.php`
+
+**Find the `check_permission` method (around line 3557) and add `return true;` at the top:**
+
+```php
+public function check_permission($request) {
+    // TEMPORARY: Disable auth for testing - REMOVE AFTER TESTING!
+    return true;
+    
+    // Check if user is logged in
+    if (!is_user_logged_in()) {
+        return new WP_Error(
+            'rest_forbidden',
+            __('You must be logged in to access this endpoint.', 'aiseo'),
+            array('status' => 401)
+        );
+    }
+    
+    // ... rest of the method
+}
+```
+
+### Test the Endpoints
+
+```bash
+# Test post creation
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
+  -H "Content-Type: application/json" \
+  -d '{"topic": "Testing AI Post Creator", "keyword": "AI test", "content_length": "short"}' | jq
+
+# Test statistics
+curl -k https://wordpress.test/wp-json/aiseo/v1/post/stats | jq
+```
+
+### Re-enable Authentication (IMPORTANT!)
+
+**After testing, REMOVE the `return true;` line:**
+
+```php
+public function check_permission($request) {
+    // Check if user is logged in
+    if (!is_user_logged_in()) {
+        return new WP_Error(
+            'rest_forbidden',
+            __('You must be logged in to access this endpoint.', 'aiseo'),
+            array('status' => 401)
+        );
+    }
+    
+    // ... rest of the method
+}
+```
+
+### Production Testing with Authentication
+
+For production testing, use WordPress authentication:
+
+```bash
+# Get authentication cookie
+curl -k -X POST https://wordpress.test/wp-login.php \
+  -d "log=admin&pwd=password&wp-submit=Log+In" \
+  -c cookies.txt
+
+# Use cookie for authenticated requests
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"topic": "Test Post", "keyword": "test"}' | jq
+```
+
+### Test Results
+
+**✅ Verified Working:**
+- `POST /wp-json/aiseo/v1/post/create` - Creates AI-generated posts
+- `GET /wp-json/aiseo/v1/post/stats` - Returns statistics
+- Authentication properly blocks unauthorized access
+- AI content generation works correctly
+- SEO metadata is generated automatically
+
+**Sample Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "post_id": 1051,
+    "title": "Unlocking Potential: AI Testing for Post Creator Features",
+    "keyword": "AI testing",
+    "url": "https://wordpress.test/?p=1051"
+  }
+}
+```
+

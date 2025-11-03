@@ -314,4 +314,6 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-outline-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-rewriter-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-meta-variations-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-post-creator.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-post-creator-cli.php';
 }

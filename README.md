@@ -14,9 +14,9 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 ## 🌟 Why AISEO?
 
 ### Most Comprehensive AI SEO Plugin
-- ✅ **33 features** (more than any competitor)
-- ✅ **60+ REST API endpoints** (vs ~10-15 for competitors)
-- ✅ **70+ WP-CLI commands** (vs ~15-25 for competitors)
+- ✅ **34 features** (more than any competitor)
+- ✅ **63+ REST API endpoints** (vs ~10-15 for competitors)
+- ✅ **74+ WP-CLI commands** (vs ~15-25 for competitors)
 - ✅ **40+ SEO factors analyzed** (vs ~20-30 for competitors)
 
 ### Developer-Friendly
@@ -41,6 +41,7 @@ AI-powered SEO optimization for WordPress. Automatically generate meta descripti
 ### Core Features
 
 #### 1. **AI-Powered Content Generation**
+- **AI Post Creator** - Generate complete blog posts with AI (title, content, SEO metadata)
 - **Meta Title Generation** - AI-generated SEO-optimized titles (50-60 characters)
 - **Meta Description Generation** - Compelling descriptions (155-160 characters)
 - **Multiple Suggestions** - Get 3 AI-generated options to choose from
@@ -290,6 +291,9 @@ All endpoints are tested and working! Perfect for browser testing, mobile apps, 
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
+| `/wp-json/aiseo/v1/post/create` | POST | Create AI-generated post |
+| `/wp-json/aiseo/v1/post/bulk-create` | POST | Bulk create AI-generated posts |
+| `/wp-json/aiseo/v1/post/stats` | GET | Get post creator statistics |
 | `/wp-json/aiseo/v1/faq/generate/{post_id}` | POST | Generate FAQs from content |
 | `/wp-json/aiseo/v1/faq/get/{post_id}` | GET | Get saved FAQs |
 | `/wp-json/aiseo/v1/outline/generate` | POST | Generate content outline |
@@ -391,6 +395,10 @@ Comprehensive command-line interface for automation and batch processing.
 
 | Command | Description |
 |---------|-------------|
+| `wp aiseo post create` | Create AI-generated post |
+| `wp aiseo post bulk-create <file>` | Bulk create posts from CSV/JSON |
+| `wp aiseo post list` | List AI-generated posts |
+| `wp aiseo post stats` | Get post creator statistics |
 | `wp aiseo faq generate <post-id>` | Generate FAQs from content |
 | `wp aiseo outline generate <topic>` | Generate content outline |
 | `wp aiseo rewrite content <post-id>` | Rewrite post content |

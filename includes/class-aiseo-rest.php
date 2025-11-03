@@ -304,6 +304,82 @@ class AISEO_REST {
             ),
         ));
         
+        // Post Creator: Create AI-generated post
+        register_rest_route(self::NAMESPACE, '/post/create', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'create_ai_post'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'topic' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_textarea_field',
+                ),
+                'title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'keyword' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'post_type' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'post',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'post_status' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'draft',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'content_length' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'medium',
+                    'enum' => array('short', 'medium', 'long'),
+                ),
+                'generate_seo' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => true,
+                ),
+                'category' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'tags' => array(
+                    'required' => false,
+                    'type' => 'array',
+                ),
+            ),
+        ));
+        
+        // Post Creator: Bulk create posts
+        register_rest_route(self::NAMESPACE, '/post/bulk-create', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'bulk_create_ai_posts'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'posts' => array(
+                    'required' => true,
+                    'type' => 'array',
+                ),
+            ),
+        ));
+        
+        // Post Creator: Get statistics
+        register_rest_route(self::NAMESPACE, '/post/stats', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_post_creator_stats'),
+            'permission_callback' => array($this, 'check_permission'),
+        ));
+        
         // Import/Export: Export to JSON
         register_rest_route(self::NAMESPACE, '/export/json', array(
             'methods' => 'GET',
@@ -3371,6 +3447,104 @@ class AISEO_REST {
             'post_id' => $post_id,
             'history' => $history,
             'count' => count($history)
+        ], 200);
+    }
+    
+    /**
+     * Create AI-generated post
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function create_ai_post($request) {
+        if (!class_exists('AISEO_Post_Creator')) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Post Creator class not found'
+            ], 500);
+        }
+        
+        $creator = new AISEO_Post_Creator();
+        
+        $args = array(
+            'topic' => $request->get_param('topic'),
+            'title' => $request->get_param('title'),
+            'keyword' => $request->get_param('keyword'),
+            'post_type' => $request->get_param('post_type'),
+            'post_status' => $request->get_param('post_status'),
+            'content_length' => $request->get_param('content_length'),
+            'generate_seo' => $request->get_param('generate_seo'),
+            'category' => $request->get_param('category'),
+            'tags' => $request->get_param('tags'),
+        );
+        
+        $result = $creator->create_post($args);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 201);
+    }
+    
+    /**
+     * Bulk create AI-generated posts
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function bulk_create_ai_posts($request) {
+        if (!class_exists('AISEO_Post_Creator')) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Post Creator class not found'
+            ], 500);
+        }
+        
+        $creator = new AISEO_Post_Creator();
+        $posts_data = $request->get_param('posts');
+        
+        if (empty($posts_data) || !is_array($posts_data)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Posts data is required and must be an array'
+            ], 400);
+        }
+        
+        $result = $creator->bulk_create_posts($posts_data);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get post creator statistics
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_post_creator_stats($request) {
+        if (!class_exists('AISEO_Post_Creator')) {
+            return new WP_REST_Response([
+                'success' => false,
+                'message' => 'Post Creator class not found'
+            ], 500);
+        }
+        
+        $creator = new AISEO_Post_Creator();
+        $stats = $creator->get_statistics();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'data' => $stats
         ], 200);
     }
     

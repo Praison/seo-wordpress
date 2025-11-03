@@ -21,6 +21,12 @@
 1. Create Core Class → 2. Build REST API → 3. Build WP-CLI → 4. Test Both → 5. Update Docs
 ```
 
+### To know about the code
+
+```
+ctags -R --languages=PHP --output-format=json . | tee api-index.jsonl
+```
+
 #### Detailed Steps:
 
 **Step 1: Create Core Class**
@@ -3037,3 +3043,161 @@ jobs:
 **Status:** ✅ FEATURE COMPLETE | ✅ CODE COMPLETE | ✅ DOCS COMPLETE | ⏳ ASSETS PENDING
 
 **Made with ❤️ by [PraisonAI](https://praison.ai)**
+
+## AI Post Creator Feature
+
+### Overview
+Complete AI-powered post creation system that generates blog posts with title, content, and SEO metadata automatically.
+
+### Architecture Components
+
+#### 1. Core Class: `AISEO_Post_Creator`
+**File:** `includes/class-aiseo-post-creator.php`
+
+**Key Methods:**
+- `create_post($args)` - Main post creation method
+- `generate_post_title($topic, $keyword)` - AI title generation
+- `generate_post_content($title, $topic, $keyword, $length)` - AI content generation
+- `generate_seo_metadata($post_id, $content, $keyword)` - SEO metadata generation
+- `bulk_create_posts($posts_data)` - Bulk post creation
+- `get_statistics()` - Get creation statistics
+
+**Features:**
+- Generates complete posts with AI (title, content, SEO)
+- Supports 3 content lengths: short (500 words), medium (1000 words), long (2000 words)
+- Automatic SEO metadata generation (title, description, social tags, schema)
+- Category and tag assignment
+- Bulk creation from arrays
+- Comprehensive statistics tracking
+
+#### 2. REST API Endpoints
+**File:** `includes/class-aiseo-rest.php`
+
+**Endpoints:**
+- `POST /wp-json/aiseo/v1/post/create` - Create single AI-generated post
+- `POST /wp-json/aiseo/v1/post/bulk-create` - Bulk create posts
+- `GET /wp-json/aiseo/v1/post/stats` - Get statistics
+
+**Request Parameters:**
+```json
+{
+  "topic": "Post topic or subject",
+  "title": "Optional pre-defined title",
+  "keyword": "Focus keyword for SEO",
+  "post_type": "post|page",
+  "post_status": "draft|publish|pending",
+  "content_length": "short|medium|long",
+  "generate_seo": true,
+  "category": "Category name or ID",
+  "tags": ["tag1", "tag2"]
+}
+```
+
+#### 3. WP-CLI Commands
+**File:** `includes/class-aiseo-post-creator-cli.php`
+
+**Commands:**
+- `wp aiseo post create` - Create single post
+- `wp aiseo post bulk-create <file>` - Bulk create from CSV/JSON
+- `wp aiseo post list` - List AI-generated posts
+- `wp aiseo post stats` - Get statistics
+
+**Example Usage:**
+```bash
+# Create post with topic
+wp aiseo post create --topic="10 SEO Tips" --keyword="SEO" --content-length=medium
+
+# Bulk create from CSV
+wp aiseo post bulk-create posts.csv
+
+# Get statistics
+wp aiseo post stats --format=json
+```
+
+### Database Schema
+
+**Post Meta Keys:**
+- `_aiseo_ai_generated_post` - Boolean flag (1 = AI-generated)
+- `_aiseo_generation_timestamp` - Creation timestamp
+- `_aiseo_focus_keyword` - Focus keyword used
+- `_aiseo_meta_title` - Generated SEO title
+- `_aiseo_meta_description` - Generated SEO description
+- `_aiseo_ai_generated_title` - Boolean flag for AI title
+- `_aiseo_ai_generated_desc` - Boolean flag for AI description
+
+### AI Integration
+
+**OpenAI API Usage:**
+1. **Title Generation:** GPT-4o-mini with 50 max tokens, temperature 0.8
+2. **Content Generation:** GPT-4o-mini with 1000-4000 max tokens, temperature 0.7
+3. **SEO Metadata:** Reuses existing AISEO_API methods
+
+**Prompt Engineering:**
+- Title prompts emphasize SEO optimization and character limits
+- Content prompts include HTML formatting requirements
+- Structured output with proper heading hierarchy
+
+### Error Handling
+
+**Validation:**
+- Requires either topic or title
+- Validates post_type exists
+- Checks API key availability
+
+**Error Responses:**
+- Returns WP_Error objects with descriptive messages
+- REST API returns proper HTTP status codes (400, 500)
+- CLI displays user-friendly error messages
+
+### Performance Considerations
+
+**Rate Limiting:**
+- Inherits AISEO_API rate limiting (10 requests/minute)
+- Bulk operations include 2-second delays between posts
+- Circuit breaker pattern for API failures
+
+**Caching:**
+- No caching for post creation (always fresh content)
+- Statistics queries use direct database access
+
+### Testing
+
+**REST API Test:**
+```bash
+curl -k -X POST https://wordpress.test/wp-json/aiseo/v1/post/create \
+  -H "Content-Type: application/json" \
+  -d '{"topic": "AI SEO", "keyword": "AI", "content_length": "medium"}' | jq
+```
+
+**WP-CLI Test:**
+```bash
+wp aiseo post create --topic="Test Post" --keyword="test"
+wp aiseo post list --format=table
+```
+
+### Future Enhancements
+
+**Planned Features:**
+- Featured image generation with DALL-E
+- Custom content templates
+- Post scheduling
+- Multi-language support
+- Content variation generation
+- SEO score prediction before creation
+
+### Code Quality
+
+**Standards Compliance:**
+- WordPress Coding Standards
+- PHPDoc documentation
+- Input sanitization and validation
+- Output escaping
+- Nonce verification (for admin actions)
+- Capability checks
+
+**Security:**
+- All user inputs sanitized
+- Database queries use prepared statements
+- API key encryption
+- Permission checks on REST endpoints
+
