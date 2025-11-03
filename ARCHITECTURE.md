@@ -2,20 +2,78 @@
 
 ## Executive Summary
 
-**AISEO** is an AI-powered SEO WordPress plugin that automatically generates and optimizes SEO elements using OpenAI's API. Unlike chatbot plugins, AISEO focuses on content optimization, meta tag generation, schema markup, and comprehensive SEO analysis. Always AI by Design.
-Always create relevant wp cli commands and rest api for each feature you create. 
+**AISEO** is an AI-powered SEO WordPress plugin that automatically generates and optimizes SEO elements using OpenAI's API. Unlike chatbot plugins, AISEO focuses on content optimization, meta tag generation, schema markup, and comprehensive SEO analysis.
 
-Always test wpcli and rest api at the same time when you create any new feature 
+### 🤖 AI by Design Philosophy
 
-also add that to README.md file before confirming that the feature is working.
+**Every feature in AISEO is built with AI at its core, not as an afterthought.**
 
-wp cli test, rest api test and Add all features , all tests, all endpoints and all wp cli commands to README.md file 
+- ✅ AI-first approach to all SEO tasks
+- ✅ Focus on free, AI-powered features (OpenAI only)
+- ✅ Avoid paid third-party service dependencies (SEMrush, Ahrefs, etc.)
+- ✅ Intelligent automation without manual intervention
 
-workflow: create core class → REST API → WP-CLI → test both → update docs!
+### 🔄 Development Workflow (MANDATORY)
 
-Run this command to get the context of the code: /opt/homebrew/bin/ctags -R --languages=PHP --output-format=json > api-index.json
+**For EVERY new feature, follow this exact workflow:**
 
-Always first focus on AI and features which are not required to integrate with third party services which requires payment (openai integration is excluded)
+```
+1. Create Core Class → 2. Build REST API → 3. Build WP-CLI → 4. Test Both → 5. Update Docs
+```
+
+#### Detailed Steps:
+
+**Step 1: Create Core Class**
+- Implement business logic in `includes/class-aiseo-[feature].php`
+- Keep it framework-agnostic (no WordPress-specific code if possible)
+- Return data structures, not HTML or formatted output
+
+**Step 2: Build REST API Endpoint**
+- Add endpoint to `includes/class-aiseo-rest.php`
+- Use proper HTTP methods (GET, POST, PUT, DELETE)
+- Implement permission callbacks
+- Return JSON responses
+
+**Step 3: Build WP-CLI Command**
+- Create `includes/cli/class-aiseo-[feature]-cli.php`
+- Register with `WP_CLI::add_command()`
+- Support multiple output formats (table, json, csv, yaml)
+- Provide helpful success/error messages
+
+**Step 4: Test Both (CRITICAL - DO NOT SKIP)**
+```bash
+# Test REST API
+curl -k "https://wordpress.test/wp-json/aiseo/v1/[endpoint]" \
+  -X POST -H "Content-Type: application/json" \
+  -d '{"data": "test"}'
+
+# Test WP-CLI
+wp aiseo [command] [subcommand] --param=value
+
+# BOTH MUST WORK before proceeding to Step 5!
+```
+
+**Step 5: Update Documentation**
+- Add feature description to README.md
+- Add REST endpoint to API section in README.md
+- Add WP-CLI command to CLI section in README.md
+- Add usage examples with real output
+- Update ARCHITECTURE.md with technical implementation details
+- **Feature is NOT complete until docs are updated!**
+
+#### Code Context Generation
+```bash
+# Generate code index for better AI context
+/opt/homebrew/bin/ctags -R --languages=PHP --output-format=json > api-index.json
+```
+
+#### Quality Standards
+- ✅ WordPress Coding Standards compliance
+- ✅ Security: nonces, capability checks, input sanitization, output escaping
+- ✅ Performance: caching, async processing, optimized queries
+- ✅ Error handling: graceful degradation, user-friendly messages
+- ✅ Testing: Both REST API and WP-CLI must work
+- ✅ Documentation: Complete before marking feature as done
 
 ---
 
