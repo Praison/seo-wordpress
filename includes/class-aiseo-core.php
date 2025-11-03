@@ -66,6 +66,15 @@ class AISEO_Core {
         // Initialize sitemap generator
         $this->sitemap->init();
         
+        // Initialize admin interface (only in admin)
+        if (is_admin()) {
+            $this->admin = new AISEO_Admin();
+            $this->admin->init();
+            
+            $this->metabox = new AISEO_Metabox();
+            $this->metabox->init();
+        }
+        
         // Other components will be initialized as needed
     }
     
