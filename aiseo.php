@@ -220,6 +220,24 @@ function aiseo_create_tables() {
         KEY priority (priority)
     ) $charset_collate;";
     dbDelta($sql);
+    
+    // Rank tracking table
+    $table_name = $wpdb->prefix . 'aiseo_rank_tracking';
+    $sql = "CREATE TABLE $table_name (
+        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        post_id BIGINT(20) UNSIGNED DEFAULT 0,
+        keyword VARCHAR(255) NOT NULL,
+        position INT NOT NULL,
+        url VARCHAR(500) NOT NULL,
+        date DATETIME NOT NULL,
+        location VARCHAR(100) DEFAULT 'US',
+        serp_features TEXT,
+        PRIMARY KEY (id),
+        KEY keyword_date (keyword(191), date),
+        KEY post_id (post_id),
+        KEY location (location)
+    ) $charset_collate;";
+    dbDelta($sql);
 }
 
 /**
@@ -251,4 +269,5 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-competitor-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-keyword-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-backlink-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-rank-tracker-cli.php';
 }

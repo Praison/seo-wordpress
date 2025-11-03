@@ -851,6 +851,120 @@ class AISEO_REST {
             'callback' => array($this, 'get_backlink_summary'),
             'permission_callback' => '__return_true',
         ));
+        
+        // Rank Tracking: Track keyword
+        register_rest_route(self::NAMESPACE, '/rank/track', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'track_keyword'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'post_id' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                ),
+                'location' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'US',
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Get position history
+        register_rest_route(self::NAMESPACE, '/rank/history/(?P<keyword>[^/]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_rank_history'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'days' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                    'default' => 30,
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Get ranking keywords for post
+        register_rest_route(self::NAMESPACE, '/rank/keywords/(?P<post_id>\\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_ranking_keywords'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Rank Tracking: Compare with competitor
+        register_rest_route(self::NAMESPACE, '/rank/compare', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'compare_rank'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'competitor_url' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Detect SERP features
+        register_rest_route(self::NAMESPACE, '/rank/serp-features', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'detect_serp_features'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Get all keywords
+        register_rest_route(self::NAMESPACE, '/rank/keywords', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_all_tracked_keywords'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'post_id' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                ),
+                'location' => array(
+                    'required' => false,
+                    'type' => 'string',
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Delete keyword
+        register_rest_route(self::NAMESPACE, '/rank/delete', array(
+            'methods' => 'DELETE',
+            'callback' => array($this, 'delete_tracked_keyword'),
+            'permission_callback' => array($this, 'check_permission'),
+            'args' => array(
+                'keyword' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'post_id' => array(
+                    'required' => false,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+        
+        // Rank Tracking: Get summary
+        register_rest_route(self::NAMESPACE, '/rank/summary', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_rank_summary'),
+            'permission_callback' => '__return_true',
+        ));
     }
     
     /**
@@ -2141,6 +2255,173 @@ class AISEO_REST {
     public function get_backlink_summary($request) {
         $backlink = new AISEO_Backlink();
         $summary = $backlink->get_summary();
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'summary' => $summary
+        ], 200);
+    }
+    
+    /**
+     * Track keyword rank
+     */
+    public function track_keyword($request) {
+        $keyword = $request->get_param('keyword');
+        $post_id = $request->get_param('post_id') ?: 0;
+        $location = $request->get_param('location') ?: 'US';
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $result = $tracker->track_keyword($keyword, $post_id, $location);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'tracking' => $result
+        ], 201);
+    }
+    
+    /**
+     * Get rank history
+     */
+    public function get_rank_history($request) {
+        $keyword = urldecode($request->get_param('keyword'));
+        $days = $request->get_param('days') ?: 30;
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $history = $tracker->get_position_history($keyword, $days);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'keyword' => $keyword,
+            'days' => $days,
+            'history' => $history,
+            'count' => count($history)
+        ], 200);
+    }
+    
+    /**
+     * Get ranking keywords for post
+     */
+    public function get_ranking_keywords($request) {
+        $post_id = $request->get_param('post_id');
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $keywords = $tracker->get_ranking_keywords($post_id);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'post_id' => $post_id,
+            'keywords' => $keywords,
+            'count' => count($keywords)
+        ], 200);
+    }
+    
+    /**
+     * Compare rank with competitor
+     */
+    public function compare_rank($request) {
+        $keyword = $request->get_param('keyword');
+        $competitor_url = $request->get_param('competitor_url');
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $result = $tracker->compare_with_competitor($keyword, $competitor_url);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'comparison' => $result
+        ], 200);
+    }
+    
+    /**
+     * Detect SERP features
+     */
+    public function detect_serp_features($request) {
+        $keyword = $request->get_param('keyword');
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $result = $tracker->detect_serp_features($keyword);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'keyword' => $keyword,
+            'serp_features' => $result
+        ], 200);
+    }
+    
+    /**
+     * Get all tracked keywords
+     */
+    public function get_all_tracked_keywords($request) {
+        $post_id = $request->get_param('post_id');
+        $location = $request->get_param('location');
+        
+        $filters = [];
+        if ($post_id) {
+            $filters['post_id'] = $post_id;
+        }
+        if ($location) {
+            $filters['location'] = $location;
+        }
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $keywords = $tracker->get_all_keywords($filters);
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'keywords' => $keywords,
+            'count' => count($keywords)
+        ], 200);
+    }
+    
+    /**
+     * Delete tracked keyword
+     */
+    public function delete_tracked_keyword($request) {
+        $keyword = $request->get_param('keyword');
+        $post_id = $request->get_param('post_id') ?: 0;
+        
+        $tracker = new AISEO_Rank_Tracker();
+        $result = $tracker->delete_keyword($keyword, $post_id);
+        
+        if (is_wp_error($result)) {
+            return new WP_REST_Response([
+                'success' => false,
+                'error' => $result->get_error_message()
+            ], 400);
+        }
+        
+        return new WP_REST_Response([
+            'success' => true,
+            'message' => 'Keyword tracking deleted successfully'
+        ], 200);
+    }
+    
+    /**
+     * Get rank tracking summary
+     */
+    public function get_rank_summary($request) {
+        $tracker = new AISEO_Rank_Tracker();
+        $summary = $tracker->get_summary();
         
         return new WP_REST_Response([
             'success' => true,

@@ -13,6 +13,8 @@ wp cli test, rest api test and Add all features , all tests, all endpoints and a
 
 workflow: create core class → REST API → WP-CLI → test both → update docs!
 
+Always first focus on AI and features which are not required to integrate with third party services which requires payment (openai integration is excluded)
+
 ---
 
 ## Plugin Information
