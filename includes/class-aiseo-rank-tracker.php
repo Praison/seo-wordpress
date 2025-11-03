@@ -231,6 +231,7 @@ class AISEO_Rank_Tracker {
         }
         
         // Get our latest position
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         $our_position = $wpdb->get_var($wpdb->prepare(
             "SELECT position FROM {$table_name} 
              WHERE keyword = %s 
@@ -371,8 +372,10 @@ class AISEO_Rank_Tracker {
                   ORDER BY last_checked DESC";
         
         if (!empty($params)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare() and params
             $results = $wpdb->get_results($wpdb->prepare($query, ...$params), ARRAY_A);
         } else {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query has no user input, table name is prefixed
             $results = $wpdb->get_results($query, ARRAY_A);
         }
         

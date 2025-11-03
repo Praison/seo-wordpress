@@ -234,6 +234,7 @@ class AISEO_Image_SEO {
             LIMIT %d OFFSET %d
         ";
         
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared with $wpdb->prepare()
         $images = $wpdb->get_results(
             $wpdb->prepare($query, $args['posts_per_page'], $args['offset'])
         );
