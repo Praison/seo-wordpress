@@ -110,6 +110,7 @@ class AISEO_Redirects {
             $args['offset']
         );
         
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above with $wpdb->prepare()
         $results = $wpdb->get_results($query, ARRAY_A);
         
         return [
@@ -229,6 +230,7 @@ class AISEO_Redirects {
         $table_name = $wpdb->prefix . 'aiseo_redirects';
         
         // Check if redirect already exists
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         $existing = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM {$table_name} WHERE source_url = %s",
             $source
@@ -289,6 +291,7 @@ class AISEO_Redirects {
             $args['offset']
         );
         
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above with $wpdb->prepare()
         $results = $wpdb->get_results($query, ARRAY_A);
         
         return [
@@ -400,6 +403,7 @@ class AISEO_Redirects {
         $table_name = $wpdb->prefix . 'aiseo_redirects';
         
         // Check for exact match
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, query uses $wpdb->prepare()
         $redirect = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$table_name} WHERE source_url = %s AND is_regex = 0",
             $requested_url
@@ -407,6 +411,7 @@ class AISEO_Redirects {
         
         // Check for regex match if no exact match
         if (!$redirect) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table name is prefixed, simple query with no user input
             $regex_redirects = $wpdb->get_results(
                 "SELECT * FROM {$table_name} WHERE is_regex = 1",
                 ARRAY_A
