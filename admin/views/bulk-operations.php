@@ -169,6 +169,9 @@ $all_posts = get_posts(array(
 
 <script>
 jQuery(document).ready(function($) {
+    // Clear refresh flag on page load (prevents infinite loops)
+    sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+    
     // Select all checkbox
     $('#aiseo-select-all-posts').on('change', function() {
         $('.aiseo-bulk-post').prop('checked', $(this).is(':checked'));
@@ -223,6 +226,10 @@ jQuery(document).ready(function($) {
                     nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
                 },
                 success: function(response) {
+                    console.log('Bulk AJAX response for post', post.id, ':', response);
+                    // Clear refresh flag on success
+                    sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                    
                     if (response.success) {
                         bulkResults.push({
                             postId: post.id,
@@ -232,6 +239,7 @@ jQuery(document).ready(function($) {
                             fieldType: fieldType
                         });
                     } else {
+                        console.error('Bulk operation failed for post', post.id, ':', response.data);
                         bulkResults.push({
                             postId: post.id,
                             postTitle: post.title,
@@ -239,6 +247,37 @@ jQuery(document).ready(function($) {
                             error: response.data
                         });
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Bulk AJAX error for post', post.id, ':', xhr.status, error);
+                    
+                    // Auto-refresh on nonce failure (only once)
+                    if (xhr.status === 403 && xhr.responseText === '-1') {
+                        if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
+                            sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
+                            alert('Session expired. Refreshing page automatically...');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1500);
+                            return;
+                        } else {
+                            sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                            bulkResults.push({
+                                postId: post.id,
+                                postTitle: post.title,
+                                success: false,
+                                error: 'Session Error: Please log out and log back in to WordPress'
+                            });
+                            return;
+                        }
+                    }
+                    
+                    bulkResults.push({
+                        postId: post.id,
+                        postTitle: post.title,
+                        success: false,
+                        error: 'Connection error: ' + error + ' (Status: ' + xhr.status + ')'
+                    });
                 },
                 complete: function() {
                     currentIndex++;
@@ -446,6 +485,11 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 console.log('Export Response:', response);
+                console.log('Export format:', format);
+                console.log('Response data type:', typeof response.data);
+                console.log('Response data is array:', Array.isArray(response.data));
+                console.log('Response data length:', response.data ? response.data.length : 0);
+                
                 if (response.success && response.data) {
                     var content, mimeType;
                     

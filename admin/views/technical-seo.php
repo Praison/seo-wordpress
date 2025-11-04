@@ -67,34 +67,6 @@ if (!defined('ABSPATH')) exit;
         </div>
     </div>
     
-    <!-- Permalink Optimization -->
-    <div class="aiseo-form-section">
-        <h2 class="aiseo-section-title"><?php esc_html_e('Permalink Optimization', 'aiseo'); ?></h2>
-        
-        <div class="aiseo-card">
-            <div class="aiseo-card-header">
-                <h3 class="aiseo-card-title"><?php esc_html_e('Optimize Permalinks', 'aiseo'); ?></h3>
-            </div>
-            <div class="aiseo-card-body">
-                <p><?php esc_html_e('Automatically optimize post slugs by:', 'aiseo'); ?></p>
-                <ul style="list-style: disc; padding-left: 20px;">
-                    <li><?php esc_html_e('Removing stop words (a, an, the, etc.)', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Converting to lowercase', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Replacing spaces with hyphens', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Removing special characters', 'aiseo'); ?></li>
-                </ul>
-                <div class="aiseo-mt-20">
-                    <button type="button" class="button button-secondary">
-                        <span class="dashicons dashicons-admin-links"></span>
-                        <?php esc_html_e('Optimize All Permalinks', 'aiseo'); ?>
-                    </button>
-                </div>
-                <p class="aiseo-mt-20"><strong><?php esc_html_e('CLI Command:', 'aiseo'); ?></strong><br>
-                <code>wp aiseo permalink optimize --all</code></p>
-            </div>
-        </div>
-    </div>
-    
     <!-- XML Sitemap -->
     <div class="aiseo-form-section">
         <h2 class="aiseo-section-title"><?php esc_html_e('XML Sitemap', 'aiseo'); ?></h2>
@@ -177,6 +149,9 @@ if (!defined('ABSPATH')) exit;
 
 <script>
 jQuery(document).ready(function($) {
+    // Clear refresh flag on page load (prevents infinite loops)
+    sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+    
     // Redirect form submission
     $('#aiseo-redirect-form').on('submit', function(e) {
         e.preventDefault();
@@ -334,33 +309,6 @@ jQuery(document).ready(function($) {
     
     // Load redirects on page load
     loadRedirects();
-    
-    // Optimize permalinks
-    $('.aiseo-technical-seo button:contains("Optimize All Permalinks")').on('click', function() {
-        var $btn = $(this);
-        if (!confirm('Optimize permalinks for all posts?')) return;
-        
-        $btn.prop('disabled', true).text('Optimizing...');
-        
-        $.ajax({
-            url: ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'aiseo_optimize_permalinks',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
-            },
-            success: function(response) {
-                if (response.success) {
-                    alert(response.data.message);
-                } else {
-                    alert('Error: ' + response.data);
-                }
-            },
-            complete: function() {
-                $btn.prop('disabled', false).html('<span class="dashicons dashicons-admin-links"></span> <?php esc_html_e('Optimize All Permalinks', 'aiseo'); ?>');
-            }
-        });
-    });
     
     // Regenerate sitemap
     $('.aiseo-technical-seo button:contains("Regenerate Sitemap")').on('click', function() {
@@ -571,6 +519,23 @@ jQuery(document).ready(function($) {
             },
             error: function(xhr, status, error) {
                 console.error('Generate single alt error:', xhr, status, error);
+                
+                // Auto-refresh on nonce failure (only once)
+                if (xhr.status === 403 && xhr.responseText === '-1') {
+                    if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
+                        sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
+                        alert('Session expired. Refreshing page automatically...');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                        return;
+                    } else {
+                        sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                        $btn.after('<span style="color:red;margin-left:5px;">Session Error: Please log out and log back in</span>');
+                        return;
+                    }
+                }
+                
                 $btn.after('<span style="color:red;margin-left:5px;">Error: ' + error + '</span>');
             },
             complete: function() {

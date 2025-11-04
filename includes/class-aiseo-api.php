@@ -599,10 +599,17 @@ class AISEO_API {
             $user_requests = 0;
         }
         
-        $rate_limit_per_minute = get_option('aiseo_rate_limit_per_minute', 10);
+        $rate_limit_per_minute = get_option('aiseo_rate_limit_per_minute', 60);
         
         if ($user_requests >= $rate_limit_per_minute) {
-            return new WP_Error('rate_limit', __('Rate limit exceeded. Please wait a moment.', 'aiseo'));
+            $wait_seconds = 60 - (time() - (int)get_transient('aiseo_user_requests_start_' . $user_id));
+            $wait_seconds = max(1, $wait_seconds);
+            return new WP_Error('rate_limit', sprintf(__('Rate limit exceeded. Please wait %d seconds and try again.', 'aiseo'), $wait_seconds));
+        }
+        
+        // Track start time for better wait time calculation
+        if ($user_requests === 0) {
+            set_transient('aiseo_user_requests_start_' . $user_id, time(), 60);
         }
         
         set_transient('aiseo_user_requests_' . $user_id, $user_requests + 1, 60);

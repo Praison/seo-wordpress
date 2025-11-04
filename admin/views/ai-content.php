@@ -79,6 +79,21 @@ if (class_exists('AISEO_Helpers')) {
                     </button>
                 </div>
             </form>
+            
+            <div id="aiseo-post-creator-results" class="aiseo-result-box" style="display:none; margin-top:20px;">
+                <h4><?php esc_html_e('Generated Content:', 'aiseo'); ?></h4>
+                <div class="aiseo-result-content" style="background:#f9f9f9;padding:20px;border-radius:5px;max-height:400px;overflow-y:auto;"></div>
+                <div class="aiseo-button-group" style="margin-top:15px;">
+                    <select class="aiseo-post-type-select">
+                        <option value="post"><?php esc_html_e('Post', 'aiseo'); ?></option>
+                        <option value="page"><?php esc_html_e('Page', 'aiseo'); ?></option>
+                    </select>
+                    <button type="button" class="button button-primary aiseo-create-post-from-generator">
+                        <span class="dashicons dashicons-plus"></span>
+                        <?php esc_html_e('Create Post', 'aiseo'); ?>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -282,6 +297,142 @@ if (class_exists('AISEO_Helpers')) {
 
 <script>
 jQuery(document).ready(function($) {
+    // AI Post Creator - Generate Content
+    $('.aiseo-generate-post').on('click', function() {
+        var $btn = $(this);
+        var $form = $('#aiseo-post-creator-form');
+        var topic = $form.find('[name="topic"]').val();
+        var keyword = $form.find('[name="keyword"]').val();
+        var postType = $form.find('[name="post_type"]').val();
+        var length = $form.find('[name="length"]').val();
+        
+        if (!topic) {
+            alert('Please enter a topic');
+            return;
+        }
+        
+        $btn.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Generating Content...');
+        
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            timeout: 60000,
+            data: {
+                action: 'aiseo_generate_content',
+                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                topic: topic,
+                keyword: keyword,
+                post_type: postType,
+                length: length
+            },
+            success: function(response) {
+                console.log('Generate Content Response:', response);
+                if (response.success && response.data) {
+                    var content = parseMarkdown(response.data);
+                    $('#aiseo-post-creator-results .aiseo-result-content').html(content);
+                    $('#aiseo-post-creator-results').show();
+                } else {
+                    var errorMsg = response.data || 'Failed to generate content';
+                    $('#aiseo-post-creator-results .aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
+                    $('#aiseo-post-creator-results').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Generate Content Error:', xhr, status, error);
+                var errorMsg = 'Connection error';
+                if (status === 'timeout') {
+                    errorMsg = 'Request timed out (60s). Please try again with shorter content.';
+                }
+                $('#aiseo-post-creator-results .aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
+                $('#aiseo-post-creator-results').show();
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('<span class="dashicons dashicons-edit"></span> <?php esc_html_e('Generate Post', 'aiseo'); ?>');
+            }
+        });
+    });
+    
+    // Create Post from Generated Content
+    $('.aiseo-create-post-from-generator').on('click', function() {
+        var $btn = $(this);
+        var content = $('#aiseo-post-creator-results .aiseo-result-content').html();
+        var topic = $('#aiseo-post-creator-form [name="topic"]').val();
+        var postType = $('#aiseo-post-creator-results .aiseo-post-type-select').val();
+        
+        if (!content) {
+            alert('No content to create post from');
+            return;
+        }
+        
+        $btn.prop('disabled', true).text('Creating Post...');
+        
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            timeout: 30000,
+            data: {
+                action: 'aiseo_create_post',
+                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                topic: topic,
+                content: content,
+                post_type: postType,
+                length: 'medium'
+            },
+            success: function(response) {
+                console.log('Create Post Response:', response);
+                // Clear refresh flag on success
+                sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                
+                if (response.success) {
+                    $btn.after('<div class="notice notice-success is-dismissible" style="margin:10px 0;padding:10px;"><strong>Success!</strong> Post created! <a href="' + response.data.edit_url + '" target="_blank">Edit post</a></div>');
+                } else {
+                    $btn.after('<div class="notice notice-error" style="margin:10px 0;padding:10px;"><strong>Error:</strong> ' + response.data + '</div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Create Post Error:', xhr, status, error);
+                var errorMsg = 'Connection error';
+                if (status === 'timeout') {
+                    errorMsg = 'Request timed out (30s). The post may still be creating in the background.';
+                }
+                $btn.after('<div class="notice notice-error" style="margin:10px 0;padding:10px;"><strong>Error:</strong> ' + errorMsg + '</div>');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('<span class="dashicons dashicons-plus"></span> <?php esc_html_e('Create Post', 'aiseo'); ?>');
+            }
+        });
+    });
+    
+    // Simple Markdown to HTML parser
+    function parseMarkdown(text) {
+        if (!text) return '';
+        
+        // Convert markdown to HTML
+        var html = text
+            // Headers
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            // Bold
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/__(.+?)__/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/_(.+?)_/g, '<em>$1</em>')
+            // Links
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+            // Line breaks
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+        
+        // Wrap in paragraph if not already wrapped
+        if (!html.startsWith('<h') && !html.startsWith('<p')) {
+            html = '<p>' + html + '</p>';
+        }
+        
+        return html;
+    }
+    
     // Content Rewriter
     $('.aiseo-rewrite-btn').on('click', function() {
         var $btn = $(this);
@@ -323,7 +474,9 @@ jQuery(document).ready(function($) {
                     } else {
                         content = 'Rewrite completed but content format is unexpected. Check console.';
                     }
-                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;white-space:pre-wrap;">' + $('<div>').text(content).html() + '</div>');
+                    // Parse markdown to HTML for proper display
+                    var htmlContent = parseMarkdown(content);
+                    $('#aiseo-rewrite-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + htmlContent + '</div>');
                 } else {
                     var errorMsg = response.data || 'Rewrite failed';
                     if (typeof errorMsg === 'object') {
@@ -647,10 +800,8 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 console.log('Create Post Response:', response);
                 if (response.success) {
-                    $resultBox.prepend('<div class="notice notice-success" style="margin:10px 0;padding:10px;"><strong>Success!</strong> Post created! <a href="' + response.data.edit_url + '" target="_blank">Edit post</a></div>');
-                    setTimeout(function() {
-                        $resultBox.find('.notice-success').fadeOut();
-                    }, 5000);
+                    $resultBox.prepend('<div class="notice notice-success is-dismissible" style="margin:10px 0;padding:10px;"><strong>Success!</strong> Post created! <a href="' + response.data.edit_url + '" target="_blank">Edit post</a></div>');
+                    // Don't auto-hide - let user manually dismiss if needed
                 } else {
                     $resultBox.prepend('<div class="notice notice-error" style="margin:10px 0;padding:10px;"><strong>Error:</strong> ' + response.data + '</div>');
                 }

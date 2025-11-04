@@ -272,6 +272,9 @@ $recent_posts = wp_get_recent_posts(array(
 
 <script>
 jQuery(document).ready(function($) {
+    // Clear refresh flag on page load (prevents infinite loops)
+    sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+    
     // Meta generation
     $('.aiseo-generate-meta').on('click', function() {
         var btn = $(this);
@@ -294,6 +297,9 @@ jQuery(document).ready(function($) {
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
             },
             success: function(response) {
+                // Clear refresh flag on success
+                sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                
                 if (response.success) {
                     $('#aiseo-meta-output').html('<strong>' + field.toUpperCase() + ':</strong> ' + response.data);
                     $('#aiseo-meta-results').show();
@@ -303,10 +309,27 @@ jQuery(document).ready(function($) {
             },
             error: function(xhr, status, error) {
                 console.error('Meta generation error:', xhr, status, error);
-                var errorMsg = '';
+                
+                // Auto-refresh on nonce failure (only once)
                 if (xhr.status === 403 && xhr.responseText === '-1') {
-                    errorMsg = '<strong>Security Error (403):</strong> Your session has expired. Please <a href="javascript:location.reload();">refresh the page</a> and try again.';
-                } else if (xhr.status === 403) {
+                    // Check if we already tried refreshing
+                    if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
+                        sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
+                        $('#aiseo-meta-results').html('<div class="notice notice-warning" style="padding:10px;"><strong>Session expired.</strong> Refreshing page automatically...</div>').show();
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                        return;
+                    } else {
+                        // Already tried refreshing, show manual refresh message
+                        sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                        $('#aiseo-meta-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Session Error:</strong> Please log out and log back in to WordPress, then try again.</div>').show();
+                        return;
+                    }
+                }
+                
+                var errorMsg = '';
+                if (xhr.status === 403) {
                     errorMsg = '<strong>Permission Error (403):</strong> You do not have permission to perform this action.';
                 } else if (xhr.status === 500) {
                     errorMsg = '<strong>Server Error (500):</strong> An internal server error occurred. Check PHP error logs.';
@@ -316,7 +339,8 @@ jQuery(document).ready(function($) {
                 $('#aiseo-meta-results').html('<div class="notice notice-error" style="padding:10px;">' + errorMsg + '</div>').show();
             },
             complete: function() {
-                btn.prop('disabled', false).html(btn.find('.dashicons').prop('outerHTML') + ' ' + btn.text().replace('<?php esc_html_e('Generating...', 'aiseo'); ?>', 'Generate ' + field.charAt(0).toUpperCase() + field.slice(1)));
+                var buttonText = field === 'title' ? '<?php esc_html_e('Generate Title', 'aiseo'); ?>' : '<?php esc_html_e('Generate Description', 'aiseo'); ?>';
+                btn.prop('disabled', false).html('<span class="dashicons dashicons-edit"></span> ' + buttonText);
             }
         });
     });
@@ -365,10 +389,27 @@ jQuery(document).ready(function($) {
             },
             error: function(xhr, status, error) {
                 console.error('Analysis error:', xhr, status, error);
-                var errorMsg = '';
+                
+                // Auto-refresh on nonce failure (only once)
                 if (xhr.status === 403 && xhr.responseText === '-1') {
-                    errorMsg = '<strong>Security Error (403):</strong> Your session has expired. Please <a href="javascript:location.reload();">refresh the page</a> and try again.';
-                } else if (xhr.status === 403) {
+                    // Check if we already tried refreshing
+                    if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
+                        sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
+                        $('.aiseo-analysis-results').html('<div class="notice notice-warning" style="padding:10px;"><strong>Session expired.</strong> Refreshing page automatically...</div>').show();
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                        return;
+                    } else {
+                        // Already tried refreshing, show manual refresh message
+                        sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                        $('.aiseo-analysis-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Session Error:</strong> Please log out and log back in to WordPress, then try again.</div>').show();
+                        return;
+                    }
+                }
+                
+                var errorMsg = '';
+                if (xhr.status === 403) {
                     errorMsg = '<strong>Permission Error (403):</strong> You do not have permission to perform this action.';
                 } else if (xhr.status === 500) {
                     errorMsg = '<strong>Server Error (500):</strong> An internal server error occurred. Check PHP error logs.';

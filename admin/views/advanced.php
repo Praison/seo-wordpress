@@ -103,9 +103,13 @@ $post_types = get_post_types(array('public' => true), 'objects');
                     </button>
                     <button type="button" class="button button-secondary" id="aiseo-download-pdf">
                         <span class="dashicons dashicons-download"></span>
-                        <?php esc_html_e('Export Report (PDF)', 'aiseo'); ?>
+                        <?php esc_html_e('Export Report (HTML)', 'aiseo'); ?>
                     </button>
                 </div>
+                <p style="margin-top:10px;color:#666;font-size:12px;">
+                    <span class="dashicons dashicons-info" style="font-size:14px;"></span>
+                    <?php esc_html_e('Note: HTML export is available. For PDF export, use WP-CLI:', 'aiseo'); ?> <code>wp aiseo report export report.pdf</code>
+                </p>
                 <div id="aiseo-report-results" style="margin-top:20px;"></div>
                 <p class="aiseo-mt-20"><strong><?php esc_html_e('CLI Commands:', 'aiseo'); ?></strong><br>
                 <code>wp aiseo report generate --format=json</code><br>
@@ -157,17 +161,41 @@ $post_types = get_post_types(array('public' => true), 'objects');
                 <h3 class="aiseo-card-title"><?php esc_html_e('AI Content Briefs', 'aiseo'); ?></h3>
             </div>
             <div class="aiseo-card-body">
-                <p><?php esc_html_e('Generate detailed content briefs with:', 'aiseo'); ?></p>
-                <ul style="list-style: disc; padding-left: 20px;">
-                    <li><?php esc_html_e('Target keywords', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Recommended word count', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Content structure', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Key topics to cover', 'aiseo'); ?></li>
-                    <li><?php esc_html_e('Competitor insights', 'aiseo'); ?></li>
-                </ul>
-                <div id="aiseo-variations-results" class="aiseo-result-box" style="display:none;">
-                    <h4><?php esc_html_e('Variations (with AI scores):', 'aiseo'); ?></h4>
-                    <div class="aiseo-result-content"></div>
+                <p><?php esc_html_e('Generate detailed content briefs with AI including target keywords, word count, structure, and key topics.', 'aiseo'); ?></p>
+                
+                <form id="aiseo-brief-form" class="aiseo-form" style="margin-top:20px;">
+                    <div class="aiseo-form-group">
+                        <label class="aiseo-form-label">
+                            <?php esc_html_e('Topic or Subject', 'aiseo'); ?>
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" name="topic" class="regular-text" placeholder="<?php esc_attr_e('e.g., WordPress SEO Best Practices', 'aiseo'); ?>" required>
+                        <span class="aiseo-form-description"><?php esc_html_e('Enter the main topic for your content brief', 'aiseo'); ?></span>
+                    </div>
+                    
+                    <div class="aiseo-form-group">
+                        <label class="aiseo-form-label"><?php esc_html_e('Target Keyword (Optional)', 'aiseo'); ?></label>
+                        <input type="text" name="keyword" class="regular-text" placeholder="<?php esc_attr_e('e.g., wordpress seo', 'aiseo'); ?>">
+                        <span class="aiseo-form-description"><?php esc_html_e('Primary keyword to optimize for', 'aiseo'); ?></span>
+                    </div>
+                    
+                    <div class="aiseo-button-group">
+                        <button type="button" class="button button-primary" id="aiseo-generate-brief">
+                            <span class="dashicons dashicons-edit-page"></span>
+                            <?php esc_html_e('Generate Content Brief', 'aiseo'); ?>
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="aiseo-brief-results" class="aiseo-result-box" style="display:none; margin-top:20px;">
+                    <h4><?php esc_html_e('Generated Content Brief:', 'aiseo'); ?></h4>
+                    <div class="aiseo-result-content" style="background:#f9f9f9;padding:20px;border-radius:5px;"></div>
+                    <div class="aiseo-button-group" style="margin-top:15px;">
+                        <button type="button" class="button button-secondary aiseo-create-post-from-brief" style="display:none;">
+                            <span class="dashicons dashicons-plus"></span>
+                            <?php esc_html_e('Create Post from Brief', 'aiseo'); ?>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -377,6 +405,145 @@ jQuery(document).ready(function($) {
         document.body.removeChild(a);
         
         $(this).after('<p style="color:green;margin-top:10px;">✓ Report downloaded! (Open in browser and print to PDF)</p>').next().delay(3000).fadeOut();
+    });
+    
+    // Content Brief Generator
+    $('#aiseo-brief-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $btn = $('#aiseo-generate-brief');
+        var topic = $form.find('[name="topic"]').val();
+        var keyword = $form.find('[name="keyword"]').val();
+        
+        if (!topic) {
+            alert('<?php esc_html_e('Please enter a topic', 'aiseo'); ?>');
+            return;
+        }
+        
+        $btn.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> <?php esc_html_e('Generating Brief...', 'aiseo'); ?>');
+        
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'aiseo_generate_brief',
+                topic: topic,
+                keyword: keyword,
+                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+            },
+            success: function(response) {
+                console.log('Brief Response:', response);
+                if (response.success && response.data) {
+                    var brief = response.data;
+                    var html = '<div class="content-brief">';
+                    
+                    // Title
+                    if (brief.title) {
+                        html += '<h3 style="margin-top:0;color:#0073aa;">' + brief.title + '</h3>';
+                    }
+                    
+                    // Target Keywords
+                    if (brief.keywords && brief.keywords.length > 0) {
+                        html += '<div style="margin-bottom:15px;"><strong>🎯 Target Keywords:</strong><br>';
+                        html += '<span style="background:#e3f2fd;padding:5px 10px;border-radius:3px;display:inline-block;margin:5px 5px 0 0;">' + brief.keywords.join('</span> <span style="background:#e3f2fd;padding:5px 10px;border-radius:3px;display:inline-block;margin:5px 5px 0 0;">') + '</span></div>';
+                    }
+                    
+                    // Word Count
+                    if (brief.word_count) {
+                        html += '<div style="margin-bottom:15px;"><strong>📝 Recommended Word Count:</strong> ' + brief.word_count + ' words</div>';
+                    }
+                    
+                    // Content Structure
+                    if (brief.structure && brief.structure.length > 0) {
+                        html += '<div style="margin-bottom:15px;"><strong>📋 Content Structure:</strong><ol style="margin:10px 0 0 20px;">';
+                        $.each(brief.structure, function(i, section) {
+                            html += '<li style="margin-bottom:5px;">' + section + '</li>';
+                        });
+                        html += '</ol></div>';
+                    }
+                    
+                    // Key Topics
+                    if (brief.key_topics && brief.key_topics.length > 0) {
+                        html += '<div style="margin-bottom:15px;"><strong>💡 Key Topics to Cover:</strong><ul style="margin:10px 0 0 20px;">';
+                        $.each(brief.key_topics, function(i, topic) {
+                            html += '<li style="margin-bottom:5px;">' + topic + '</li>';
+                        });
+                        html += '</ul></div>';
+                    }
+                    
+                    // SEO Tips
+                    if (brief.seo_tips) {
+                        html += '<div style="margin-bottom:15px;"><strong>🔍 SEO Tips:</strong><p style="margin:5px 0;">' + brief.seo_tips + '</p></div>';
+                    }
+                    
+                    html += '</div>';
+                    
+                    $('#aiseo-brief-results').show().find('.aiseo-result-content').html(html);
+                    // Show Create Post button
+                    $('.aiseo-create-post-from-brief').show();
+                } else {
+                    var errorMsg = response.data || 'Failed to generate brief';
+                    $('#aiseo-brief-results').show().find('.aiseo-result-content').html('<p style="color:red;">Error: ' + errorMsg + '</p>');
+                    $('.aiseo-create-post-from-brief').hide();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Brief Error:', xhr, status, error);
+                $('#aiseo-brief-results').show().find('.aiseo-result-content').html('<p style="color:red;">Connection error: ' + error + '</p>');
+                $('.aiseo-create-post-from-brief').hide();
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('<span class="dashicons dashicons-edit-page"></span> <?php esc_html_e('Generate Content Brief', 'aiseo'); ?>');
+            }
+        });
+    });
+    
+    // Create Post from Brief
+    $('.aiseo-create-post-from-brief').on('click', function() {
+        var $btn = $(this);
+        var briefContent = $('#aiseo-brief-results .aiseo-result-content').html();
+        var topic = $('#aiseo-brief-form [name="topic"]').val();
+        
+        if (!briefContent) {
+            alert('No brief content to create post from');
+            return;
+        }
+        
+        $btn.prop('disabled', true).text('Creating Post...');
+        
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            timeout: 30000,
+            data: {
+                action: 'aiseo_create_post',
+                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                topic: topic || 'Generated from Content Brief',
+                content: briefContent,
+                post_type: 'post',
+                length: 'medium'
+            },
+            success: function(response) {
+                console.log('Create Post from Brief Response:', response);
+                if (response.success) {
+                    $btn.after('<div class="notice notice-success" style="margin:10px 0;padding:10px;"><strong>Success!</strong> Post created! <a href="' + response.data.edit_url + '" target="_blank">Edit post</a></div>');
+                } else {
+                    $btn.after('<div class="notice notice-error" style="margin:10px 0;padding:10px;"><strong>Error:</strong> ' + response.data + '</div>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Create Post Error:', xhr, status, error);
+                var errorMsg = 'Connection error';
+                if (status === 'timeout') {
+                    errorMsg = 'Request timed out (30s). The post may still be creating in the background.';
+                }
+                $btn.after('<div class="notice notice-error" style="margin:10px 0;padding:10px;"><strong>Error:</strong> ' + errorMsg + '</div>');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html('<span class="dashicons dashicons-plus"></span> <?php esc_html_e('Create Post from Brief', 'aiseo'); ?>');
+            }
+        });
     });
 });
 </script>

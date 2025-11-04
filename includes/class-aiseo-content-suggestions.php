@@ -581,4 +581,31 @@ Format as JSON array with keys: topic, priority, reason, traffic_potential";
             ));
         }
     }
+    
+    /**
+     * Get content suggestions (wrapper for AJAX compatibility)
+     *
+     * @param string $topic Topic or niche
+     * @param int $count Number of suggestions
+     * @return array|WP_Error Suggestions array
+     */
+    public function get_suggestions($topic, $count = 5) {
+        if (empty($topic)) {
+            return new WP_Error('empty_topic', 'Topic is required');
+        }
+        
+        // Use the existing get_topic_suggestions method
+        $result = $this->get_topic_suggestions([
+            'niche' => $topic,
+            'count' => $count,
+            'use_cache' => true
+        ]);
+        
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        
+        // Return just the topics array for simpler AJAX response
+        return isset($result['topics']) ? $result['topics'] : $result;
+    }
 }
