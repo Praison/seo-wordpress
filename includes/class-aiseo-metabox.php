@@ -70,6 +70,21 @@ class AISEO_Metabox {
         $noindex = get_post_meta($post->ID, '_aiseo_noindex', true);
         $nofollow = get_post_meta($post->ID, '_aiseo_nofollow', true);
         
+        // Use post title as default if meta title is empty
+        if (empty($meta_title)) {
+            $meta_title = get_the_title($post->ID);
+        }
+        
+        // Use post excerpt as default if meta description is empty
+        if (empty($meta_description)) {
+            $meta_description = $post->post_excerpt;
+            // If no excerpt, use first 160 characters of content
+            if (empty($meta_description)) {
+                $content = wp_strip_all_tags($post->post_content);
+                $meta_description = wp_trim_words($content, 25, '...');
+            }
+        }
+        
         // Get SEO score if available
         $analysis = new AISEO_Analysis();
         $score_data = $analysis->analyze_post($post->ID, $focus_keyword);

@@ -8,6 +8,136 @@
 (function($) {
     'use strict';
 
+    // Global nonce management
+    window.aiseoNonce = {
+        current: aiseoAdmin.nonce,
+        refreshing: false,
+        
+        /**
+         * Get current nonce
+         */
+        get: function() {
+            return this.current;
+        },
+        
+        /**
+         * Refresh nonce
+         */
+        refresh: function(callback) {
+            if (this.refreshing) {
+                // Already refreshing, wait for it
+                setTimeout(() => {
+                    if (callback) callback(this.current);
+                }, 100);
+                return;
+            }
+            
+            this.refreshing = true;
+            
+            $.ajax({
+                url: aiseoAdmin.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: aiseoAdmin.nonceRefreshAction
+                },
+                success: (response) => {
+                    this.refreshing = false;
+                    if (response.success && response.data.nonce) {
+                        this.current = response.data.nonce;
+                        aiseoAdmin.nonce = response.data.nonce;
+                        console.log('AISEO: Nonce refreshed successfully');
+                        if (callback) callback(this.current);
+                    } else {
+                        console.error('AISEO: Failed to refresh nonce');
+                        if (callback) callback(null);
+                    }
+                },
+                error: () => {
+                    this.refreshing = false;
+                    console.error('AISEO: Nonce refresh request failed');
+                    if (callback) callback(null);
+                }
+            });
+        }
+    };
+    
+    /**
+     * Enhanced AJAX wrapper with automatic nonce refresh
+     */
+    window.aiseoAjax = function(options) {
+        // Add nonce to data
+        if (!options.data) {
+            options.data = {};
+        }
+        options.data.nonce = window.aiseoNonce.get();
+        
+        // Store original error handler
+        const originalError = options.error;
+        const originalSuccess = options.success;
+        
+        // Wrap success handler to detect nonce errors
+        options.success = function(response) {
+            // Check if response indicates nonce failure
+            if (!response.success && response.data && 
+                (response.data.indexOf('nonce') !== -1 || 
+                 response.data.indexOf('expired') !== -1 ||
+                 response.data.indexOf('invalid') !== -1)) {
+                
+                console.warn('AISEO: Nonce expired, refreshing and retrying...');
+                
+                // Refresh nonce and retry
+                window.aiseoNonce.refresh((newNonce) => {
+                    if (newNonce) {
+                        // Update nonce and retry
+                        options.data.nonce = newNonce;
+                        $.ajax(options);
+                    } else {
+                        // Refresh failed, show error
+                        alert(aiseoAdmin.strings.sessionExpired || 'Session expired. Please refresh the page.');
+                        if (originalError) {
+                            originalError(null, 'error', 'Nonce refresh failed');
+                        }
+                    }
+                });
+                return;
+            }
+            
+            // Call original success handler
+            if (originalSuccess) {
+                originalSuccess(response);
+            }
+        };
+        
+        // Wrap error handler
+        options.error = function(xhr, status, error) {
+            // Check if it's a 403 (forbidden) which often indicates nonce failure
+            if (xhr.status === 403) {
+                console.warn('AISEO: 403 error, likely nonce issue. Refreshing and retrying...');
+                
+                window.aiseoNonce.refresh((newNonce) => {
+                    if (newNonce) {
+                        options.data.nonce = newNonce;
+                        $.ajax(options);
+                    } else {
+                        alert(aiseoAdmin.strings.sessionExpired || 'Session expired. Please refresh the page.');
+                        if (originalError) {
+                            originalError(xhr, status, error);
+                        }
+                    }
+                });
+                return;
+            }
+            
+            // Call original error handler
+            if (originalError) {
+                originalError(xhr, status, error);
+            }
+        };
+        
+        // Make the AJAX request
+        return $.ajax(options);
+    };
+
     const AISEO_Admin = {
         
         /**
@@ -16,6 +146,17 @@
         init: function() {
             this.bindEvents();
             this.initTooltips();
+            this.setupNonceRefresh();
+        },
+        
+        /**
+         * Setup automatic nonce refresh every 10 minutes
+         */
+        setupNonceRefresh: function() {
+            // Refresh nonce every 10 minutes to prevent expiration
+            setInterval(() => {
+                window.aiseoNonce.refresh();
+            }, 10 * 60 * 1000); // 10 minutes
         },
         
         /**

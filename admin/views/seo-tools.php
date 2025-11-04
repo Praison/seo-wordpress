@@ -271,6 +271,9 @@ $recent_posts = wp_get_recent_posts(array(
 </div>
 
 <script>
+// Ensure ajaxurl is defined
+var ajaxurl = ajaxurl || '<?php echo admin_url('admin-ajax.php'); ?>';
+
 jQuery(document).ready(function($) {
     // Clear refresh flag on page load (prevents infinite loops)
     sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
@@ -288,6 +291,14 @@ jQuery(document).ready(function($) {
         
         btn.prop('disabled', true).text('<?php esc_html_e('Generating...', 'aiseo'); ?>');
         
+        // DEBUG: Log request details
+        console.log('=== AISEO META GENERATION DEBUG ===');
+        console.log('Field:', field);
+        console.log('Post ID:', postId);
+        console.log('Action:', 'aiseo_generate_' + field);
+        console.log('Nonce:', '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>');
+        console.log('AJAX URL:', ajaxurl);
+        
         $.ajax({
             url: ajaxurl,
             type: 'POST',
@@ -297,36 +308,42 @@ jQuery(document).ready(function($) {
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
             },
             success: function(response) {
-                // Clear refresh flag on success
-                sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
+                console.log('=== AJAX SUCCESS ===');
+                console.log('Response:', response);
+                console.log('Response Type:', typeof response);
+                console.log('Response Success:', response.success);
+                console.log('Response Data:', response.data);
                 
                 if (response.success) {
                     $('#aiseo-meta-output').html('<strong>' + field.toUpperCase() + ':</strong> ' + response.data);
                     $('#aiseo-meta-results').show();
                 } else {
+                    console.error('Response indicates failure:', response.data);
                     $('#aiseo-meta-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Error:</strong> ' + (response.data || 'Failed to generate') + '</div>').show();
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Meta generation error:', xhr, status, error);
+                console.log('=== AJAX ERROR ===');
+                console.error('XHR Status:', xhr.status);
+                console.error('XHR Status Text:', xhr.statusText);
+                console.error('XHR Response Text:', xhr.responseText);
+                console.error('XHR Response (parsed):', xhr.responseJSON);
+                console.error('Status:', status);
+                console.error('Error:', error);
+                console.error('Full XHR Object:', xhr);
                 
-                // Auto-refresh on nonce failure (only once)
-                if (xhr.status === 403 && xhr.responseText === '-1') {
-                    // Check if we already tried refreshing
-                    if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
-                        sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
-                        $('#aiseo-meta-results').html('<div class="notice notice-warning" style="padding:10px;"><strong>Session expired.</strong> Refreshing page automatically...</div>').show();
-                        setTimeout(function() {
-                            location.reload();
-                        }, 1500);
-                        return;
-                    } else {
-                        // Already tried refreshing, show manual refresh message
-                        sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
-                        $('#aiseo-meta-results').html('<div class="notice notice-error" style="padding:10px;"><strong>Session Error:</strong> Please log out and log back in to WordPress, then try again.</div>').show();
-                        return;
-                    }
-                }
+                // DISABLED AUTO-REFRESH FOR DEBUGGING
+                // Show detailed error instead
+                var errorDetails = '<div class="notice notice-error" style="padding:10px;">';
+                errorDetails += '<strong>AJAX Error Details:</strong><br>';
+                errorDetails += 'Status Code: ' + xhr.status + '<br>';
+                errorDetails += 'Status Text: ' + xhr.statusText + '<br>';
+                errorDetails += 'Response: ' + (xhr.responseText || 'No response') + '<br>';
+                errorDetails += 'Error: ' + error + '<br>';
+                errorDetails += '<em>Check browser console for full details</em>';
+                errorDetails += '</div>';
+                
+                $('#aiseo-meta-results').html(errorDetails).show();
                 
                 var errorMsg = '';
                 if (xhr.status === 403) {

@@ -148,6 +148,9 @@ if (!defined('ABSPATH')) exit;
 </div>
 
 <script>
+// Ensure ajaxurl is defined
+var ajaxurl = ajaxurl || '<?php echo admin_url('admin-ajax.php'); ?>';
+
 jQuery(document).ready(function($) {
     // Clear refresh flag on page load (prevents infinite loops)
     sessionStorage.removeItem('aiseo_nonce_refresh_attempted');

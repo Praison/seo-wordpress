@@ -367,6 +367,372 @@ class AISEO_API {
     }
     
     /**
+     * Make structured request with JSON schema (for title + content separation)
+     *
+     * @param string $prompt User prompt
+     * @param array $schema JSON schema definition
+     * @param array $options Additional options
+     * @return array|WP_Error Structured response or error
+     */
+    public function make_structured_request($prompt, $schema, $options = array()) {
+        // Check API key
+        if (empty($this->api_key)) {
+            AISEO_Helpers::log('ERROR', 'api_request', 'API key not configured');
+            return new WP_Error('no_api_key', __('OpenAI API key not configured', 'aiseo'));
+        }
+        
+        // Check rate limiting
+        $rate_limit_check = $this->check_rate_limit();
+        if (is_wp_error($rate_limit_check)) {
+            return $rate_limit_check;
+        }
+        
+        // Check circuit breaker
+        $circuit_check = $this->check_circuit_breaker();
+        if (is_wp_error($circuit_check)) {
+            return $circuit_check;
+        }
+        
+        // Prepare request
+        $defaults = array(
+            'max_tokens' => (int) get_option('aiseo_api_max_tokens', 2000),
+            'temperature' => (float) get_option('aiseo_api_temperature', 0.7),
+            'max_retries' => 3,
+        );
+        
+        $options = wp_parse_args($options, $defaults);
+        $max_retries = $options['max_retries'];
+        
+        // Retry loop for structured output
+        for ($retry = 0; $retry < $max_retries; $retry++) {
+            $body = array(
+                'model' => $this->model,
+                'messages' => array(
+                    array(
+                        'role' => 'system',
+                        'content' => 'You are an SEO expert assistant. Provide structured, accurate content.',
+                    ),
+                    array(
+                        'role' => 'user',
+                        'content' => $prompt,
+                    ),
+                ),
+                'max_tokens' => $options['max_tokens'],
+                'temperature' => $options['temperature'],
+                'response_format' => array(
+                    'type' => 'json_schema',
+                    'json_schema' => array(
+                        'name' => $schema['name'],
+                        'strict' => true,
+                        'schema' => $schema['schema'],
+                    ),
+                ),
+            );
+            
+            $args = array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $this->api_key,
+                    'Content-Type' => 'application/json',
+                ),
+                'body' => json_encode($body),
+                'timeout' => get_option('aiseo_api_timeout', 60),
+                'sslverify' => true,
+            );
+            
+            // Track start time
+            $start_time = microtime(true);
+            
+            // Make request
+            $response = wp_remote_post(self::API_ENDPOINT, $args);
+            
+            // Track end time
+            $duration = (microtime(true) - $start_time) * 1000; // milliseconds
+            
+            if (is_wp_error($response)) {
+                if ($retry < $max_retries - 1) {
+                    AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after error: ' . $response->get_error_message());
+                    sleep(1); // Wait 1 second before retry
+                    continue;
+                }
+                
+                $this->record_failure();
+                $this->log_usage(false, 0, $duration);
+                return $response;
+            }
+            
+            // Parse response
+            $response_code = wp_remote_retrieve_response_code($response);
+            $response_body = wp_remote_retrieve_body($response);
+            
+            if ($response_code !== 200) {
+                if ($retry < $max_retries - 1) {
+                    AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after HTTP ' . $response_code);
+                    sleep(1);
+                    continue;
+                }
+                
+                $error_message = $this->parse_error_response($response_body, $response_code);
+                $this->record_failure();
+                $this->log_usage(false, 0, $duration);
+                return new WP_Error('api_error', $error_message);
+            }
+            
+            $data = json_decode($response_body, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                if ($retry < $max_retries - 1) {
+                    AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after JSON parse error');
+                    sleep(1);
+                    continue;
+                }
+                
+                return new WP_Error('invalid_response', __('Invalid API response', 'aiseo'));
+            }
+            
+            if (!isset($data['choices'][0]['message']['content'])) {
+                if ($retry < $max_retries - 1) {
+                    AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after missing content');
+                    sleep(1);
+                    continue;
+                }
+                
+                return new WP_Error('invalid_response', __('Unexpected API response format', 'aiseo'));
+            }
+            
+            $content = $data['choices'][0]['message']['content'];
+            $structured_data = json_decode($content, true);
+            
+            // Validate structured data matches schema
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($structured_data)) {
+                if ($retry < $max_retries - 1) {
+                    AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after invalid structured data');
+                    sleep(1);
+                    continue;
+                }
+                
+                return new WP_Error('invalid_structure', __('API returned invalid structured data', 'aiseo'));
+            }
+            
+            // Validate required fields exist
+            $required_fields = isset($schema['schema']['required']) ? $schema['schema']['required'] : array();
+            foreach ($required_fields as $field) {
+                if (!isset($structured_data[$field]) || empty($structured_data[$field])) {
+                    if ($retry < $max_retries - 1) {
+                        AISEO_Helpers::log('WARNING', 'api_structured_request', 'Retry ' . ($retry + 1) . ' after missing field: ' . $field);
+                        sleep(1);
+                        continue 2; // Continue outer loop
+                    }
+                    
+                    return new WP_Error('missing_field', sprintf(__('Required field "%s" is missing', 'aiseo'), $field));
+                }
+            }
+            
+            // Success! Track token usage
+            $tokens_used = isset($data['usage']['total_tokens']) ? $data['usage']['total_tokens'] : 0;
+            delete_transient('aiseo_api_failures');
+            $this->log_usage(true, $tokens_used, $duration);
+            
+            AISEO_Helpers::log('INFO', 'api_structured_request', 'Structured API request successful', array(
+                'tokens_used' => $tokens_used,
+                'duration_ms' => $duration,
+                'model' => $this->model,
+                'retries' => $retry,
+            ));
+            
+            return $structured_data;
+        }
+        
+        // If we get here, all retries failed
+        return new WP_Error('max_retries_exceeded', __('Failed to get valid structured response after maximum retries', 'aiseo'));
+    }
+    
+    /**
+     * Generate content outline with structured output
+     *
+     * @param string $topic Topic for the outline
+     * @param string $keyword Focus keyword (optional)
+     * @return array|WP_Error Structured outline or error
+     */
+    public function generate_outline($topic, $keyword = '') {
+        $prompt = "Create a comprehensive content outline for: \"{$topic}\"\n\n";
+        
+        if (!empty($keyword)) {
+            $prompt .= "Focus keyword: {$keyword}\n\n";
+        }
+        
+        $prompt .= "Create a well-structured outline with:\n";
+        $prompt .= "- An engaging title\n";
+        $prompt .= "- Introduction points (2-3 items)\n";
+        $prompt .= "- Main sections with subsections (3-5 sections)\n";
+        $prompt .= "- Conclusion points (2-3 items)\n";
+        $prompt .= "- Make it SEO-friendly and comprehensive";
+        
+        $schema = array(
+            'name' => 'content_outline',
+            'schema' => array(
+                'type' => 'object',
+                'properties' => array(
+                    'title' => array(
+                        'type' => 'string',
+                        'description' => 'Engaging title for the content',
+                    ),
+                    'introduction' => array(
+                        'type' => 'array',
+                        'description' => 'Introduction points',
+                        'items' => array(
+                            'type' => 'string',
+                        ),
+                    ),
+                    'sections' => array(
+                        'type' => 'array',
+                        'description' => 'Main content sections',
+                        'items' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'title' => array('type' => 'string'),
+                                'subsections' => array(
+                                    'type' => 'array',
+                                    'items' => array('type' => 'string'),
+                                ),
+                            ),
+                            'required' => array('title', 'subsections'),
+                            'additionalProperties' => false,
+                        ),
+                    ),
+                    'conclusion' => array(
+                        'type' => 'array',
+                        'description' => 'Conclusion points',
+                        'items' => array(
+                            'type' => 'string',
+                        ),
+                    ),
+                ),
+                'required' => array('title', 'introduction', 'sections', 'conclusion'),
+                'additionalProperties' => false,
+            ),
+        );
+        
+        return $this->make_structured_request($prompt, $schema, array(
+            'max_tokens' => 1500,
+            'temperature' => 0.7,
+            'max_retries' => 3,
+        ));
+    }
+    
+    /**
+     * Generate FAQ with structured output
+     *
+     * @param string $content Content to generate FAQs from
+     * @param int $count Number of FAQs to generate
+     * @return array|WP_Error Structured FAQs or error
+     */
+    public function generate_faq($content, $count = 3) {
+        $content = AISEO_Helpers::strip_shortcodes_and_tags($content);
+        $content = AISEO_Helpers::truncate_text($content, 1000);
+        
+        $prompt = "Generate {$count} frequently asked questions and answers based on this content:\n\n{$content}\n\n";
+        $prompt .= "Requirements:\n";
+        $prompt .= "- Questions should be clear and relevant\n";
+        $prompt .= "- Answers should be concise but informative\n";
+        $prompt .= "- Cover the most important aspects of the content";
+        
+        $schema = array(
+            'name' => 'faq_list',
+            'schema' => array(
+                'type' => 'object',
+                'properties' => array(
+                    'faqs' => array(
+                        'type' => 'array',
+                        'description' => 'List of FAQ items',
+                        'items' => array(
+                            'type' => 'object',
+                            'properties' => array(
+                                'question' => array(
+                                    'type' => 'string',
+                                    'description' => 'The question',
+                                ),
+                                'answer' => array(
+                                    'type' => 'string',
+                                    'description' => 'The answer',
+                                ),
+                            ),
+                            'required' => array('question', 'answer'),
+                            'additionalProperties' => false,
+                        ),
+                    ),
+                ),
+                'required' => array('faqs'),
+                'additionalProperties' => false,
+            ),
+        );
+        
+        return $this->make_structured_request($prompt, $schema, array(
+            'max_tokens' => 1500,
+            'temperature' => 0.7,
+            'max_retries' => 3,
+        ));
+    }
+    
+    /**
+     * Generate content brief with structured output
+     *
+     * @param string $topic Topic for the brief
+     * @param string $keyword Focus keyword (optional)
+     * @return array|WP_Error Structured brief or error
+     */
+    public function generate_content_brief($topic, $keyword = '') {
+        $prompt = "Create a detailed content brief for the topic: '$topic'";
+        if (!empty($keyword)) {
+            $prompt .= " with focus keyword: '$keyword'";
+        }
+        $prompt .= ".\n\nProvide a comprehensive content brief with all necessary details for creating high-quality SEO content.";
+        
+        $schema = array(
+            'name' => 'content_brief',
+            'schema' => array(
+                'type' => 'object',
+                'properties' => array(
+                    'title' => array(
+                        'type' => 'string',
+                        'description' => 'Compelling title for the content',
+                    ),
+                    'keywords' => array(
+                        'type' => 'array',
+                        'description' => 'Target keywords (5-7 keywords)',
+                        'items' => array('type' => 'string'),
+                    ),
+                    'word_count' => array(
+                        'type' => 'string',
+                        'description' => 'Recommended word count range (e.g., "1500-2000")',
+                    ),
+                    'structure' => array(
+                        'type' => 'array',
+                        'description' => 'Main sections/headings (5-7 items)',
+                        'items' => array('type' => 'string'),
+                    ),
+                    'key_topics' => array(
+                        'type' => 'array',
+                        'description' => 'Key topics to cover (5-7 items)',
+                        'items' => array('type' => 'string'),
+                    ),
+                    'seo_tips' => array(
+                        'type' => 'string',
+                        'description' => 'Brief SEO recommendations',
+                    ),
+                ),
+                'required' => array('title', 'keywords', 'word_count', 'structure', 'key_topics', 'seo_tips'),
+                'additionalProperties' => false,
+            ),
+        );
+        
+        return $this->make_structured_request($prompt, $schema, array(
+            'max_tokens' => 1000,
+            'temperature' => 0.7,
+            'max_retries' => 3,
+        ));
+    }
+    
+    /**
      * Make Vision API request to OpenAI
      *
      * @param string $image_url URL of the image to analyze

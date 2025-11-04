@@ -300,11 +300,11 @@ jQuery(document).ready(function($) {
     // AI Post Creator - Generate Content
     $('.aiseo-generate-post').on('click', function() {
         var $btn = $(this);
-        var $form = $('#aiseo-post-creator-form');
-        var topic = $form.find('[name="topic"]').val();
+        var $form = $('#aiseo-create-post-form');
+        var topic = $form.find('[name="topic"]').val().trim();
         var keyword = $form.find('[name="keyword"]').val();
         var postType = $form.find('[name="post_type"]').val();
-        var length = $form.find('[name="length"]').val();
+        var length = $form.find('[name="content_length"]').val();
         
         if (!topic) {
             alert('Please enter a topic');
@@ -666,6 +666,15 @@ jQuery(document).ready(function($) {
                         html += '</ul>';
                     }
                     
+                    // Catch-all: If html is still empty, try to display raw data
+                    if (!html && response.data) {
+                        if (typeof response.data === 'object') {
+                            html = '<pre style="background:white;padding:10px;border-radius:5px;overflow:auto;">' + JSON.stringify(response.data, null, 2) + '</pre>';
+                        } else {
+                            html = '<div>' + response.data + '</div>';
+                        }
+                    }
+                    
                     if (html) {
                         $('#aiseo-outline-result').show().find('.aiseo-result-content').html('<div style="background:#f0f0f0;padding:15px;border-radius:5px;">' + html + '</div>');
                     } else {
@@ -785,6 +794,36 @@ jQuery(document).ready(function($) {
         
         $btn.prop('disabled', true).text('Creating...');
         
+        // Extract title from content
+        var tempDiv = $('<div>').html(content);
+        var title = '';
+        
+        // For FAQ content, extract first question
+        if (source === 'faq') {
+            var textContent = tempDiv.text().trim();
+            // Look for "Q:" pattern
+            var qMatch = textContent.match(/Q:\s*([^?]+\?)/i);
+            if (qMatch) {
+                title = qMatch[1].trim();
+            }
+        }
+        
+        // For other content, try headings first
+        if (!title) {
+            title = tempDiv.find('h1, h2, h3').first().text();
+        }
+        
+        // Fallback to first sentence
+        if (!title) {
+            var textContent = tempDiv.text().trim();
+            title = textContent.split(/[.!?]/)[0].substring(0, 100);
+        }
+        
+        // Final fallback
+        if (!title) {
+            title = 'Generated from ' + source;
+        }
+        
         $.ajax({
             url: ajaxurl,
             type: 'POST',
@@ -792,7 +831,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_create_post',
                 nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
-                topic: 'Generated from ' + source,
+                topic: title,
                 content: content,
                 post_type: postType,
                 length: 'medium'

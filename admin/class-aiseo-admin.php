@@ -34,6 +34,7 @@ class AISEO_Admin {
         
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_gutenberg_assets'));
         add_action('wp_ajax_aiseo_admin_action', array($this, 'handle_ajax_request'));
         
         // Individual AJAX handlers for UI buttons
@@ -69,11 +70,32 @@ class AISEO_Admin {
         add_action('wp_ajax_aiseo_internal_linking', array($this, 'ajax_internal_linking'));
         add_action('wp_ajax_aiseo_meta_variations', array($this, 'ajax_meta_variations'));
         
+        // Nonce refresh endpoint (no nonce check needed for getting a new nonce)
+        add_action('wp_ajax_aiseo_refresh_nonce', array($this, 'ajax_refresh_nonce'));
+        
+        // SEO Improvement handlers
+        add_action('wp_ajax_aiseo_improve_seo_meta', array($this, 'ajax_improve_seo_meta'));
+        add_action('wp_ajax_aiseo_improve_content_block', array($this, 'ajax_improve_content_block'));
+        
         // Bulk Operations
         add_action('wp_ajax_aiseo_import_seo', array($this, 'ajax_import_seo'));
         add_action('wp_ajax_aiseo_export_seo', array($this, 'ajax_export_seo'));
         add_action('wp_ajax_aiseo_save_title', array($this, 'ajax_save_title'));
         add_action('wp_ajax_aiseo_save_description', array($this, 'ajax_save_description'));
+    }
+    
+    /**
+     * AJAX: Refresh nonce
+     * Returns a fresh nonce without requiring nonce verification
+     */
+    public function ajax_refresh_nonce() {
+        if (!is_user_logged_in()) {
+            wp_send_json_error('Not logged in');
+            return;
+        }
+        
+        $new_nonce = wp_create_nonce('aiseo_admin_nonce');
+        wp_send_json_success(array('nonce' => $new_nonce));
     }
     
     /**
@@ -187,16 +209,52 @@ class AISEO_Admin {
             true
         );
         
-        // Localize script
+        // Localize script with nonce refresh support
         wp_localize_script('aiseo-admin', 'aiseoAdmin', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('aiseo_admin_nonce'),
+            'nonceRefreshAction' => 'aiseo_refresh_nonce',
             'strings' => array(
                 'generating' => __('Generating...', 'aiseo'),
                 'success' => __('Success!', 'aiseo'),
                 'error' => __('Error occurred', 'aiseo'),
                 'confirm' => __('Are you sure?', 'aiseo'),
+                'sessionExpired' => __('Session expired. Refreshing...', 'aiseo'),
             ),
+        ));
+    }
+    
+    /**
+     * Enqueue Gutenberg block editor assets
+     */
+    public function enqueue_gutenberg_assets() {
+        // Enqueue the rewrite button script
+        wp_enqueue_script(
+            'aiseo-gutenberg-rewrite',
+            AISEO_PLUGIN_URL . 'admin/js/gutenberg-rewrite-button.js',
+            array('wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-hooks', 'wp-i18n', 'wp-compose', 'wp-block-editor', 'jquery'),
+            AISEO_VERSION,
+            true
+        );
+        
+        // Enqueue the SEO improver script
+        wp_enqueue_script(
+            'aiseo-seo-improver',
+            AISEO_PLUGIN_URL . 'admin/js/gutenberg-seo-improver.js',
+            array('wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n', 'jquery'),
+            AISEO_VERSION,
+            true
+        );
+        
+        // Localize scripts with nonce
+        wp_localize_script('aiseo-gutenberg-rewrite', 'aiseGutenbergData', array(
+            'nonce' => wp_create_nonce('aiseo_admin_nonce'),
+            'ajaxUrl' => admin_url('admin-ajax.php')
+        ));
+        
+        wp_localize_script('aiseo-seo-improver', 'aiseoSEOImprover', array(
+            'nonce' => wp_create_nonce('aiseo_admin_nonce'),
+            'ajaxUrl' => admin_url('admin-ajax.php')
         ));
     }
     
@@ -576,12 +634,40 @@ class AISEO_Admin {
      * AJAX: Generate title for SEO Tools tab
      */
     public function ajax_generate_title() {
-        check_ajax_referer('aiseo_admin_nonce', 'nonce');
+        // DEBUG: Log all request data
+        error_log('=== AISEO GENERATE TITLE DEBUG ===');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('Nonce received: ' . (isset($_POST['nonce']) ? $_POST['nonce'] : 'NONE'));
+        error_log('Action: ' . (isset($_POST['action']) ? $_POST['action'] : 'NONE'));
+        error_log('User ID: ' . get_current_user_id());
+        error_log('User logged in: ' . (is_user_logged_in() ? 'YES' : 'NO'));
+        error_log('User can edit_posts: ' . (current_user_can('edit_posts') ? 'YES' : 'NO'));
         
-        if (!current_user_can('edit_posts')) {
-            wp_send_json_error('Permission denied');
+        // Verify nonce manually to get better error info
+        if (!isset($_POST['nonce'])) {
+            error_log('ERROR: No nonce provided in request');
+            wp_send_json_error('Security check failed: No nonce provided');
             return;
         }
+        
+        $nonce = $_POST['nonce'];
+        $nonce_check = wp_verify_nonce($nonce, 'aiseo_admin_nonce');
+        error_log('Nonce value: ' . $nonce);
+        error_log('wp_verify_nonce result: ' . var_export($nonce_check, true));
+        
+        if ($nonce_check === false) {
+            error_log('ERROR: Nonce verification failed - nonce is invalid or expired');
+            wp_send_json_error('Security check failed: Invalid or expired nonce. Please refresh the page.');
+            return;
+        }
+        
+        if (!current_user_can('edit_posts')) {
+            error_log('ERROR: User does not have edit_posts capability');
+            wp_send_json_error('Permission denied: You need edit_posts capability');
+            return;
+        }
+        
+        error_log('SUCCESS: All security checks passed, proceeding with title generation');
         
         $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
         
@@ -621,12 +707,37 @@ class AISEO_Admin {
      * AJAX: Generate description for SEO Tools tab
      */
     public function ajax_generate_description() {
-        check_ajax_referer('aiseo_admin_nonce', 'nonce');
+        // DEBUG: Log all request data
+        error_log('=== AISEO GENERATE DESCRIPTION DEBUG ===');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('Nonce received: ' . (isset($_POST['nonce']) ? $_POST['nonce'] : 'NONE'));
+        error_log('User ID: ' . get_current_user_id());
+        error_log('User logged in: ' . (is_user_logged_in() ? 'YES' : 'NO'));
         
-        if (!current_user_can('edit_posts')) {
-            wp_send_json_error('Permission denied');
+        // Verify nonce manually
+        if (!isset($_POST['nonce'])) {
+            error_log('ERROR: No nonce provided');
+            wp_send_json_error('Security check failed: No nonce provided');
             return;
         }
+        
+        $nonce = $_POST['nonce'];
+        $nonce_check = wp_verify_nonce($nonce, 'aiseo_admin_nonce');
+        error_log('wp_verify_nonce result: ' . var_export($nonce_check, true));
+        
+        if ($nonce_check === false) {
+            error_log('ERROR: Nonce verification failed');
+            wp_send_json_error('Security check failed: Invalid or expired nonce. Please refresh the page.');
+            return;
+        }
+        
+        if (!current_user_can('edit_posts')) {
+            error_log('ERROR: User does not have edit_posts capability');
+            wp_send_json_error('Permission denied: You need edit_posts capability');
+            return;
+        }
+        
+        error_log('SUCCESS: All security checks passed');
         
         $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
         
@@ -1110,63 +1221,13 @@ class AISEO_Admin {
             return;
         }
         
-        // Generate content brief using AI
+        // Use structured output API
         $api = new AISEO_API();
+        $brief = $api->generate_content_brief($topic, $keyword);
         
-        $prompt = "Create a detailed content brief for the topic: '$topic'";
-        if (!empty($keyword)) {
-            $prompt .= " with focus keyword: '$keyword'";
-        }
-        $prompt .= ".\n\nProvide a structured brief in JSON format with:\n";
-        $prompt .= "- title: A compelling title for the content\n";
-        $prompt .= "- keywords: Array of 5-7 target keywords\n";
-        $prompt .= "- word_count: Recommended word count (e.g., '1500-2000')\n";
-        $prompt .= "- structure: Array of 5-7 main sections/headings\n";
-        $prompt .= "- key_topics: Array of 5-7 key topics to cover\n";
-        $prompt .= "- seo_tips: Brief SEO recommendations\n\n";
-        $prompt .= "Return ONLY valid JSON, no markdown code blocks.";
-        
-        $result = $api->make_request($prompt, array(
-            'max_tokens' => 800,
-            'temperature' => 0.7
-        ));
-        
-        if (is_wp_error($result)) {
-            wp_send_json_error($result->get_error_message());
+        if (is_wp_error($brief)) {
+            wp_send_json_error($brief->get_error_message());
             return;
-        }
-        
-        // Parse JSON response
-        $result = preg_replace('/```json\s*/', '', $result);
-        $result = preg_replace('/```\s*$/', '', $result);
-        $result = trim($result);
-        
-        $brief = json_decode($result, true);
-        
-        if (!$brief) {
-            // Fallback if JSON parsing fails
-            $brief = array(
-                'title' => ucwords($topic) . ': Complete Guide',
-                'keywords' => array($keyword ?: $topic, 'guide', 'tips', 'best practices', 'tutorial'),
-                'word_count' => '1500-2000',
-                'structure' => array(
-                    'Introduction to ' . $topic,
-                    'Understanding the Basics',
-                    'Key Concepts and Strategies',
-                    'Best Practices',
-                    'Common Mistakes to Avoid',
-                    'Advanced Tips',
-                    'Conclusion and Next Steps'
-                ),
-                'key_topics' => array(
-                    'Overview and importance',
-                    'Core principles',
-                    'Practical applications',
-                    'Tools and resources',
-                    'Real-world examples'
-                ),
-                'seo_tips' => 'Use the focus keyword in the title, first paragraph, and headings. Include related keywords naturally throughout. Add internal links to related content. Optimize images with alt text.'
-            );
         }
         
         wp_send_json_success($brief);
@@ -1252,60 +1313,17 @@ class AISEO_Admin {
             return;
         }
         
-        if (!class_exists('AISEO_Outline')) {
-            // Mock response for demo - return structured data
-            $result = array(
-                'outline' => array(
-                    'introduction' => array(
-                        array('text' => "Overview of $topic"),
-                        array('text' => 'Why this topic is important'),
-                        array('text' => 'What you will learn')
-                    ),
-                    'sections' => array(
-                        array(
-                            'title' => 'Understanding the Basics',
-                            'subsections' => array(
-                                array('text' => 'Key concepts and terminology'),
-                                array('text' => 'Common misconceptions'),
-                                array('text' => 'Best practices overview')
-                            )
-                        ),
-                        array(
-                            'title' => 'Advanced Techniques',
-                            'subsections' => array(
-                                array('text' => 'Professional strategies'),
-                                array('text' => 'Tools and resources'),
-                                array('text' => 'Real-world examples')
-                            )
-                        ),
-                        array(
-                            'title' => 'Implementation Guide',
-                            'subsections' => array(
-                                array('text' => 'Step-by-step process'),
-                                array('text' => 'Common pitfalls to avoid'),
-                                array('text' => 'Measuring success')
-                            )
-                        )
-                    ),
-                    'conclusion' => array(
-                        array('text' => 'Key takeaways and summary'),
-                        array('text' => 'Next steps and resources'),
-                        array('text' => 'Final recommendations')
-                    )
-                )
-            );
-            wp_send_json_success($result);
-            return;
-        }
-        
-        $outline = new AISEO_Outline();
-        $result = $outline->generate($topic, $keyword);
+        // Use structured output API
+        $api = new AISEO_API();
+        $result = $api->generate_outline($topic, $keyword);
         
         if (is_wp_error($result)) {
             wp_send_json_error($result->get_error_message());
+            return;
         }
         
-        wp_send_json_success($result);
+        // Wrap in 'outline' key for backward compatibility with frontend
+        wp_send_json_success(array('outline' => $result));
     }
     
     /**
@@ -1323,29 +1341,20 @@ class AISEO_Admin {
         
         if (empty($content)) {
             wp_send_json_error('Content is required');
-        }
-        
-        if (!class_exists('AISEO_FAQ')) {
-            // Mock response for demo
-            $faqs = array();
-            for ($i = 1; $i <= $count; $i++) {
-                $faqs[] = array(
-                    'question' => "What is the main point #$i about this content?",
-                    'answer' => "This content discusses important aspect #$i which provides valuable information for readers."
-                );
-            }
-            wp_send_json_success($faqs);
             return;
         }
         
-        $faq = new AISEO_FAQ();
-        $result = $faq->generate($content, $count);
+        // Use structured output API
+        $api = new AISEO_API();
+        $result = $api->generate_faq($content, $count);
         
         if (is_wp_error($result)) {
             wp_send_json_error($result->get_error_message());
+            return;
         }
         
-        wp_send_json_success($result);
+        // Return the faqs array directly
+        wp_send_json_success($result['faqs']);
     }
     
     /**
@@ -1973,5 +1982,143 @@ class AISEO_Admin {
         }
         
         return serialize_blocks($block_array);
+    }
+    
+    /**
+     * AJAX: Improve SEO Meta (Title & Description)
+     */
+    public function ajax_improve_seo_meta() {
+        check_ajax_referer('aiseo_admin_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+            return;
+        }
+        
+        $post_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        $current_title = isset($_POST['current_title']) ? sanitize_text_field($_POST['current_title']) : '';
+        $analysis = isset($_POST['analysis']) ? json_decode(stripslashes($_POST['analysis']), true) : array();
+        
+        if (!$post_id || !$current_title) {
+            wp_send_json_error('Missing required data');
+            return;
+        }
+        
+        $post = get_post($post_id);
+        if (!$post) {
+            wp_send_json_error('Post not found');
+            return;
+        }
+        
+        $focus_keyword = get_post_meta($post_id, '_aiseo_focus_keyword', true);
+        
+        // Build improvement prompt based on analysis
+        $improvements = array();
+        if (isset($analysis['keyword_in_title']) && $analysis['keyword_in_title'] < 50 && $focus_keyword) {
+            $improvements[] = "Include the focus keyword '{$focus_keyword}' in the title";
+        }
+        
+        $prompt = "Improve this SEO title: '{$current_title}'\n\n";
+        $prompt .= "Requirements:\n";
+        $prompt .= "- Keep it under 60 characters\n";
+        $prompt .= "- Make minimal changes\n";
+        $prompt .= "- Keep the same meaning\n";
+        if (!empty($improvements)) {
+            $prompt .= "- " . implode("\n- ", $improvements) . "\n";
+        }
+        $prompt .= "\nReturn ONLY the improved title, nothing else.";
+        
+        try {
+            $api = new AISEO_API();
+            $improved_title = $api->generate_content($prompt, 'short');
+            
+            if (is_wp_error($improved_title)) {
+                wp_send_json_error($improved_title->get_error_message());
+                return;
+            }
+            
+            // Clean up the response
+            $improved_title = trim(strip_tags($improved_title));
+            
+            wp_send_json_success(array(
+                'title' => $improved_title,
+                'original' => $current_title
+            ));
+        } catch (Exception $e) {
+            wp_send_json_error('Failed to improve title: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * AJAX: Improve Content Block
+     */
+    public function ajax_improve_content_block() {
+        check_ajax_referer('aiseo_admin_nonce', 'nonce');
+        
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error('Permission denied');
+            return;
+        }
+        
+        $content = isset($_POST['content']) ? sanitize_textarea_field($_POST['content']) : '';
+        $block_type = isset($_POST['block_type']) ? sanitize_text_field($_POST['block_type']) : '';
+        $analysis = isset($_POST['analysis']) ? json_decode(stripslashes($_POST['analysis']), true) : array();
+        
+        if (!$content) {
+            wp_send_json_error('No content provided');
+            return;
+        }
+        
+        // Build improvement instructions based on analysis
+        $instructions = array();
+        
+        if (isset($analysis['readability']) && $analysis['readability'] < 50) {
+            $instructions[] = "Use shorter sentences and simpler words";
+        }
+        
+        if (isset($analysis['sentence_length']) && $analysis['sentence_length'] < 70) {
+            $instructions[] = "Shorten long sentences";
+        }
+        
+        if (isset($analysis['keyword_density']) && $analysis['keyword_density'] < 30) {
+            $focus_keyword = isset($analysis['focus_keyword']) ? $analysis['focus_keyword'] : '';
+            if ($focus_keyword) {
+                $instructions[] = "Naturally include the keyword '{$focus_keyword}' if relevant";
+            }
+        }
+        
+        $prompt = "Improve this content for SEO:\n\n{$content}\n\n";
+        $prompt .= "Requirements:\n";
+        $prompt .= "- Make MINIMAL changes only\n";
+        $prompt .= "- Keep the same structure and length\n";
+        $prompt .= "- Preserve the original meaning\n";
+        $prompt .= "- Keep the same number of sentences\n";
+        
+        if (!empty($instructions)) {
+            $prompt .= "- " . implode("\n- ", $instructions) . "\n";
+        }
+        
+        $prompt .= "\nReturn ONLY the improved content, nothing else. No explanations.";
+        
+        try {
+            $api = new AISEO_API();
+            $improved_content = $api->generate_content($prompt, 'medium');
+            
+            if (is_wp_error($improved_content)) {
+                wp_send_json_error($improved_content->get_error_message());
+                return;
+            }
+            
+            // Clean up and preserve HTML structure if it was a heading
+            $improved_content = trim($improved_content);
+            
+            if ($block_type === 'core/heading') {
+                $improved_content = strip_tags($improved_content);
+            }
+            
+            wp_send_json_success($improved_content);
+        } catch (Exception $e) {
+            wp_send_json_error('Failed to improve content: ' . $e->getMessage());
+        }
     }
 }

@@ -172,6 +172,30 @@ jQuery(document).ready(function($) {
     // Clear refresh flag on page load (prevents infinite loops)
     sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
     
+    // Global nonce variable
+    var aiseoBulkNonce = '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>';
+    
+    // Function to refresh nonce
+    function refreshNonce(callback) {
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'aiseo_refresh_nonce'
+            },
+            success: function(response) {
+                if (response.success && response.data.nonce) {
+                    aiseoBulkNonce = response.data.nonce;
+                    console.log('Nonce refreshed successfully');
+                    if (callback) callback();
+                }
+            },
+            error: function() {
+                console.error('Failed to refresh nonce');
+            }
+        });
+    }
+    
     // Select all checkbox
     $('#aiseo-select-all-posts').on('change', function() {
         $('.aiseo-bulk-post').prop('checked', $(this).is(':checked'));
@@ -223,7 +247,7 @@ jQuery(document).ready(function($) {
                 data: {
                     action: action,
                     post_id: post.id,
-                    nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                    nonce: aiseoBulkNonce
                 },
                 success: function(response) {
                     console.log('Bulk AJAX response for post', post.id, ':', response);
@@ -251,14 +275,18 @@ jQuery(document).ready(function($) {
                 error: function(xhr, status, error) {
                     console.error('Bulk AJAX error for post', post.id, ':', xhr.status, error);
                     
-                    // Auto-refresh on nonce failure (only once)
+                    // Auto-refresh nonce on 403 failure (no page reload!)
                     if (xhr.status === 403 && xhr.responseText === '-1') {
                         if (!sessionStorage.getItem('aiseo_nonce_refresh_attempted')) {
                             sessionStorage.setItem('aiseo_nonce_refresh_attempted', '1');
-                            alert('Session expired. Refreshing page automatically...');
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1500);
+                            console.log('Nonce expired, refreshing nonce and retrying...');
+                            
+                            // Refresh nonce and retry this request
+                            refreshNonce(function() {
+                                // Retry the same post with new nonce
+                                currentIndex--; // Go back one so processNext() will retry this post
+                                processNext();
+                            });
                             return;
                         } else {
                             sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
@@ -268,16 +296,15 @@ jQuery(document).ready(function($) {
                                 success: false,
                                 error: 'Session Error: Please log out and log back in to WordPress'
                             });
-                            return;
                         }
+                    } else {
+                        bulkResults.push({
+                            postId: post.id,
+                            postTitle: post.title,
+                            success: false,
+                            error: 'Connection error: ' + error + ' (Status: ' + xhr.status + ')'
+                        });
                     }
-                    
-                    bulkResults.push({
-                        postId: post.id,
-                        postTitle: post.title,
-                        success: false,
-                        error: 'Connection error: ' + error + ' (Status: ' + xhr.status + ')'
-                    });
                 },
                 complete: function() {
                     currentIndex++;

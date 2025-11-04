@@ -56,26 +56,24 @@ class AISEO_Post_Creator {
         
         $args = wp_parse_args($args, $defaults);
         
-        // Generate title if not provided
-        if (empty($args['title'])) {
-            $title_result = $this->generate_post_title($args['topic'], $args['keyword']);
-            if (is_wp_error($title_result)) {
-                return $title_result;
-            }
-            $args['title'] = $title_result;
-        }
-        
-        // Generate content
-        $content_result = $this->generate_post_content(
-            $args['title'],
+        // Use structured output to generate both title and content together
+        $structured_result = $this->generate_post_with_structured_output(
             $args['topic'],
             $args['keyword'],
             $args['content_length']
         );
         
-        if (is_wp_error($content_result)) {
-            return $content_result;
+        if (is_wp_error($structured_result)) {
+            return $structured_result;
         }
+        
+        // Use structured title and content
+        $args['title'] = $structured_result['title'];
+        $content_result = array(
+            'content' => $structured_result['content'],
+            'keyword' => !empty($args['keyword']) ? $args['keyword'] : $structured_result['keyword'],
+            'word_count' => str_word_count(wp_strip_all_tags($structured_result['content'])),
+        );
         
         // Create the post
         $post_data = array(
@@ -257,6 +255,106 @@ class AISEO_Post_Creator {
             'keyword' => $extracted_keyword,
             'word_count' => str_word_count(wp_strip_all_tags($content)),
         );
+    }
+    
+    /**
+     * Generate post with structured output (title + content)
+     *
+     * @param string $topic Topic or subject
+     * @param string $keyword Focus keyword
+     * @param string $length Content length
+     * @return array|WP_Error Structured data with title and content, or error
+     */
+    private function generate_post_with_structured_output($topic, $keyword = '', $length = 'medium') {
+        // Determine word count based on length
+        $word_counts = array(
+            'tiny' => 100,
+            'brief' => 200,
+            'short' => 500,
+            'medium' => 1000,
+            'long' => 2000,
+        );
+        
+        $target_words = isset($word_counts[$length]) ? $word_counts[$length] : $word_counts['medium'];
+        
+        // Build prompt
+        $prompt = "Create a comprehensive, SEO-optimized blog post about: \"{$topic}\"\n\n";
+        
+        if (!empty($keyword)) {
+            $prompt .= "Focus keyword: {$keyword}\n";
+            $prompt .= "Include the keyword naturally throughout the content.\n\n";
+        }
+        
+        $prompt .= "Requirements:\n";
+        $prompt .= "- Target length: approximately {$target_words} words\n";
+        $prompt .= "- Use proper HTML formatting with <h2>, <h3>, <p>, <ul>, <li> tags\n";
+        $prompt .= "- Include an engaging introduction\n";
+        $prompt .= "- Use subheadings to organize content\n";
+        $prompt .= "- Include bullet points or lists where appropriate\n";
+        $prompt .= "- Write in a clear, engaging style\n";
+        $prompt .= "- Include a conclusion with a call-to-action\n";
+        $prompt .= "- Make it SEO-friendly and valuable to readers\n\n";
+        $prompt .= "IMPORTANT: \n";
+        $prompt .= "- Do NOT include the title as an <h1> or heading in the content (WordPress will add it automatically)\n";
+        $prompt .= "- Start the content directly with the introduction paragraph\n";
+        $prompt .= "- Use <h2> for main sections, <h3> for subsections\n";
+        $prompt .= "- Provide ONLY the HTML content body in the 'content' field\n";
+        $prompt .= "- Do NOT wrap content in markdown code blocks\n";
+        $prompt .= "- Extract a focus keyword if not provided";
+        
+        // Define JSON schema for structured output
+        $schema = array(
+            'name' => 'blog_post',
+            'schema' => array(
+                'type' => 'object',
+                'properties' => array(
+                    'title' => array(
+                        'type' => 'string',
+                        'description' => 'SEO-optimized post title (50-60 characters)',
+                    ),
+                    'content' => array(
+                        'type' => 'string',
+                        'description' => 'HTML formatted post content without the title',
+                    ),
+                    'keyword' => array(
+                        'type' => 'string',
+                        'description' => 'Primary focus keyword for SEO',
+                    ),
+                ),
+                'required' => array('title', 'content', 'keyword'),
+                'additionalProperties' => false,
+            ),
+        );
+        
+        // Adjust max_tokens based on length
+        $max_tokens = array(
+            'tiny' => 500,
+            'brief' => 800,
+            'short' => 1000,
+            'medium' => 2000,
+            'long' => 4000,
+        );
+        
+        // Make structured request with retries
+        $result = $this->api->make_structured_request($prompt, $schema, array(
+            'max_tokens' => isset($max_tokens[$length]) ? $max_tokens[$length] : $max_tokens['medium'],
+            'temperature' => 0.7,
+            'max_retries' => 3,
+        ));
+        
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        
+        // Clean up the content
+        $result['content'] = $this->cleanup_generated_content($result['content']);
+        
+        // Use provided keyword if available
+        if (!empty($keyword)) {
+            $result['keyword'] = $keyword;
+        }
+        
+        return $result;
     }
     
     /**
