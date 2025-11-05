@@ -36,6 +36,62 @@ wp aiseo report unified 123 --format=json
 wp aiseo readability analyze 123
 ```
 
+### Admin UI Testing (Playwright)
+```bash
+# Run automated UI tests
+cd /Users/praison/aiseo/tests/playwright
+npx playwright test --headed
+
+# Run specific test
+npx playwright test test-all-pages.spec.js --headed
+
+# Debug mode
+npx playwright test --debug
+```
+
+**Critical Setup Requirements:**
+1. **Environment Variables** (`.env` in plugin root):
+   ```
+   WP_URL=https://wordpress.test
+   WP_USERNAME=your_username
+   WP_PASSWORD=your_password
+   ```
+
+2. **AJAX Action Registration Timing**:
+   - AJAX handlers MUST be registered immediately when plugin loads during AJAX requests
+   - Do NOT wait for `init` or `plugins_loaded` hooks
+   - WordPress's `admin-ajax.php` checks for actions BEFORE these hooks fire
+   
+   ```php
+   // In main plugin file, BEFORE any hooks
+   if (is_admin() && defined('DOING_AJAX') && DOING_AJAX) {
+       require_once dirname(__FILE__) . '/admin/class-aiseo-admin.php';
+       new AISEO_Admin(); // Registers AJAX actions immediately
+   }
+   ```
+
+3. **Browser Context Persistence**:
+   - Use `browser.newContext()` to ensure cookies persist across requests
+   - Verify WordPress auth cookies are set after login
+   - Required cookies: `wordpress_logged_in_*`, `wordpress_sec_*`
+
+4. **Debugging AJAX Failures**:
+   ```bash
+   # Monitor WordPress debug log
+   tail -f /path/to/wordpress/wp-content/debug.log
+   
+   # Check if AJAX actions are registered
+   php -r "require 'wp-load.php'; echo has_action('wp_ajax_aiseo_generate_title') ? 'YES' : 'NO';"
+   
+   # Verify nonce validity
+   php -r "require 'wp-load.php'; echo wp_verify_nonce('NONCE_VALUE', 'aiseo_admin_nonce') ? 'VALID' : 'INVALID';"
+   ```
+
+5. **Common Issues**:
+   - **403 with `-1` response**: AJAX actions registered too late (see #2)
+   - **Invalid nonce**: Session mismatch between page load and AJAX request
+   - **Action not found**: Class not instantiated during AJAX requests
+
 ---
 
 ## REST API Endpoints (60+)
@@ -447,10 +503,10 @@ jobs:
 
 ## Documentation
 
-- **README.md** - User guide, features, quick start
-- **ARCHITECTURE.md** - Technical specs, development workflow
+- **../README.md** - User guide, features, quick start
+- **../ARCHITECTURE.md** - Technical specs, development workflow
 - **TESTING.md** - This file (testing guide)
-- **WORDPRESS-ORG-CHECKLIST.md** - Publication checklist
+- **../WORDPRESS-ORG-CHECKLIST.md** - Publication checklist
 
 ---
 
@@ -706,3 +762,391 @@ curl -k -X POST https://wordpress.test/wp-admin/admin-ajax.php \
 ### Wordpress Local path
 
 /Users/praison/Sites/localhost/wordpress
+
+---
+
+## AJAX Handler Testing (CLI)
+
+### Overview
+Test AJAX handlers directly without browser interaction using the CLI test script. This is useful for debugging nonce issues, testing handler logic, and verifying API integration.
+
+### Location
+`tests/ajax/test-ajax-handlers.php`
+
+### Running the Test
+
+**Method 1: From WordPress root**
+```bash
+cd /Users/praison/Sites/localhost/wordpress
+php wp-content/plugins/aiseo/tests/ajax/test-ajax-handlers.php
+```
+
+**Method 2: Using WP_ROOT environment variable**
+```bash
+export WP_ROOT=/Users/praison/Sites/localhost/wordpress
+cd /path/to/aiseo/plugin
+php tests/ajax/test-ajax-handlers.php
+```
+
+**Method 3: From plugin directory (auto-detect)**
+```bash
+cd /Users/praison/aiseo
+php tests/ajax/test-ajax-handlers.php
+```
+
+### What It Tests
+
+✅ **Nonce System**
+- Nonce generation with `wp_create_nonce()`
+- Nonce verification with `wp_verify_nonce()`
+- Nonce age detection (fresh vs old)
+- Session management
+
+✅ **User Authentication**
+- User login status
+- User capabilities (`edit_posts`)
+- Admin user detection
+
+✅ **AJAX Handlers**
+- `ajax_generate_title()` - Generate SEO titles
+- `ajax_generate_description()` - Generate meta descriptions
+- `ajax_generate_keyword()` - Generate focus keywords
+- Direct function calls without HTTP overhead
+
+✅ **API Integration**
+- OpenAI API connectivity
+- Response parsing
+- Error handling
+
+### Expected Output
+
+```
+=== AISEO AJAX HANDLER TEST ===
+
+✓ AISEO classes loaded
+
+✓ Set current user to: admin (ID: 1)
+✓ User can edit_posts: YES
+
+✓ Generated nonce: 74777fd078
+✓ Nonce verification: VALID (1)
+
+✓ Using post: Sample Post Title (ID: 1302)
+
+--- Simulating AJAX Request ---
+POST data:
+Array
+(
+    [action] => aiseo_generate_title
+    [post_id] => 1302
+    [nonce] => 74777fd078
+)
+
+--- Calling ajax_generate_title() ---
+{"success":true,"data":"Mastering Testing: Key Types and Processes for Better Results"}
+
+=== TEST COMPLETE ===
+```
+
+### Debug Logs
+
+The test generates detailed logs in `wp-content/debug.log`:
+
+```bash
+# Watch logs in real-time
+tail -f /Users/praison/Sites/localhost/wordpress/wp-content/debug.log | grep AISEO
+
+# View recent AISEO logs
+tail -100 /Users/praison/Sites/localhost/wordpress/wp-content/debug.log | grep -A 5 "FUNCTION CALLED"
+```
+
+**Log entries include:**
+- `!!! FUNCTION CALLED: ajax_generate_title !!!` - Function entry point
+- `=== AISEO GENERATE TITLE DEBUG ===` - Debug section start
+- `POST data: Array(...)` - Request parameters
+- `Nonce received: abc123` - Nonce value
+- `User ID: 1` - Current user
+- `wp_verify_nonce result: 1` - Nonce validation (1=fresh, 2=old, false=invalid)
+- `Nonce age: Fresh (0-12 hours)` - Nonce status
+
+### Troubleshooting
+
+**Error: "Cannot find wp-load.php"**
+```bash
+# Solution 1: Set WP_ROOT
+export WP_ROOT=/Users/praison/Sites/localhost/wordpress
+
+# Solution 2: Run from WordPress directory
+cd /Users/praison/Sites/localhost/wordpress
+php wp-content/plugins/aiseo/tests/ajax/test-ajax-handlers.php
+```
+
+**Error: "No admin user found"**
+```bash
+# Create an admin user first
+wp user create testadmin test@example.com --role=administrator --user_pass=password
+```
+
+**Error: "Class not found"**
+```bash
+# Make sure plugin is properly installed
+ls -la /Users/praison/Sites/localhost/wordpress/wp-content/plugins/aiseo/
+
+# Check symlink
+ls -la /Users/praison/Sites/localhost/wordpress/wp-content/plugins/ | grep aiseo
+```
+
+**Nonce verification fails**
+- Check debug.log for `wp_verify_nonce result`
+- Verify user is logged in: `User logged in: YES`
+- Check user capabilities: `User can edit_posts: YES`
+
+### Use Cases
+
+**1. Debug Nonce Issues**
+```bash
+# Run test and check nonce verification
+php tests/ajax/test-ajax-handlers.php 2>&1 | grep -E "Nonce|wp_verify"
+```
+
+**2. Test API Integration**
+```bash
+# Verify OpenAI API is working
+php tests/ajax/test-ajax-handlers.php 2>&1 | grep -E "success|data"
+```
+
+**3. Performance Testing**
+```bash
+# Time the execution
+time php tests/ajax/test-ajax-handlers.php
+```
+
+**4. CI/CD Integration**
+```yaml
+# GitHub Actions example
+- name: Test AJAX Handlers
+  run: |
+    export WP_ROOT=${{ github.workspace }}/wordpress
+    php wp-content/plugins/aiseo/tests/ajax/test-ajax-handlers.php
+```
+
+### Nonce Issue Resolution
+
+This test was created to debug and fix the "Session expired. Refreshing page automatically..." error that occurred when:
+- Nonces were hardcoded in PHP view files
+- Browser used stale/cached nonces
+- WordPress returned `-1` (nonce verification failed)
+
+**Root Cause:** Hardcoded nonces in `admin/views/seo-tools.php`:
+```php
+// ❌ OLD (causes issues)
+nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+
+// ✅ NEW (fixed)
+nonce: aiseoAdmin.nonce  // Uses localized script nonce
+```
+
+**Solution:** Use `aiseoAdmin.nonce` from localized script which is fresh on every page load.
+
+### Test Coverage
+
+| Handler | Status | Notes |
+|---------|--------|-------|
+| `ajax_generate_title()` | ✅ Tested | Generates SEO titles |
+| `ajax_generate_description()` | ✅ Tested | Generates meta descriptions |
+| `ajax_generate_keyword()` | ✅ Tested | Generates focus keywords |
+| `ajax_analyze_post()` | 🔄 Planned | Content analysis |
+| `ajax_create_post()` | 🔄 Planned | AI post creation |
+| `ajax_generate_faq()` | 🔄 Planned | FAQ generation |
+| `ajax_generate_outline()` | 🔄 Planned | Content outlines |
+
+### Related Documentation
+
+- **TESTING.md** - This file (complete testing guide)
+- **ajax/test-ajax-handlers.php** - The actual CLI test script
+- **../admin/class-aiseo-admin.php** - AJAX handler implementations
+- **../NONCE-FIX-SUMMARY.md** - Detailed nonce fix documentation
+
+---
+
+## Automated E2E Testing (Playwright)
+
+### Overview
+Automated end-to-end tests that interact with all AISEO admin pages, trigger AJAX requests, and monitor logs in real-time.
+
+### Location
+`tests/playwright/`
+
+### Setup
+
+```bash
+cd tests/playwright
+npm install
+npx playwright install chromium
+```
+
+### Running Tests
+
+**Method 1: With automatic log monitoring (recommended)**
+```bash
+cd tests/playwright
+./run-tests-with-logs.sh
+```
+
+This will:
+- ✅ Start monitoring WordPress debug.log
+- ✅ Run all Playwright tests with visible browser
+- ✅ Capture all console logs and AJAX requests
+- ✅ Save results to `tests/logs/`
+- ✅ Show summary of errors and AJAX requests
+
+**Method 2: Manual test run**
+```bash
+cd tests/playwright
+
+# Headless mode
+npm test
+
+# With visible browser
+npm run test:headed
+
+# Debug mode (step through)
+npm run test:debug
+
+# Interactive UI
+npm run test:ui
+```
+
+**Method 3: Monitor logs separately**
+```bash
+# Terminal 1: Run tests
+cd tests/playwright
+npm run test:headed
+
+# Terminal 2: Monitor logs
+tail -f /Users/praison/Sites/localhost/wordpress/wp-content/debug.log | grep -E "🔵|AISEO|403|500"
+```
+
+### What Gets Tested
+
+The automated test suite tests ALL admin pages:
+
+| Page | Test Action | What It Checks |
+|------|-------------|----------------|
+| **Dashboard** | View overview | Page loads correctly |
+| **SEO Tools** | Generate title for a post | AJAX request succeeds, no 403 |
+| **AI Content** | Generate content | Content generation works |
+| **Bulk Operations** | Generate titles for 2 posts | Bulk AJAX requests succeed |
+| **Technical SEO** | List redirects | Technical features work |
+| **Advanced** | View settings | Settings page loads |
+| **Monitoring** | View logs | Monitoring works |
+| **Settings** | View configuration | Config page loads |
+
+### Test Output
+
+**Console logs captured:**
+- 🔴 Client-side AJAX interceptor logs
+- 🔵 Server-side AJAX logger logs
+- ❌ JavaScript errors
+- ⚠️  Warnings
+- 📊 AJAX request/response details
+
+**Files generated:**
+```
+tests/logs/
+├── playwright-test-results.json    # All captured logs
+├── playwright-report/              # HTML test report
+└── test-run-YYYYMMDD-HHMMSS.log   # WordPress debug log excerpt
+```
+
+### View Results
+
+```bash
+# View captured logs as JSON
+cat tests/logs/playwright-test-results.json | jq
+
+# View HTML report
+npx playwright show-report tests/logs/playwright-report
+
+# View WordPress log excerpt
+cat tests/logs/test-run-*.log | grep "403\|500\|Error"
+```
+
+### Environment Variables
+
+Tests use credentials from `/Users/praison/aiseo/.env`:
+
+```bash
+USERNAME=praison
+PASSWORD=leicester
+WP_URL=https://wordpress.test
+```
+
+### Debugging Failed Tests
+
+**If tests show 403 errors:**
+```bash
+# Check the captured logs
+cat tests/logs/playwright-test-results.json | jq '.ajaxRequests[] | select(.postData | contains("aiseo_generate"))'
+
+# Check WordPress debug log
+tail -100 /Users/praison/Sites/localhost/wordpress/wp-content/debug.log | grep -A 10 "🔵 GLOBAL AJAX LOGGER"
+```
+
+**If tests timeout:**
+```bash
+# Increase timeouts in playwright.config.js
+actionTimeout: 60000,
+navigationTimeout: 60000,
+```
+
+**If elements not found:**
+```bash
+# Run in debug mode to inspect
+npm run test:debug
+```
+
+### CI/CD Integration
+
+```yaml
+# .github/workflows/playwright.yml
+name: E2E Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: |
+          cd tests/playwright
+          npm ci
+          npx playwright install --with-deps
+      - name: Run tests
+        env:
+          WP_URL: ${{ secrets.WP_URL }}
+          USERNAME: ${{ secrets.WP_USERNAME }}
+          PASSWORD: ${{ secrets.WP_PASSWORD }}
+        run: cd tests/playwright && npm test
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results
+          path: tests/logs/
+```
+
+### Test Coverage Summary
+
+| Feature | CLI Test | Playwright Test | Status |
+|---------|----------|-----------------|--------|
+| AJAX nonce verification | ✅ | ✅ | Tested |
+| Title generation | ✅ | ✅ | Tested |
+| Description generation | ✅ | ✅ | Tested |
+| Keyword generation | ✅ | ✅ | Tested |
+| Bulk operations | ❌ | ✅ | Tested |
+| Content generation | ❌ | ✅ | Tested |
+| Technical SEO | ❌ | ✅ | Tested |
+| All admin pages | ❌ | ✅ | Tested |
+
+---

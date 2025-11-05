@@ -1,0 +1,18 @@
+{
+  "name": "aiseo-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for AISEO WordPress plugin",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": ["playwright", "wordpress", "testing", "aiseo"],
+  "author": "MervinPraison",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "dotenv": "^16.3.1"
+  }
+}

@@ -168,7 +168,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_add_redirect',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 from_url: $form.find('[name="from_url"]').val(),
                 to_url: $form.find('[name="to_url"]').val(),
                 redirect_type: $form.find('[name="redirect_type"]').val()
@@ -203,7 +203,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_list_redirects',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success && response.data.length > 0) {
@@ -296,7 +296,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_delete_redirect',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 redirect_id: redirectId
             },
             success: function(response) {
@@ -323,7 +323,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_regenerate_sitemap',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -351,7 +351,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_find_missing_alt',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success && response.data.length > 0) {
@@ -410,7 +410,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_image_alt',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -465,7 +465,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_image_alt',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -494,7 +494,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_single_alt',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 post_id: postId,
                 image_url: imageUrl
             },

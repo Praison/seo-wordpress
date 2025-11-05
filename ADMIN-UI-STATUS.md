@@ -331,7 +331,7 @@ The AISEO Admin UI is **100% production-ready** with:
 All features are documented in:
 - `README.md` - Main plugin documentation
 - `ARCHITECTURE.md` - Technical architecture
-- `TESTING.md` - Testing procedures
+- `tests/TESTING.md` - Testing procedures & CLI test suite
 - `UI.md` - UI design specifications
 
 ---

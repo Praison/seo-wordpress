@@ -172,8 +172,8 @@ jQuery(document).ready(function($) {
     // Clear refresh flag on page load (prevents infinite loops)
     sessionStorage.removeItem('aiseo_nonce_refresh_attempted');
     
-    // Global nonce variable
-    var aiseoBulkNonce = '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>';
+    // Global nonce variable - use localized nonce
+    var aiseoBulkNonce = aiseoAdmin.nonce;
     
     // Function to refresh nonce
     function refreshNonce(callback) {
@@ -434,7 +434,7 @@ jQuery(document).ready(function($) {
                     action: action,
                     post_id: item.post_id,
                     value: item.value,
-                    nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                    nonce: aiseoAdmin.nonce
                 },
                 success: function(response) {
                     if (response.success) {
@@ -468,7 +468,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_import_seo',
                 source: source,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -508,7 +508,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_export_seo',
                 format: format,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 console.log('Export Response:', response);

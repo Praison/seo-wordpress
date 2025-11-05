@@ -87,6 +87,14 @@ coverage/
 .coverage
 *.cover
 
+# Playwright
+/tests/playwright/node_modules/
+/tests/playwright/.playwright/
+/tests/logs/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 # Environment files
 .env
 .env.local

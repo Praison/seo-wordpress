@@ -216,7 +216,7 @@ jQuery(document).ready(function($) {
         $.ajax({
             url: ajaxurl,
             type: 'POST',
-            data: $form.serialize() + '&action=aiseo_save_cpt_settings&nonce=<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+            data: $form.serialize() + '&action=aiseo_save_cpt_settings&nonce=' + aiseoAdmin.nonce,
             success: function(response) {
                 if (response.success) {
                     alert('Settings saved successfully!');
@@ -240,7 +240,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_report',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -298,7 +298,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_keyword_research',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 keyword: keyword
             },
             success: function(response) {
@@ -332,7 +332,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_report',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -430,7 +430,7 @@ jQuery(document).ready(function($) {
                 action: 'aiseo_generate_brief',
                 topic: topic,
                 keyword: keyword,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 console.log('Brief Response:', response);
@@ -518,7 +518,7 @@ jQuery(document).ready(function($) {
             timeout: 30000,
             data: {
                 action: 'aiseo_create_post',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: topic || 'Generated from Content Brief',
                 content: briefContent,
                 post_type: 'post',

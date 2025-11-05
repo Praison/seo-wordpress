@@ -319,7 +319,7 @@ jQuery(document).ready(function($) {
             timeout: 60000,
             data: {
                 action: 'aiseo_generate_content',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: topic,
                 keyword: keyword,
                 post_type: postType,
@@ -372,7 +372,7 @@ jQuery(document).ready(function($) {
             timeout: 30000,
             data: {
                 action: 'aiseo_create_post',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: topic,
                 content: content,
                 post_type: postType,
@@ -452,7 +452,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_rewrite_content',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 content: content,
                 mode: mode
             },
@@ -516,7 +516,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_content_suggestions',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: topic
             },
             success: function(response) {
@@ -569,7 +569,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_outline',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: topic,
                 keyword: keyword
             },
@@ -717,7 +717,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: {
                 action: 'aiseo_generate_faq',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 content: content,
                 count: count
             },
@@ -830,7 +830,7 @@ jQuery(document).ready(function($) {
             timeout: 30000, // 30 second timeout
             data: {
                 action: 'aiseo_create_post',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>',
+                nonce: aiseoAdmin.nonce,
                 topic: title,
                 content: content,
                 post_type: postType,

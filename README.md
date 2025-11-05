@@ -457,7 +457,7 @@ wp aiseo analyze --id=$POST_ID --format=json
 curl https://yoursite.test/wp-json/aiseo/v1/meta-tags/$POST_ID
 ```
 
-For comprehensive testing documentation, see [UNINSTALL-AND-TESTING.md](UNINSTALL-AND-TESTING.md).
+For comprehensive testing documentation, see [tests/TESTING.md](tests/TESTING.md).
 
 ---
 
@@ -543,9 +543,9 @@ wp db query "SELECT * FROM wp_aiseo_logs WHERE level='ERROR' ORDER BY timestamp 
 ## 📚 Documentation
 
 - [Architecture Documentation](ARCHITECTURE.md) - Detailed technical architecture
-- [Testing & Uninstall Guide](UNINSTALL-AND-TESTING.md) - Comprehensive testing workflows
-- [WP-CLI Commands](UNINSTALL-AND-TESTING.md#wp-cli-testing--commands) - Complete CLI reference
-- [REST API Reference](UNINSTALL-AND-TESTING.md#rest-api-testing-easiest-method) - API endpoints documentation
+- [Testing Guide](tests/TESTING.md) - Comprehensive testing workflows, REST API & WP-CLI commands
+- [Nonce Fix Summary](NONCE-FIX-SUMMARY.md) - AJAX nonce issue resolution
+- [WordPress.org Checklist](WORDPRESS-ORG-CHECKLIST.md) - Publication checklist
 
 ---
 

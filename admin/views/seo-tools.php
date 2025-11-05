@@ -291,13 +291,23 @@ jQuery(document).ready(function($) {
         
         btn.prop('disabled', true).text('<?php esc_html_e('Generating...', 'aiseo'); ?>');
         
-        // DEBUG: Log request details
-        console.log('=== AISEO META GENERATION DEBUG ===');
+        // 🔴 COMPREHENSIVE DEBUG LOGGING
+        console.log('========================================');
+        console.log('🔴 SEO TOOLS - AJAX REQUEST STARTING');
+        console.log('========================================');
+        console.log('Timestamp:', new Date().toISOString());
+        console.log('Page loaded at: <?php echo current_time('Y-m-d H:i:s'); ?>');
         console.log('Field:', field);
         console.log('Post ID:', postId);
         console.log('Action:', 'aiseo_generate_' + field);
-        console.log('Nonce:', '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>');
         console.log('AJAX URL:', ajaxurl);
+        console.log('User ID (PHP):', '<?php echo get_current_user_id(); ?>');
+        console.log('---');
+        console.log('aiseoAdmin object:', aiseoAdmin);
+        console.log('aiseoAdmin.nonce:', aiseoAdmin ? aiseoAdmin.nonce : 'UNDEFINED');
+        console.log('aiseoAdmin.ajaxUrl:', aiseoAdmin ? aiseoAdmin.ajaxUrl : 'UNDEFINED');
+        console.log('Nonce being sent:', aiseoAdmin.nonce);
+        console.log('========================================');
         
         $.ajax({
             url: ajaxurl,
@@ -305,7 +315,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_generate_' + field,
                 post_id: postId,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce  // Use localized nonce instead of hardcoded
             },
             success: function(response) {
                 console.log('=== AJAX SUCCESS ===');
@@ -381,7 +391,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_analyze_content',
                 post_id: postId,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 if (response.success) {
@@ -459,7 +469,7 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'aiseo_internal_linking',
                 post_id: postId,
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 console.log('Internal Linking Response:', response);
@@ -520,7 +530,7 @@ jQuery(document).ready(function($) {
                 action: 'aiseo_meta_variations',
                 post_id: postId,
                 type: 'title',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 console.log('Title Variations Response:', response);
@@ -580,7 +590,7 @@ jQuery(document).ready(function($) {
                 action: 'aiseo_meta_variations',
                 post_id: postId,
                 type: 'description',
-                nonce: '<?php echo wp_create_nonce('aiseo_admin_nonce'); ?>'
+                nonce: aiseoAdmin.nonce
             },
             success: function(response) {
                 console.log('Description Variations Response:', response);

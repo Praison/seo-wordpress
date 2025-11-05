@@ -2997,9 +2997,9 @@ jobs:
 - ✅ readme.txt (WordPress.org ready)
 - ✅ ARCHITECTURE.md (technical specs, 2,800+ lines)
 - ✅ IMPLEMENTATION-STATUS.md (feature breakdown)
-- ✅ UNINSTALL-AND-TESTING.md (testing guide)
+- ✅ tests/TESTING.md (comprehensive testing guide)
 - ✅ WORDPRESS-ORG-CHECKLIST.md (publication guide)
-- ✅ COMPLETION-SUMMARY.md (comprehensive summary)
+- ✅ NONCE-FIX-SUMMARY.md (AJAX debugging documentation)
 
 ### Publication Status
 
