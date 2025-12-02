@@ -2,8 +2,8 @@
 Contributors: MervinPraison
 Tags: seo, ai, openai, schema, sitemap
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 5.0.0
+Tested up to: 6.7
+Stable tag: 5.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -195,14 +195,40 @@ Yes! AISEO is compatible with WPML, Polylang, and TranslatePress. It can sync me
 * Structured logging and monitoring
 * Performance optimizations
 
+== Changelog ==
+
+= 5.0.1 =
+* Fix: Limit to 5 tags as required by WordPress.org
+
+= 5.0.0 =
+* Complete rewrite with modern architecture
+* Added REST API with 60+ endpoints
+* Added WP-CLI support with 70+ commands
+* Added Homepage SEO settings (title, description, keywords)
+* Added Taxonomy SEO (categories, tags, custom taxonomies)
+* Added Webmaster Verification (Google, Bing, Yandex, Pinterest, Baidu)
+* Added Google Analytics integration (GA4 support)
+* Added Title Templates with placeholders
+* Added Global Robots Settings (noindex/nofollow)
+* Added Visual Breadcrumbs with shortcode and schema markup
+* Added Legacy Sitemap URLs support (sitemap_index.xml, post-sitemap.xml)
+* Added RSS Feed Customization
+* Added Import from legacy Praison SEO plugin
+* Improved AI-powered content generation
+* Enhanced schema markup support
+* Better performance with caching system
+
+= 4.0.18 =
+* Previous version (legacy Praison SEO)
+
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release of AISEO - AI-Powered SEO Plugin.
+= 5.0.0 =
+Major update! Complete rewrite with modern architecture, REST API, WP-CLI support, and many new features.
 
 == Privacy Policy ==
 
-AISEO does not collect or store any personal data on our servers. All data remains on your WordPress installation.
+This plugin does not collect or store any personal data on our servers. All data remains on your WordPress installation.
 
 When you use AI-powered features, the plugin sends content to OpenAI's API. Please review OpenAI's privacy policy at https://openai.com/policies/privacy-policy.
 
@@ -213,4 +239,4 @@ Your OpenAI API key is stored encrypted in your WordPress database using AES-256
 For support, please visit:
 * Documentation: https://github.com/MervinPraison/WordPressAISEO
 * Issues: https://github.com/MervinPraison/WordPressAISEO/issues
-* Website: https://praison.ai
+* Website: https://mer.vin
