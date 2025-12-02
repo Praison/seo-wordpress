@@ -56,17 +56,30 @@ class AISEO_Sitemap {
         // Add query vars
         add_filter('query_vars', function($vars) {
             $vars[] = 'aiseo_sitemap';
+            $vars[] = 'aiseo_sitemap_type';
             return $vars;
         });
         
         // Use rewrite_rules_array filter to ensure our rules come first
         add_filter('rewrite_rules_array', function($rules) {
             $new_rules = array(
+                // OLD-STYLE URLs (PRIMARY - for migration compatibility)
+                // Main sitemap index (old Yoast-style)
+                '^sitemap_index\.xml$' => 'index.php?aiseo_sitemap=index',
+                // Old-style post type sitemaps
+                '^post-sitemap\.xml$' => 'index.php?aiseo_sitemap=posts-post-1',
+                '^page-sitemap\.xml$' => 'index.php?aiseo_sitemap=posts-page-1',
+                '^([a-z0-9_-]+)-sitemap\.xml$' => 'index.php?aiseo_sitemap=posts-$matches[1]-1',
+                // Old-style taxonomy sitemaps
+                '^category-sitemap\.xml$' => 'index.php?aiseo_sitemap=taxonomies-category-1',
+                '^post_tag-sitemap\.xml$' => 'index.php?aiseo_sitemap=taxonomies-post_tag-1',
+                
+                // NEW-STYLE URLs (BACKUP - WordPress standard)
                 // Primary WordPress standard path
                 '^wp-sitemap\.xml$' => 'index.php?aiseo_sitemap=index',
-                // User-friendly alias (sitemap.xml redirects to wp-sitemap.xml)
+                // User-friendly alias
                 '^sitemap\.xml$' => 'index.php?aiseo_sitemap=index',
-                // Sub-sitemaps
+                // Sub-sitemaps (WordPress standard format)
                 '^wp-sitemap-posts-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=posts-$matches[1]-$matches[2]',
                 '^wp-sitemap-taxonomies-([^-]+)-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=taxonomies-$matches[1]-$matches[2]',
                 '^wp-sitemap-users-([0-9]+)\.xml$' => 'index.php?aiseo_sitemap=users-$matches[1]',
@@ -131,8 +144,28 @@ class AISEO_Sitemap {
         foreach ($post_types as $post_type) {
             $lastmod = $this->get_post_type_lastmod($post_type);
             
+            // Use old-style URLs as primary (e.g., post-sitemap.xml, page-sitemap.xml)
+            $sitemap_url = home_url("/{$post_type}-sitemap.xml");
+            
             echo "\t<sitemap>\n";
-            echo "\t\t<loc>" . esc_url(home_url("/wp-sitemap-posts-{$post_type}-1.xml")) . "</loc>\n";
+            echo "\t\t<loc>" . esc_url($sitemap_url) . "</loc>\n";
+            if ($lastmod) {
+                echo "\t\t<lastmod>" . esc_html($lastmod) . "</lastmod>\n";
+            }
+            echo "\t</sitemap>\n";
+        }
+        
+        // Add taxonomy sitemaps
+        $taxonomies = $this->get_enabled_taxonomies();
+        
+        foreach ($taxonomies as $taxonomy) {
+            $lastmod = $this->get_taxonomy_lastmod($taxonomy);
+            
+            // Use old-style URLs (e.g., category-sitemap.xml, post_tag-sitemap.xml)
+            $sitemap_url = home_url("/{$taxonomy}-sitemap.xml");
+            
+            echo "\t<sitemap>\n";
+            echo "\t\t<loc>" . esc_url($sitemap_url) . "</loc>\n";
             if ($lastmod) {
                 echo "\t\t<lastmod>" . esc_html($lastmod) . "</lastmod>\n";
             }
@@ -140,6 +173,68 @@ class AISEO_Sitemap {
         }
         
         echo '</sitemapindex>';
+    }
+    
+    /**
+     * Get enabled taxonomies for sitemap
+     *
+     * @return array Taxonomy names
+     */
+    private function get_enabled_taxonomies() {
+        $taxonomies = get_taxonomies(array(
+            'public' => true,
+            'publicly_queryable' => true,
+        ), 'names');
+        
+        // Filter out unwanted taxonomies
+        $excluded = array('post_format');
+        $taxonomies = array_diff($taxonomies, $excluded);
+        
+        return apply_filters('aiseo_sitemap_taxonomies', $taxonomies);
+    }
+    
+    /**
+     * Get taxonomy last modified date
+     *
+     * @param string $taxonomy Taxonomy name
+     * @return string|null ISO 8601 date or null
+     */
+    private function get_taxonomy_lastmod($taxonomy) {
+        global $wpdb;
+        
+        $terms = get_terms(array(
+            'taxonomy' => $taxonomy,
+            'hide_empty' => true,
+            'number' => 1,
+            'orderby' => 'count',
+            'order' => 'DESC',
+        ));
+        
+        if (empty($terms) || is_wp_error($terms)) {
+            return null;
+        }
+        
+        // Get most recent post in this taxonomy
+        $term = $terms[0];
+        $posts = get_posts(array(
+            'post_type' => 'any',
+            'posts_per_page' => 1,
+            'orderby' => 'modified',
+            'order' => 'DESC',
+            'tax_query' => array(
+                array(
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $term->term_id,
+                ),
+            ),
+        ));
+        
+        if (!empty($posts)) {
+            return gmdate('c', strtotime($posts[0]->post_modified_gmt));
+        }
+        
+        return null;
     }
     
     /**
@@ -461,8 +556,11 @@ class AISEO_Sitemap {
     public function add_sitemap_to_robots($output, $public) {
         if ($public) {
             $output .= "\n# AISEO Sitemap\n";
-            $output .= "Sitemap: " . home_url('/sitemap.xml') . "\n";
-            $output .= "# Also available at: " . home_url('/wp-sitemap.xml') . "\n";
+            // Use old-style URL as primary for migration compatibility
+            $output .= "Sitemap: " . home_url('/sitemap_index.xml') . "\n";
+            $output .= "# Also available at:\n";
+            $output .= "# " . home_url('/sitemap.xml') . "\n";
+            $output .= "# " . home_url('/wp-sitemap.xml') . "\n";
         }
         
         return $output;
@@ -472,7 +570,8 @@ class AISEO_Sitemap {
      * Ping search engines about sitemap update
      */
     public function ping_search_engines() {
-        $sitemap_url = urlencode(home_url('/wp-sitemap.xml'));
+        // Use old-style URL as primary
+        $sitemap_url = urlencode(home_url('/sitemap_index.xml'));
         
         // Google
         wp_remote_get("https://www.google.com/ping?sitemap={$sitemap_url}");

@@ -333,4 +333,15 @@ if (defined('WP_CLI') && WP_CLI) {
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-meta-variations-cli.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-post-creator.php';
     require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-post-creator-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-homepage-seo.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-homepage-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-taxonomy-seo.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-taxonomy-cli.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-webmaster.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-analytics.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-title-templates.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-robots.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-breadcrumbs.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-rss.php';
+    require_once AISEO_PLUGIN_DIR . 'includes/class-aiseo-importer.php';
 }

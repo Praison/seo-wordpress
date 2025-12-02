@@ -1,5 +1,134 @@
 # AISEO Testing Guide
 
+## Linux Debian Setup (Important)
+
+When testing on Linux Debian, there are specific considerations:
+
+### PHP Built-in Server Limitations
+
+The PHP built-in server (`php -S`) does **not** support `.htaccess` URL rewriting. You must use a router script:
+
+```bash
+# Create router.php in WordPress root
+cat > ~/Sites/localhost/wordpress/router.php << 'EOF'
+<?php
+/**
+ * Router script for PHP built-in server
+ * Handles URL rewriting for WordPress
+ */
+$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+// If the file exists, serve it directly
+if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
+    return false;
+}
+
+// Otherwise, route through WordPress
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+require_once __DIR__ . '/index.php';
+EOF
+
+# Start server WITH router script
+php -S localhost:8888 -t ~/Sites/localhost/wordpress ~/Sites/localhost/wordpress/router.php
+```
+
+### Port Conflicts
+
+Common ports like 8080 may be used by other services (GitLab, etc.). Check and use an available port:
+
+```bash
+# Check what's using a port
+ss -tlnp | grep 8080
+
+# Use alternative port (8888 recommended)
+wp option update siteurl 'http://localhost:8888' --path=~/Sites/localhost/wordpress
+wp option update home 'http://localhost:8888' --path=~/Sites/localhost/wordpress
+```
+
+### Shell/Terminal Issues
+
+If commands hang or timeout, use explicit shell with timeout:
+
+```bash
+# Use /bin/sh explicitly with timeout
+timeout 10 /bin/sh -c "wp aiseo homepage get --path=~/Sites/localhost/wordpress"
+
+# Or run commands directly in your terminal
+/bin/sh -c "curl -s http://localhost:8888/sitemap_index.xml | head -20"
+```
+
+### MariaDB/MySQL Setup
+
+On Debian, MariaDB is often used instead of MySQL:
+
+```bash
+# Create database and user with sudo
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS wp_localhost; \
+  CREATE USER IF NOT EXISTS 'wpuser'@'localhost' IDENTIFIED BY 'yourpassword'; \
+  GRANT ALL PRIVILEGES ON wp_localhost.* TO 'wpuser'@'localhost'; \
+  FLUSH PRIVILEGES;"
+
+# Create wp-config with the new user
+wp config create --dbname=wp_localhost --dbuser=wpuser --dbpass=yourpassword
+```
+
+### Complete Linux Debian Setup
+
+```bash
+# 1. Create WordPress directory
+mkdir -p ~/Sites/localhost/wordpress
+cd ~/Sites/localhost/wordpress
+
+# 2. Download WordPress
+wp core download
+
+# 3. Create database (with sudo for MariaDB)
+sudo mysql -e "CREATE DATABASE wp_localhost; \
+  CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'leicester'; \
+  GRANT ALL ON wp_localhost.* TO 'wpuser'@'localhost'; \
+  FLUSH PRIVILEGES;"
+
+# 4. Create config
+wp config create --dbname=wp_localhost --dbuser=wpuser --dbpass=leicester
+
+# 5. Install WordPress
+wp core install --url=http://localhost:8888 --title="WordPress Test" \
+  --admin_user=admin --admin_password=leicester --admin_email=admin@localhost.test
+
+# 6. Enable debug
+wp config set WP_DEBUG true --raw
+wp config set WP_DEBUG_LOG true --raw
+
+# 7. Link AISEO plugin
+ln -sf /path/to/WordPressAISEO ~/Sites/localhost/wordpress/wp-content/plugins/aiseo
+
+# 8. Activate plugin
+wp plugin activate aiseo
+
+# 9. Flush rewrite rules
+wp rewrite flush
+
+# 10. Create router.php (see above)
+
+# 11. Start server
+php -S localhost:8888 -t ~/Sites/localhost/wordpress ~/Sites/localhost/wordpress/router.php
+
+# 12. Test sitemap
+curl -s http://localhost:8888/sitemap_index.xml | head -20
+```
+
+### Troubleshooting
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| 404 on sitemap URLs | No URL rewriting | Use router.php with PHP server |
+| `/users/sign_in` redirect | Wrong service on port | Use different port (8888) |
+| Commands hang | Shell issues | Use `timeout 10 /bin/sh -c "command"` |
+| MySQL access denied | Root auth issues | Create new user with sudo mysql |
+| `index.php` in URLs | Permalinks not set | Flush rewrite rules after setting permalinks |
+
+---
+
 ## Quick Test Commands
 
 ### REST API Testing
@@ -1148,5 +1277,114 @@ jobs:
 | Content generation | ❌ | ✅ | Tested |
 | Technical SEO | ❌ | ✅ | Tested |
 | All admin pages | ❌ | ✅ | Tested |
+| Homepage SEO | ✅ | ✅ | Tested |
+| Taxonomy SEO | ✅ | ✅ | Tested |
+| Webmaster Verification | ❌ | ✅ | Tested |
+| Google Analytics | ❌ | ✅ | Tested |
+| Title Templates | ❌ | ✅ | Tested |
+| Robots Settings | ❌ | ✅ | Tested |
+| Breadcrumbs | ❌ | ✅ | Tested |
+| RSS Feed | ❌ | ✅ | Tested |
+| Import from Old Plugin | ❌ | ✅ | Tested |
+| Sitemap (old-style URLs) | ❌ | ✅ | Tested |
+
+---
+
+## New Features REST API Endpoints
+
+### Homepage SEO (2)
+```
+GET  /wp-json/aiseo/v1/homepage-seo
+POST /wp-json/aiseo/v1/homepage-seo
+```
+
+### Taxonomy SEO (3)
+```
+GET  /wp-json/aiseo/v1/taxonomy-seo/{taxonomy}
+GET  /wp-json/aiseo/v1/taxonomy-seo/{taxonomy}/{term_id}
+POST /wp-json/aiseo/v1/taxonomy-seo/{taxonomy}/{term_id}
+```
+
+### Webmaster Verification (2)
+```
+GET  /wp-json/aiseo/v1/webmaster-verification
+POST /wp-json/aiseo/v1/webmaster-verification
+```
+
+### Google Analytics (2)
+```
+GET  /wp-json/aiseo/v1/analytics
+POST /wp-json/aiseo/v1/analytics
+```
+
+### Title Templates (2)
+```
+GET  /wp-json/aiseo/v1/title-templates
+POST /wp-json/aiseo/v1/title-templates
+```
+
+### Robots Settings (2)
+```
+GET  /wp-json/aiseo/v1/robots-settings
+POST /wp-json/aiseo/v1/robots-settings
+```
+
+### Breadcrumbs (2)
+```
+GET  /wp-json/aiseo/v1/breadcrumbs
+POST /wp-json/aiseo/v1/breadcrumbs
+```
+
+### RSS Feed (2)
+```
+GET  /wp-json/aiseo/v1/rss
+POST /wp-json/aiseo/v1/rss
+```
+
+### Import from Old Plugin (4)
+```
+GET  /wp-json/aiseo/v1/import/check
+GET  /wp-json/aiseo/v1/import/preview
+POST /wp-json/aiseo/v1/import/run
+POST /wp-json/aiseo/v1/import/cleanup
+```
+
+## New Features WP-CLI Commands
+
+### Homepage SEO
+```bash
+wp aiseo homepage get [--format=<format>]
+wp aiseo homepage set --home-title=<title> --home-description=<desc>
+wp aiseo homepage clear --all|--home|--blog
+wp aiseo homepage generate [--type=<type>] [--apply]
+```
+
+### Taxonomy SEO
+```bash
+wp aiseo taxonomy get <taxonomy> <term_id> [--format=<format>]
+wp aiseo taxonomy set <taxonomy> <term_id> --title=<title> --description=<desc>
+wp aiseo taxonomy list <taxonomy> [--format=<format>]
+wp aiseo taxonomy clear <taxonomy> <term_id> [--yes]
+wp aiseo taxonomy bulk <taxonomy> --noindex|--index [--yes]
+```
+
+## Running New Feature Tests
+
+### Standalone PHP Tests
+```bash
+php tests/standalone-test.php
+```
+
+### REST API Tests (curl)
+```bash
+./tests/test-new-features.sh https://your-wordpress-site.test
+```
+
+### Playwright Tests
+```bash
+cd tests/playwright
+npm install
+npx playwright test test-new-features.spec.js --headed
+```
 
 ---

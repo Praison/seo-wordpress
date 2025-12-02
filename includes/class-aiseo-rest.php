@@ -169,6 +169,301 @@ class AISEO_REST {
             'permission_callback' => '__return_true',
         ));
         
+        // Homepage SEO: Get settings
+        register_rest_route(self::NAMESPACE, '/homepage-seo', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_homepage_seo'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Homepage SEO: Update settings
+        register_rest_route(self::NAMESPACE, '/homepage-seo', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_homepage_seo'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+            'args' => array(
+                'home_title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'home_description' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_textarea_field',
+                ),
+                'home_keywords' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'blog_title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'blog_description' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_textarea_field',
+                ),
+                'blog_keywords' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+            ),
+        ));
+        
+        // Taxonomy SEO: Get term SEO settings
+        register_rest_route(self::NAMESPACE, '/taxonomy-seo/(?P<taxonomy>[a-z0-9_-]+)/(?P<term_id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_taxonomy_seo'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'taxonomy' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_key',
+                ),
+                'term_id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+            ),
+        ));
+        
+        // Taxonomy SEO: Update term SEO settings
+        register_rest_route(self::NAMESPACE, '/taxonomy-seo/(?P<taxonomy>[a-z0-9_-]+)/(?P<term_id>\d+)', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_taxonomy_seo'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+            'args' => array(
+                'taxonomy' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_key',
+                ),
+                'term_id' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                    'sanitize_callback' => 'absint',
+                ),
+                'title' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'description' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_textarea_field',
+                ),
+                'keywords' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'canonical' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'esc_url_raw',
+                ),
+                'noindex' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+                'nofollow' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+            ),
+        ));
+        
+        // Taxonomy SEO: List all terms with SEO for a taxonomy
+        register_rest_route(self::NAMESPACE, '/taxonomy-seo/(?P<taxonomy>[a-z0-9_-]+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'list_taxonomy_seo'),
+            'permission_callback' => '__return_true',
+            'args' => array(
+                'taxonomy' => array(
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_key',
+                ),
+            ),
+        ));
+        
+        // Webmaster Verification: Get codes
+        register_rest_route(self::NAMESPACE, '/webmaster-verification', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_webmaster_verification'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Webmaster Verification: Update codes
+        register_rest_route(self::NAMESPACE, '/webmaster-verification', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_webmaster_verification'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+            'args' => array(
+                'google' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'bing' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'yandex' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'pinterest' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'baidu' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+            ),
+        ));
+        
+        // Analytics: Get settings
+        register_rest_route(self::NAMESPACE, '/analytics', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_analytics_settings'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Analytics: Update settings
+        register_rest_route(self::NAMESPACE, '/analytics', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_analytics_settings'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+            'args' => array(
+                'tracking_id' => array(
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ),
+                'enabled' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+                'anonymize_ip' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+                'track_admin' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+                'track_logged_in' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                ),
+            ),
+        ));
+        
+        // Title Templates: Get templates
+        register_rest_route(self::NAMESPACE, '/title-templates', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_title_templates'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Title Templates: Update templates
+        register_rest_route(self::NAMESPACE, '/title-templates', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_title_templates'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // Robots Settings: Get settings
+        register_rest_route(self::NAMESPACE, '/robots-settings', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_robots_settings'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Robots Settings: Update settings
+        register_rest_route(self::NAMESPACE, '/robots-settings', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_robots_settings'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // Breadcrumbs: Get settings
+        register_rest_route(self::NAMESPACE, '/breadcrumbs', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_breadcrumbs_settings'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // Breadcrumbs: Update settings
+        register_rest_route(self::NAMESPACE, '/breadcrumbs', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_breadcrumbs_settings'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // RSS: Get settings
+        register_rest_route(self::NAMESPACE, '/rss', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_rss_settings'),
+            'permission_callback' => '__return_true',
+        ));
+        
+        // RSS: Update settings
+        register_rest_route(self::NAMESPACE, '/rss', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'update_rss_settings'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // Importer: Check for old plugin data
+        register_rest_route(self::NAMESPACE, '/import/check', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'check_import_data'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // Importer: Get preview
+        register_rest_route(self::NAMESPACE, '/import/preview', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_import_preview'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
+        // Importer: Run import
+        register_rest_route(self::NAMESPACE, '/import/run', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'run_import'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+            'args' => array(
+                'overwrite' => array(
+                    'required' => false,
+                    'type' => 'boolean',
+                    'default' => false,
+                ),
+            ),
+        ));
+        
+        // Importer: Cleanup old data
+        register_rest_route(self::NAMESPACE, '/import/cleanup', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'cleanup_import_data'),
+            'permission_callback' => array($this, 'check_admin_permission'),
+        ));
+        
         // Image SEO: Generate alt text for image
         register_rest_route(self::NAMESPACE, '/image/generate-alt/(?P<id>\d+)', array(
             'methods' => 'POST',
@@ -1529,6 +1824,522 @@ class AISEO_REST {
             'success' => true,
             'stats' => $stats,
             'sitemap_url' => home_url('/sitemap.xml'),
+        ), 200);
+    }
+    
+    /**
+     * Get homepage SEO settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_homepage_seo($request) {
+        $homepage_seo = new AISEO_Homepage_SEO();
+        $settings = $homepage_seo->get_settings();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'settings' => $settings,
+        ), 200);
+    }
+    
+    /**
+     * Update homepage SEO settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_homepage_seo($request) {
+        $homepage_seo = new AISEO_Homepage_SEO();
+        
+        $settings = array();
+        
+        if ($request->has_param('home_title')) {
+            $settings['home_title'] = $request->get_param('home_title');
+        }
+        if ($request->has_param('home_description')) {
+            $settings['home_description'] = $request->get_param('home_description');
+        }
+        if ($request->has_param('home_keywords')) {
+            $settings['home_keywords'] = $request->get_param('home_keywords');
+        }
+        if ($request->has_param('blog_title')) {
+            $settings['blog_title'] = $request->get_param('blog_title');
+        }
+        if ($request->has_param('blog_description')) {
+            $settings['blog_description'] = $request->get_param('blog_description');
+        }
+        if ($request->has_param('blog_keywords')) {
+            $settings['blog_keywords'] = $request->get_param('blog_keywords');
+        }
+        
+        $updated = $homepage_seo->update_settings($settings);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'settings' => $homepage_seo->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Check admin permission
+     *
+     * @return bool
+     */
+    public function check_admin_permission() {
+        return current_user_can('manage_options');
+    }
+    
+    /**
+     * Get taxonomy SEO settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_taxonomy_seo($request) {
+        $taxonomy = $request->get_param('taxonomy');
+        $term_id = $request->get_param('term_id');
+        
+        // Verify taxonomy exists
+        if (!taxonomy_exists($taxonomy)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'error' => 'Invalid taxonomy',
+            ), 400);
+        }
+        
+        // Verify term exists
+        $term = get_term($term_id, $taxonomy);
+        if (!$term || is_wp_error($term)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'error' => 'Term not found',
+            ), 404);
+        }
+        
+        $taxonomy_seo = new AISEO_Taxonomy_SEO();
+        $meta = $taxonomy_seo->get_term_meta($term_id, $taxonomy);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'term_id' => $term_id,
+            'taxonomy' => $taxonomy,
+            'term_name' => $term->name,
+            'term_slug' => $term->slug,
+            'seo' => $meta,
+        ), 200);
+    }
+    
+    /**
+     * Update taxonomy SEO settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_taxonomy_seo($request) {
+        $taxonomy = $request->get_param('taxonomy');
+        $term_id = $request->get_param('term_id');
+        
+        // Verify taxonomy exists
+        if (!taxonomy_exists($taxonomy)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'error' => 'Invalid taxonomy',
+            ), 400);
+        }
+        
+        // Verify term exists
+        $term = get_term($term_id, $taxonomy);
+        if (!$term || is_wp_error($term)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'error' => 'Term not found',
+            ), 404);
+        }
+        
+        $taxonomy_seo = new AISEO_Taxonomy_SEO();
+        
+        $meta = array();
+        
+        if ($request->has_param('title')) {
+            $meta['title'] = $request->get_param('title');
+        }
+        if ($request->has_param('description')) {
+            $meta['description'] = $request->get_param('description');
+        }
+        if ($request->has_param('keywords')) {
+            $meta['keywords'] = $request->get_param('keywords');
+        }
+        if ($request->has_param('canonical')) {
+            $meta['canonical'] = $request->get_param('canonical');
+        }
+        if ($request->has_param('noindex')) {
+            $meta['noindex'] = $request->get_param('noindex');
+        }
+        if ($request->has_param('nofollow')) {
+            $meta['nofollow'] = $request->get_param('nofollow');
+        }
+        
+        $updated = $taxonomy_seo->update_term_meta($term_id, $taxonomy, $meta);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'term_id' => $term_id,
+            'taxonomy' => $taxonomy,
+            'seo' => $taxonomy_seo->get_term_meta($term_id, $taxonomy),
+        ), 200);
+    }
+    
+    /**
+     * List all terms with SEO for a taxonomy
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function list_taxonomy_seo($request) {
+        $taxonomy = $request->get_param('taxonomy');
+        
+        // Verify taxonomy exists
+        if (!taxonomy_exists($taxonomy)) {
+            return new WP_REST_Response(array(
+                'success' => false,
+                'error' => 'Invalid taxonomy',
+            ), 400);
+        }
+        
+        $taxonomy_seo = new AISEO_Taxonomy_SEO();
+        $terms = $taxonomy_seo->get_taxonomy_terms_with_meta($taxonomy);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'taxonomy' => $taxonomy,
+            'count' => count($terms),
+            'terms' => $terms,
+        ), 200);
+    }
+    
+    /**
+     * Get webmaster verification codes
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_webmaster_verification($request) {
+        $webmaster = new AISEO_Webmaster();
+        $codes = $webmaster->get_verification_codes();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'codes' => $codes,
+        ), 200);
+    }
+    
+    /**
+     * Update webmaster verification codes
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_webmaster_verification($request) {
+        $webmaster = new AISEO_Webmaster();
+        
+        $codes = array();
+        
+        if ($request->has_param('google')) {
+            $codes['google'] = $request->get_param('google');
+        }
+        if ($request->has_param('bing')) {
+            $codes['bing'] = $request->get_param('bing');
+        }
+        if ($request->has_param('yandex')) {
+            $codes['yandex'] = $request->get_param('yandex');
+        }
+        if ($request->has_param('pinterest')) {
+            $codes['pinterest'] = $request->get_param('pinterest');
+        }
+        if ($request->has_param('baidu')) {
+            $codes['baidu'] = $request->get_param('baidu');
+        }
+        
+        $updated = $webmaster->update_verification_codes($codes);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'codes' => $webmaster->get_verification_codes(),
+        ), 200);
+    }
+    
+    /**
+     * Get analytics settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_analytics_settings($request) {
+        $analytics = new AISEO_Analytics();
+        $settings = $analytics->get_settings();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'settings' => $settings,
+        ), 200);
+    }
+    
+    /**
+     * Update analytics settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_analytics_settings($request) {
+        $analytics = new AISEO_Analytics();
+        
+        $settings = array();
+        
+        if ($request->has_param('tracking_id')) {
+            $settings['tracking_id'] = $request->get_param('tracking_id');
+        }
+        if ($request->has_param('enabled')) {
+            $settings['enabled'] = $request->get_param('enabled');
+        }
+        if ($request->has_param('anonymize_ip')) {
+            $settings['anonymize_ip'] = $request->get_param('anonymize_ip');
+        }
+        if ($request->has_param('track_admin')) {
+            $settings['track_admin'] = $request->get_param('track_admin');
+        }
+        if ($request->has_param('track_logged_in')) {
+            $settings['track_logged_in'] = $request->get_param('track_logged_in');
+        }
+        
+        $updated = $analytics->update_settings($settings);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'settings' => $analytics->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Get title templates
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_title_templates($request) {
+        $title_templates = new AISEO_Title_Templates();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'templates' => $title_templates->get_templates(),
+            'placeholders' => $title_templates->get_placeholders(),
+        ), 200);
+    }
+    
+    /**
+     * Update title templates
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_title_templates($request) {
+        $title_templates = new AISEO_Title_Templates();
+        
+        $templates = $request->get_json_params();
+        if (empty($templates)) {
+            $templates = $request->get_body_params();
+        }
+        
+        $updated = $title_templates->update_templates($templates);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'templates' => $title_templates->get_templates(),
+        ), 200);
+    }
+    
+    /**
+     * Get robots settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_robots_settings($request) {
+        $robots = new AISEO_Robots();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'settings' => $robots->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Update robots settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_robots_settings($request) {
+        $robots = new AISEO_Robots();
+        
+        $settings = $request->get_json_params();
+        if (empty($settings)) {
+            $settings = $request->get_body_params();
+        }
+        
+        $updated = $robots->update_settings($settings);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'settings' => $robots->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Get breadcrumbs settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_breadcrumbs_settings($request) {
+        $breadcrumbs = new AISEO_Breadcrumbs();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'settings' => $breadcrumbs->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Update breadcrumbs settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_breadcrumbs_settings($request) {
+        $breadcrumbs = new AISEO_Breadcrumbs();
+        
+        $settings = $request->get_json_params();
+        if (empty($settings)) {
+            $settings = $request->get_body_params();
+        }
+        
+        $updated = $breadcrumbs->update_settings($settings);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'settings' => $breadcrumbs->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Get RSS settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_rss_settings($request) {
+        $rss = new AISEO_RSS();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'settings' => $rss->get_settings(),
+            'placeholders' => $rss->get_placeholders(),
+        ), 200);
+    }
+    
+    /**
+     * Update RSS settings
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function update_rss_settings($request) {
+        $rss = new AISEO_RSS();
+        
+        $settings = $request->get_json_params();
+        if (empty($settings)) {
+            $settings = $request->get_body_params();
+        }
+        
+        $updated = $rss->update_settings($settings);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'updated' => $updated,
+            'settings' => $rss->get_settings(),
+        ), 200);
+    }
+    
+    /**
+     * Check for old plugin import data
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function check_import_data($request) {
+        $importer = new AISEO_Importer();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'has_data' => $importer->has_old_plugin_data(),
+        ), 200);
+    }
+    
+    /**
+     * Get import preview
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function get_import_preview($request) {
+        $importer = new AISEO_Importer();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'preview' => $importer->get_import_preview(),
+        ), 200);
+    }
+    
+    /**
+     * Run import from old plugin
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function run_import($request) {
+        $importer = new AISEO_Importer();
+        $overwrite = $request->get_param('overwrite');
+        
+        $results = $importer->import_all($overwrite);
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'results' => $results,
+        ), 200);
+    }
+    
+    /**
+     * Cleanup old plugin data
+     *
+     * @param WP_REST_Request $request Request object
+     * @return WP_REST_Response
+     */
+    public function cleanup_import_data($request) {
+        $importer = new AISEO_Importer();
+        
+        $results = $importer->cleanup_old_data();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'results' => $results,
         ), 200);
     }
     

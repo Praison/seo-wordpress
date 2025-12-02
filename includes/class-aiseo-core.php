@@ -28,6 +28,14 @@ class AISEO_Core {
     private $admin;
     private $metabox;
     private $image_seo;
+    private $homepage_seo;
+    private $taxonomy_seo;
+    private $webmaster;
+    private $analytics;
+    private $title_templates;
+    private $robots;
+    private $breadcrumbs;
+    private $rss;
     
     /**
      * Constructor
@@ -67,6 +75,38 @@ class AISEO_Core {
         
         // Initialize sitemap generator
         $this->sitemap->init();
+        
+        // Initialize homepage SEO
+        $this->homepage_seo = new AISEO_Homepage_SEO();
+        $this->homepage_seo->init();
+        
+        // Initialize taxonomy SEO
+        $this->taxonomy_seo = new AISEO_Taxonomy_SEO();
+        $this->taxonomy_seo->init();
+        
+        // Initialize webmaster verification
+        $this->webmaster = new AISEO_Webmaster();
+        $this->webmaster->init();
+        
+        // Initialize analytics
+        $this->analytics = new AISEO_Analytics();
+        $this->analytics->init();
+        
+        // Initialize title templates
+        $this->title_templates = new AISEO_Title_Templates();
+        $this->title_templates->init();
+        
+        // Initialize robots settings
+        $this->robots = new AISEO_Robots();
+        $this->robots->init();
+        
+        // Initialize breadcrumbs
+        $this->breadcrumbs = new AISEO_Breadcrumbs();
+        $this->breadcrumbs->init();
+        
+        // Initialize RSS customization
+        $this->rss = new AISEO_RSS();
+        $this->rss->init();
         
         // Initialize metabox and image SEO (only in admin)
         if (is_admin()) {

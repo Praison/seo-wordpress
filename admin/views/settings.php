@@ -49,6 +49,61 @@ if (isset($_POST['aiseo_settings_submit']) && check_admin_referer('aiseo_setting
     update_option('aiseo_enable_logging', isset($_POST['aiseo_enable_logging']) ? '1' : '0');
     update_option('aiseo_log_level', sanitize_text_field($_POST['aiseo_log_level']));
     
+    // Homepage SEO Settings
+    $homepage_seo = new AISEO_Homepage_SEO();
+    $homepage_settings = array();
+    if (isset($_POST['aiseo_home_title'])) {
+        $homepage_settings['home_title'] = sanitize_text_field($_POST['aiseo_home_title']);
+    }
+    if (isset($_POST['aiseo_home_description'])) {
+        $homepage_settings['home_description'] = sanitize_textarea_field($_POST['aiseo_home_description']);
+    }
+    if (isset($_POST['aiseo_home_keywords'])) {
+        $homepage_settings['home_keywords'] = sanitize_text_field($_POST['aiseo_home_keywords']);
+    }
+    if (isset($_POST['aiseo_blog_title'])) {
+        $homepage_settings['blog_title'] = sanitize_text_field($_POST['aiseo_blog_title']);
+    }
+    if (isset($_POST['aiseo_blog_description'])) {
+        $homepage_settings['blog_description'] = sanitize_textarea_field($_POST['aiseo_blog_description']);
+    }
+    if (isset($_POST['aiseo_blog_keywords'])) {
+        $homepage_settings['blog_keywords'] = sanitize_text_field($_POST['aiseo_blog_keywords']);
+    }
+    $homepage_seo->update_settings($homepage_settings);
+    
+    // Webmaster Verification Codes
+    $webmaster = new AISEO_Webmaster();
+    $verification = array();
+    if (isset($_POST['aiseo_verification_google'])) {
+        $verification['google'] = sanitize_text_field($_POST['aiseo_verification_google']);
+    }
+    if (isset($_POST['aiseo_verification_bing'])) {
+        $verification['bing'] = sanitize_text_field($_POST['aiseo_verification_bing']);
+    }
+    if (isset($_POST['aiseo_verification_yandex'])) {
+        $verification['yandex'] = sanitize_text_field($_POST['aiseo_verification_yandex']);
+    }
+    if (isset($_POST['aiseo_verification_pinterest'])) {
+        $verification['pinterest'] = sanitize_text_field($_POST['aiseo_verification_pinterest']);
+    }
+    if (isset($_POST['aiseo_verification_baidu'])) {
+        $verification['baidu'] = sanitize_text_field($_POST['aiseo_verification_baidu']);
+    }
+    $webmaster->update_verification_codes($verification);
+    
+    // Analytics Settings
+    $analytics = new AISEO_Analytics();
+    $analytics_data = array();
+    if (isset($_POST['aiseo_ga_tracking_id'])) {
+        $analytics_data['tracking_id'] = sanitize_text_field($_POST['aiseo_ga_tracking_id']);
+    }
+    $analytics_data['enabled'] = isset($_POST['aiseo_ga_enabled']);
+    $analytics_data['anonymize_ip'] = isset($_POST['aiseo_ga_anonymize_ip']);
+    $analytics_data['track_admin'] = isset($_POST['aiseo_ga_track_admin']);
+    $analytics_data['track_logged_in'] = isset($_POST['aiseo_ga_track_logged_in']);
+    $analytics->update_settings($analytics_data);
+    
     echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Settings saved successfully!', 'aiseo') . '</p></div>';
 }
 
@@ -65,6 +120,18 @@ $enable_schema = get_option('aiseo_enable_schema', '1');
 $enable_sitemap = get_option('aiseo_enable_sitemap', '1');
 $enable_logging = get_option('aiseo_enable_logging', '0');
 $log_level = get_option('aiseo_log_level', 'error');
+
+// Get homepage SEO settings
+$homepage_seo = new AISEO_Homepage_SEO();
+$homepage_settings = $homepage_seo->get_settings();
+
+// Get webmaster verification codes
+$webmaster = new AISEO_Webmaster();
+$verification_codes = $webmaster->get_verification_codes();
+
+// Get analytics settings
+$analytics = new AISEO_Analytics();
+$analytics_settings = $analytics->get_settings();
 ?>
 
 <div class="aiseo-settings">
@@ -218,6 +285,231 @@ $log_level = get_option('aiseo_log_level', 'error');
                     <option value="info" <?php selected($log_level, 'info'); ?>>Info, Warning & Error</option>
                     <option value="debug" <?php selected($log_level, 'debug'); ?>>Debug (All)</option>
                 </select>
+            </div>
+        </div>
+        
+        <!-- Homepage SEO Settings -->
+        <div class="aiseo-form-section">
+            <h2 class="aiseo-section-title"><?php esc_html_e('Homepage SEO', 'aiseo'); ?></h2>
+            
+            <?php
+            $frontpage_id = get_option('page_on_front');
+            $blog_id = get_option('page_for_posts');
+            $show_on_front = get_option('show_on_front');
+            
+            if ($show_on_front === 'page' && ($frontpage_id || $blog_id)) {
+                echo '<div class="aiseo-card" style="background: #f0f6fc; border-left: 4px solid #2271b1; padding: 15px; margin-bottom: 20px;">';
+                echo '<p style="margin: 0;"><strong>' . esc_html__('Note:', 'aiseo') . '</strong> ';
+                echo esc_html__('You are using a static front page. You can also edit SEO settings directly on:', 'aiseo') . ' ';
+                if ($frontpage_id) {
+                    echo '<a href="' . esc_url(get_edit_post_link($frontpage_id)) . '">' . esc_html__('Front Page', 'aiseo') . '</a>';
+                }
+                if ($frontpage_id && $blog_id) {
+                    echo ' | ';
+                }
+                if ($blog_id) {
+                    echo '<a href="' . esc_url(get_edit_post_link($blog_id)) . '">' . esc_html__('Blog Page', 'aiseo') . '</a>';
+                }
+                echo '</p></div>';
+            }
+            ?>
+            
+            <h3><?php esc_html_e('Homepage Settings', 'aiseo'); ?></h3>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Homepage Title', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_home_title" 
+                       value="<?php echo esc_attr($homepage_settings['home_title']); ?>" 
+                       class="large-text"
+                       placeholder="<?php echo esc_attr(get_bloginfo('name') . ' | ' . get_bloginfo('description')); ?>" />
+                <span class="aiseo-form-description"><?php esc_html_e('Custom title for your homepage. Leave empty to use default.', 'aiseo'); ?></span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Homepage Meta Description', 'aiseo'); ?></label>
+                <textarea name="aiseo_home_description" 
+                          class="large-text" 
+                          rows="3"
+                          placeholder="<?php esc_attr_e('Enter a compelling description for your homepage (155-160 characters recommended)', 'aiseo'); ?>"><?php echo esc_textarea($homepage_settings['home_description']); ?></textarea>
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Meta description for your homepage. Recommended: 155-160 characters.', 'aiseo'); ?>
+                    <span class="aiseo-char-count" data-target="aiseo_home_description"><?php echo strlen($homepage_settings['home_description']); ?>/160</span>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Homepage Meta Keywords', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_home_keywords" 
+                       value="<?php echo esc_attr($homepage_settings['home_keywords']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('keyword1, keyword2, keyword3', 'aiseo'); ?>" />
+                <span class="aiseo-form-description"><?php esc_html_e('Comma-separated keywords for your homepage.', 'aiseo'); ?></span>
+            </div>
+            
+            <h3><?php esc_html_e('Blog Page Settings', 'aiseo'); ?></h3>
+            <p class="description"><?php esc_html_e('These settings apply when you have a separate blog page (Settings → Reading → Posts page).', 'aiseo'); ?></p>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Blog Page Title', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_blog_title" 
+                       value="<?php echo esc_attr($homepage_settings['blog_title']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Blog | Your Site Name', 'aiseo'); ?>" />
+                <span class="aiseo-form-description"><?php esc_html_e('Custom title for your blog page.', 'aiseo'); ?></span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Blog Page Meta Description', 'aiseo'); ?></label>
+                <textarea name="aiseo_blog_description" 
+                          class="large-text" 
+                          rows="3"
+                          placeholder="<?php esc_attr_e('Enter a description for your blog page', 'aiseo'); ?>"><?php echo esc_textarea($homepage_settings['blog_description']); ?></textarea>
+                <span class="aiseo-form-description"><?php esc_html_e('Meta description for your blog page.', 'aiseo'); ?></span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Blog Page Meta Keywords', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_blog_keywords" 
+                       value="<?php echo esc_attr($homepage_settings['blog_keywords']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('blog, articles, news', 'aiseo'); ?>" />
+                <span class="aiseo-form-description"><?php esc_html_e('Comma-separated keywords for your blog page.', 'aiseo'); ?></span>
+            </div>
+        </div>
+        
+        <!-- Webmaster Verification -->
+        <div class="aiseo-form-section">
+            <h2 class="aiseo-section-title"><?php esc_html_e('Webmaster Verification', 'aiseo'); ?></h2>
+            <p class="description"><?php esc_html_e('Enter verification codes from search engines and webmaster tools. You can paste the full meta tag or just the verification code.', 'aiseo'); ?></p>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Google Search Console', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_verification_google" 
+                       value="<?php echo esc_attr($verification_codes['google']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Enter Google verification code', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Get your code from', 'aiseo'); ?> 
+                    <a href="https://search.google.com/search-console" target="_blank">Google Search Console</a>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Bing Webmaster Tools', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_verification_bing" 
+                       value="<?php echo esc_attr($verification_codes['bing']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Enter Bing verification code', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Get your code from', 'aiseo'); ?> 
+                    <a href="https://www.bing.com/webmasters" target="_blank">Bing Webmaster Tools</a>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Yandex Webmaster', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_verification_yandex" 
+                       value="<?php echo esc_attr($verification_codes['yandex']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Enter Yandex verification code', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Get your code from', 'aiseo'); ?> 
+                    <a href="https://webmaster.yandex.com" target="_blank">Yandex Webmaster</a>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Pinterest', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_verification_pinterest" 
+                       value="<?php echo esc_attr($verification_codes['pinterest']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Enter Pinterest verification code', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Get your code from', 'aiseo'); ?> 
+                    <a href="https://pinterest.com/settings/claim" target="_blank">Pinterest Settings</a>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Baidu Webmaster', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_verification_baidu" 
+                       value="<?php echo esc_attr($verification_codes['baidu']); ?>" 
+                       class="large-text"
+                       placeholder="<?php esc_attr_e('Enter Baidu verification code', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Get your code from', 'aiseo'); ?> 
+                    <a href="https://ziyuan.baidu.com" target="_blank">Baidu Webmaster</a>
+                </span>
+            </div>
+        </div>
+        
+        <!-- Google Analytics -->
+        <div class="aiseo-form-section">
+            <h2 class="aiseo-section-title"><?php esc_html_e('Google Analytics', 'aiseo'); ?></h2>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-toggle">
+                    <input type="checkbox" 
+                           name="aiseo_ga_enabled" 
+                           value="1" 
+                           <?php checked($analytics_settings['enabled'], true); ?> />
+                    <span class="aiseo-toggle-slider"></span>
+                    <?php esc_html_e('Enable Google Analytics', 'aiseo'); ?>
+                </label>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-form-label"><?php esc_html_e('Tracking ID', 'aiseo'); ?></label>
+                <input type="text" 
+                       name="aiseo_ga_tracking_id" 
+                       value="<?php echo esc_attr($analytics_settings['tracking_id']); ?>" 
+                       class="regular-text"
+                       placeholder="<?php esc_attr_e('G-XXXXXXXXXX or UA-XXXXX-X', 'aiseo'); ?>" />
+                <span class="aiseo-form-description">
+                    <?php esc_html_e('Enter your GA4 (G-XXXXXXXXXX) or Universal Analytics (UA-XXXXX-X) tracking ID.', 'aiseo'); ?>
+                </span>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-toggle">
+                    <input type="checkbox" 
+                           name="aiseo_ga_anonymize_ip" 
+                           value="1" 
+                           <?php checked($analytics_settings['anonymize_ip'], true); ?> />
+                    <span class="aiseo-toggle-slider"></span>
+                    <?php esc_html_e('Anonymize IP addresses (recommended for GDPR compliance)', 'aiseo'); ?>
+                </label>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-toggle">
+                    <input type="checkbox" 
+                           name="aiseo_ga_track_logged_in" 
+                           value="1" 
+                           <?php checked($analytics_settings['track_logged_in'], true); ?> />
+                    <span class="aiseo-toggle-slider"></span>
+                    <?php esc_html_e('Track logged-in users', 'aiseo'); ?>
+                </label>
+            </div>
+            
+            <div class="aiseo-form-group">
+                <label class="aiseo-toggle">
+                    <input type="checkbox" 
+                           name="aiseo_ga_track_admin" 
+                           value="1" 
+                           <?php checked($analytics_settings['track_admin'], true); ?> />
+                    <span class="aiseo-toggle-slider"></span>
+                    <?php esc_html_e('Track admin pages', 'aiseo'); ?>
+                </label>
             </div>
         </div>
         
