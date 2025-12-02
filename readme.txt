@@ -1,9 +1,9 @@
 === AISEO ===
 Contributors: MervinPraison
-Tags: seo, ai, openai, meta description, schema
+Tags: seo, ai, openai, schema, sitemap
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 5.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
