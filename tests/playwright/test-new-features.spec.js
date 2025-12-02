@@ -14,48 +14,48 @@
  * 
  * Usage:
  *   npx playwright test test-new-features.spec.js --headed
+ * 
+ * Note: For PHP built-in server (single-threaded), use API-only tests.
+ * For full browser tests, use Apache/Nginx or Valet.
  */
 
-const { test, expect } = require('@playwright/test');
+const { test, expect, request } = require('@playwright/test');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 // Get credentials from environment
-const WP_URL = process.env.WP_URL || 'https://wordpress.test';
-const USERNAME = process.env.WP_USERNAME || 'praison';
-const PASSWORD = process.env.WP_PASSWORD || 'leicester';
+const WP_URL = process.env.WP_URL || 'http://localhost:8888';
+const USERNAME = process.env.WP_USERNAME || 'admin';
+const PASSWORD = process.env.WP_PASSWORD || '';
 
 test.describe('AISEO New Features - REST API Tests', () => {
-  let page;
-  let context;
+  let apiContext;
 
-  test.beforeAll(async ({ browser }) => {
-    context = await browser.newContext({
-      ignoreHTTPSErrors: true,
-    });
-    page = await context.newPage();
-
-    // Login to WordPress
-    console.log('\n========================================');
-    console.log('🔐 LOGGING IN TO WORDPRESS');
-    console.log(`URL: ${WP_URL}/wp-admin`);
-    console.log('========================================\n');
-
-    await page.goto(`${WP_URL}/wp-login.php`);
-    await page.fill('#user_login', USERNAME);
-    await page.fill('#user_pass', PASSWORD);
-    await page.click('#wp-submit');
-    await page.waitForURL('**/wp-admin/**');
+  test.beforeAll(async ({ playwright }) => {
+    // Use API context with Application Password (Basic Auth header)
+    const authHeader = 'Basic ' + Buffer.from(`${USERNAME}:${PASSWORD}`).toString('base64');
     
-    console.log('✅ Login successful!\n');
+    apiContext = await playwright.request.newContext({
+      baseURL: WP_URL,
+      ignoreHTTPSErrors: true,
+      extraHTTPHeaders: {
+        'Authorization': authHeader,
+      },
+    });
+    
+    console.log('\n========================================');
+    console.log('🧪 AISEO REST API Tests (Authenticated)');
+    console.log(`URL: ${WP_URL}`);
+    console.log(`User: ${USERNAME}`);
+    console.log('========================================\n');
   });
 
   test.afterAll(async () => {
-    await context.close();
+    await apiContext.dispose();
   });
 
   test('1. Homepage SEO - GET settings', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/homepage-seo`);
+    const response = await apiContext.get('/wp-json/aiseo/v1/homepage-seo');
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -68,7 +68,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('2. Homepage SEO - POST update settings', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/homepage-seo`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/homepage-seo`, {
       data: {
         home_title: 'Test Homepage Title',
         home_description: 'Test homepage description for SEO testing'
@@ -83,7 +83,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('3. Webmaster Verification - GET codes', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/webmaster-verification`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/webmaster-verification`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -96,7 +96,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('4. Webmaster Verification - POST update codes', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/webmaster-verification`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/webmaster-verification`, {
       data: {
         google: 'test-google-verification-code',
         bing: 'test-bing-verification-code'
@@ -111,7 +111,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('5. Analytics - GET settings', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/analytics`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/analytics`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -124,7 +124,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('6. Analytics - POST update settings', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/analytics`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/analytics`, {
       data: {
         tracking_id: 'G-TEST123456',
         enabled: true
@@ -139,7 +139,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('7. Title Templates - GET templates', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/title-templates`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/title-templates`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -151,7 +151,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('8. Title Templates - POST update templates', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/title-templates`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/title-templates`, {
       data: {
         separator: '|',
         post_title: '%title% | %sitename%'
@@ -166,7 +166,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('9. Robots Settings - GET settings', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/robots-settings`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/robots-settings`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -177,7 +177,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('10. Robots Settings - POST update settings', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/robots-settings`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/robots-settings`, {
       data: {
         noindex_categories: false,
         nofollow_external_links: true
@@ -192,7 +192,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('11. Breadcrumbs - GET settings', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/breadcrumbs`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/breadcrumbs`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -205,7 +205,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('12. Breadcrumbs - POST update settings', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/breadcrumbs`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/breadcrumbs`, {
       data: {
         separator: '»',
         home_text: 'Home',
@@ -221,7 +221,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('13. RSS Feed - GET settings', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/rss`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/rss`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -233,7 +233,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('14. RSS Feed - POST update settings', async () => {
-    const response = await page.request.post(`${WP_URL}/wp-json/aiseo/v1/rss`, {
+    const response = await apiContext.post(`${WP_URL}/wp-json/aiseo/v1/rss`, {
       data: {
         enabled: true,
         before_content: 'Originally posted at %site_url%',
@@ -249,7 +249,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('15. Import - Check for old plugin data', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/import/check`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/import/check`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -260,7 +260,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('16. Import - Get preview', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/import/preview`);
+    const response = await apiContext.get(`${WP_URL}/wp-json/aiseo/v1/import/preview`);
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -271,7 +271,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('17. Sitemap - Check old-style URL (sitemap_index.xml)', async () => {
-    const response = await page.request.get(`${WP_URL}/sitemap_index.xml`, {
+    const response = await apiContext.get(`${WP_URL}/sitemap_index.xml`, {
       failOnStatusCode: false
     });
     
@@ -283,7 +283,7 @@ test.describe('AISEO New Features - REST API Tests', () => {
   });
 
   test('18. Sitemap - Check old-style URL (post-sitemap.xml)', async () => {
-    const response = await page.request.get(`${WP_URL}/post-sitemap.xml`, {
+    const response = await apiContext.get(`${WP_URL}/post-sitemap.xml`, {
       failOnStatusCode: false
     });
     
@@ -295,29 +295,26 @@ test.describe('AISEO New Features - REST API Tests', () => {
 });
 
 test.describe('AISEO New Features - Taxonomy SEO Tests', () => {
-  let page;
-  let context;
+  let apiContext;
 
-  test.beforeAll(async ({ browser }) => {
-    context = await browser.newContext({
+  test.beforeAll(async ({ playwright }) => {
+    const authHeader = 'Basic ' + Buffer.from(`${USERNAME}:${PASSWORD}`).toString('base64');
+    
+    apiContext = await playwright.request.newContext({
+      baseURL: WP_URL,
       ignoreHTTPSErrors: true,
+      extraHTTPHeaders: {
+        'Authorization': authHeader,
+      },
     });
-    page = await context.newPage();
-
-    // Login
-    await page.goto(`${WP_URL}/wp-login.php`);
-    await page.fill('#user_login', USERNAME);
-    await page.fill('#user_pass', PASSWORD);
-    await page.click('#wp-submit');
-    await page.waitForURL('**/wp-admin/**');
   });
 
   test.afterAll(async () => {
-    await context.close();
+    await apiContext.dispose();
   });
 
   test('19. Taxonomy SEO - GET all categories', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/taxonomy-seo/category`);
+    const response = await apiContext.get('/wp-json/aiseo/v1/taxonomy-seo/category');
     expect(response.ok()).toBeTruthy();
     
     const data = await response.json();
@@ -327,7 +324,7 @@ test.describe('AISEO New Features - Taxonomy SEO Tests', () => {
   });
 
   test('20. Taxonomy SEO - GET term meta (category 1)', async () => {
-    const response = await page.request.get(`${WP_URL}/wp-json/aiseo/v1/taxonomy-seo/category/1`, {
+    const response = await apiContext.get('/wp-json/aiseo/v1/taxonomy-seo/category/1', {
       failOnStatusCode: false
     });
     

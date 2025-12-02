@@ -84,16 +84,16 @@ wp core download
 
 # 3. Create database (with sudo for MariaDB)
 sudo mysql -e "CREATE DATABASE wp_localhost; \
-  CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'leicester'; \
+  CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'your_password'; \
   GRANT ALL ON wp_localhost.* TO 'wpuser'@'localhost'; \
   FLUSH PRIVILEGES;"
 
 # 4. Create config
-wp config create --dbname=wp_localhost --dbuser=wpuser --dbpass=leicester
+wp config create --dbname=wp_localhost --dbuser=wpuser --dbpass=your_password
 
 # 5. Install WordPress
 wp core install --url=http://localhost:8888 --title="WordPress Test" \
-  --admin_user=admin --admin_password=leicester --admin_email=admin@localhost.test
+  --admin_user=admin --admin_password=your_password --admin_email=admin@localhost.test
 
 # 6. Enable debug
 wp config set WP_DEBUG true --raw
@@ -1207,7 +1207,7 @@ Tests use credentials from `/Users/praison/aiseo/.env`:
 
 ```bash
 USERNAME=praison
-PASSWORD=leicester
+PASSWORD=your_password
 WP_URL=https://wordpress.test
 ```
 

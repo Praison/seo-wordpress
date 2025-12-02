@@ -18,7 +18,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 // Get credentials from environment
 const WP_URL = process.env.WP_URL || 'https://wordpress.test';
 const USERNAME = process.env.WP_USERNAME || 'praison';
-const PASSWORD = process.env.WP_PASSWORD || 'leicester';
+const PASSWORD = process.env.WP_PASSWORD || '';
 
 test.describe('AISEO Admin Pages - Full Test Suite', () => {
   let page;

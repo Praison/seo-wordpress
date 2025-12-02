@@ -12,7 +12,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const WP_URL = process.env.WP_URL || 'https://wordpress.test';
 const USERNAME = process.env.WP_USERNAME || 'praison';
-const PASSWORD = process.env.WP_PASSWORD || 'leicester';
+const PASSWORD = process.env.WP_PASSWORD || '';
 
 // Store all test data
 const toolResults = [];

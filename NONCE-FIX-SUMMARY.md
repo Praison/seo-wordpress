@@ -225,7 +225,7 @@ check_ajax_referer('aiseo_admin_nonce', 'nonce');
 
 ### 3. Restart services
 ```bash
-echo "leicester" | sudo -S valet restart
+sudo valet restart
 ```
 
 ## Summary

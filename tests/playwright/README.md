@@ -15,7 +15,7 @@ Automated end-to-end tests for the AISEO WordPress plugin using Playwright.
    The tests use credentials from `/Users/praison/aiseo/.env`:
    ```
    USERNAME=praison
-   PASSWORD=leicester
+   PASSWORD=your_password
    WP_URL=https://wordpress.test
    ```
 
