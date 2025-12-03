@@ -3,7 +3,7 @@ Contributors: MervinPraison
 Tags: seo, ai, openai, schema, sitemap
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 5.0.4
+Stable tag: 5.0.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -196,6 +196,9 @@ Yes! AISEO is compatible with WPML, Polylang, and TranslatePress. It can sync me
 * Performance optimizations
 
 == Changelog ==
+
+= 5.0.5 =
+* Improved publishing workflow
 
 = 5.0.4 =
 * Add publish.sh script for automated WordPress.org publishing
