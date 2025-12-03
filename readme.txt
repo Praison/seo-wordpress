@@ -1,9 +1,9 @@
-=== AISEO ===
+=== Praison AI SEO ===
 Contributors: MervinPraison
 Tags: seo, ai, openai, schema, sitemap
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ AI-powered SEO optimization for WordPress. Generate meta descriptions, titles, s
 
 == Description ==
 
-AISEO is a powerful AI-powered SEO plugin that helps you optimize your WordPress content using OpenAI's GPT-4o-mini model. Automatically generate SEO-optimized meta titles, descriptions, schema markup, and get comprehensive content analysis.
+Praison AI SEO is a powerful AI-powered SEO plugin that helps you optimize your WordPress content using OpenAI's GPT-4o-mini model. Automatically generate SEO-optimized meta titles, descriptions, schema markup, and get comprehensive content analysis.
 
 = Key Features =
 
@@ -196,6 +196,9 @@ Yes! AISEO is compatible with WPML, Polylang, and TranslatePress. It can sync me
 * Performance optimizations
 
 == Changelog ==
+
+= 5.0.3 =
+* Update plugin name to Praison AI SEO
 
 = 5.0.2 =
 * Add seo-wordpress.php for WordPress.org compatibility
