@@ -966,4 +966,50 @@ wp aiseo import yoast --post-type=post
 
 ---
 
+## 📦 Publishing to WordPress.org
+
+This repository contains both `aiseo.php` and `seo-wordpress.php` (same content, different plugin names):
+- **aiseo.php** - AISEO plugin
+- **seo-wordpress.php** - Praison AI SEO plugin (for WordPress.org slug `seo-wordpress`)
+
+### Publishing Steps
+
+```bash
+# 1. Update version in aiseo.php, seo-wordpress.php, and readme.txt
+
+# 2. Sync to SVN trunk
+rsync -av --exclude='.git' --exclude='node_modules' --exclude='tests' --exclude='.env' --exclude='*.md' \
+  /home/mervin/wordpress-plugins/WordPressAISEO/ \
+  /home/mervin/wordpress-plugins/seo-wordpress-svn/trunk/ --delete
+
+# 3. Remove dev files from SVN
+rm -f trunk/.distignore trunk/.gitignore trunk/add-logging.js trunk/api-index.jsonl trunk/aiseo.php
+
+# 4. Commit to SVN
+cd /home/mervin/wordpress-plugins/seo-wordpress-svn
+svn ci -m "Version X.X.X" --username mervinpraison
+
+# 5. Create tag
+svn cp trunk tags/X.X.X
+svn ci -m "Tagging version X.X.X" --username mervinpraison
+```
+
+### Git Remotes
+
+```bash
+origin     -> github.com:MervinPraison/WordPressAISEO.git (main)
+praison    -> github.com/Praison/seo-wordpress.git (master)
+mervin-seo -> github.com/MervinPraison/seo-wordpress.git (master)
+```
+
+### Push to All Remotes
+
+```bash
+git push origin main
+git push praison main:master
+git push mervin-seo main:master
+```
+
+---
+
 **Made with ❤️ by [PraisonAI](https://praison.ai)**
